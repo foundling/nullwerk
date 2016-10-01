@@ -1,33 +1,6 @@
 <template>
     <div class="keyboard">
-        <key color="white"></key>
-        <key color="black"></key>
-        <key color="white"></key>
-        <key color="black"></key>
-        <key color="white"></key>
-        <key color="white"></key>
-
-        <key color="black"></key>
-        <key color="white"></key>
-        <key color="black"></key>
-        <key color="white"></key>
-        <key color="black"></key>
-        <key color="white"></key>
-        <key color="white"></key>
-
-        <key color="black"></key>
-        <key color="white"></key>
-        <key color="black"></key>
-        <key color="white"></key>
-        <key color="white"></key>
-
-        <key color="black"></key>
-        <key color="white"></key>
-        <key color="black"></key>
-        <key color="white"></key>
-        <key color="black"></key>
-        <key color="white"></key>
-        <key color="white"></key>
+        <key v-for="index in 25" :index="index - 1" ></key>
     </div>
 </template>
 
@@ -43,24 +16,20 @@
     .key {
         border-radius: 5px;
     }
-
-    /* 2,4,7,9,11*/
-    .key:nth-child(){
-    }
-
 </style>
 
 <script>
     import Key from './Key';
+    import Note from './Note.js';
+    const note = new Note();
+
+    console.log(note);
     export default {
         components: {
             Key: Key
         },
         data: function() {
             return {
-                keys: [
-                    
-                ]
             };
         }
     };

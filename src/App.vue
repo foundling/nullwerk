@@ -1,5 +1,8 @@
 <template>
-    <keyboard></keyboard>
+    <div>
+        <volume></volume>
+        <keyboard></keyboard>
+    </div>
 </template>
 
 <style>
@@ -7,9 +10,11 @@
 
 <script>
     import Keyboard from './components/Keyboard.vue';
+    import Volume from './components/Volume.vue';
     export default {
         components: {
-            Keyboard: Keyboard
+            Keyboard: Keyboard,
+            Volume: Volume
         }
     }
 </script>
