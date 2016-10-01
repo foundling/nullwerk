@@ -1,15 +1,15 @@
 <template>
-    <key></key>
+    <keyboard></keyboard>
 </template>
-
-<script>
-    import Key from './components/Key';
-    export default {
-        components: {
-            Key: Key
-        }
-    };
-</script>
 
 <style>
 </style>
+
+<script>
+    import Keyboard from './components/Keyboard.vue';
+    export default {
+        components: {
+            Keyboard: Keyboard
+        }
+    }
+</script>
