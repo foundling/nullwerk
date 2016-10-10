@@ -40,31 +40,47 @@
 
         /* Modulation Wheels */
 
-        div.mod-wheel-ctr,
-        div.volume-wheel-ctr {
-            width: 5%;
-            height: 35%;
+        div.wheel-ctr {
+            display: inline-block;
+            height: 50%;
+            padding: 3% 2%;
+            width: 20%;
+            background: lightgray;
             position: absolute;
-            bottom: 0%; 
-            border-radius: 10px;
+            bottom: 0px;
+            left: 0px;
+            text-align: center;
         }
+
+        div.volume-wheel-ctr,
         div.mod-wheel-ctr {
-            left: 7%; 
+            display: inline-block;
+            height: 100%;
+            width: 40%;
         }
-        div.volume-wheel-ctr {
-            left: 13%; 
+
+        div.mod-wheel,
+        div.volume-wheel,
+        span.mod-wheel-label,
+        span.volume-wheel-label {
+            margin: auto;
         }
 
         div.mod-wheel,
         div.volume-wheel {
-            height: 90%;
+            border-radius: 5px;
+            width: 40px;
             background: white;
-            border-radius: 10px;
+            height: 87%;
         }
+
         span.mod-wheel-label,
         span.volume-wheel-label {
+            display: block;
+            width: 40px;
+            text-align: center;
             color: white;
-            font-size: 10%;
+            padding-top: 10px;
         }
 
         /* Control Panel */
@@ -87,8 +103,7 @@
 
         div.oscillators-ctr {
             height: 25%;
-            width: 50%;
-            border: 2px solid lightgray;
+            width: 43%;
         }
 
         div.osc-sine-ctr,
@@ -96,6 +111,7 @@
         div.osc-triangle-ctr,
         div.osc-sawtooth-ctr {
             display: inline-block;
+            padding: 20px;
             height: 100%;
             width: 25%;
             margin-left: -4px;
@@ -104,12 +120,14 @@
         div.osc-square-knob,
         div.osc-triangle-knob,
         div.osc-sawtooth-knob {
-            height: 80px;
-            width: 80px;
+            height: 100%;
+            width: 100%;
+            margin: 80px;
             margin: auto;
             padding-top: calc((100% - 80px)/2);
             background: white;
             border-radius: 50%;
+            border: 8px dotted limegreen;
         }
 
         div.osc-sine-label,
@@ -120,6 +138,9 @@
             height: 90%;
         }
 
+        div.osc-sine-knob {
+            content: '-';
+        }
 
     </style>
   </head>
@@ -128,7 +149,8 @@
           <div class="control-panel-ctr">
               <div class="oscillators-ctr">
                   <div class="osc-sine-ctr">
-                      <div class="osc-sine-knob"></div>
+                      <div class="osc-sine-knob">
+                      </div>
                       <span class="osc-sine-label"></span>
                   </div>
                   <div class="osc-square-ctr">
@@ -144,17 +166,20 @@
                       <div class="osc-sawtooth-label"></div>
                   </div>
               </div>
-              <div class="mod-wheel-ctr">
-                    <div class="mod-wheel"></div>
-                    <span class="mod-wheel-label">Pitch</span>
+              <div class="wheel-ctr">
+                  <div class="mod-wheel-ctr">
+                        <div class="mod-wheel"></div>
+                        <span class="mod-wheel-label">Pitch</span>
+                  </div>
+                  <div class="volume-wheel-ctr">
+                      <div class="volume-wheel"></div>
+                      <span class="volume-wheel-label">Mod</span>
+                  </div>
               </div>
-              <div class="volume-wheel-ctr">
-                  <div class="volume-wheel"></div>
-                  <span class="volume-wheel-label">Mod</span>
-              </div>
-                <div class="controls-octaves-ctr"></div>
-                <div class="controls-octave-up"></div>
-                <div class="controls-octave-down"></div>
+
+              <div class="controls-octaves-ctr"></div>
+              <div class="controls-octave-up"></div>
+              <div class="controls-octave-down"></div>
           </div>
             <div class="keyboard"></div>
       </div>
