@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>nullwerk</title>
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0px;
+            padding: 0px;
+        }
+        body {
+            text-align: center;
+        }
+        html, body, body * {
+            box-sizing: border-box;
+            font-family: "Helvetica Neue";
+            font-weight: 200;
+            -webkit-user-select: none;
+        }
+        div.synth-body {
+            position: relative;
+            margin: 20px auto;
+            height: 750px;
+            width: 1050px;
+            background: #5a5a5a;
+            border-radius: 10px;
+        }
+        div.keyboard {
+            position: absolute;
+            bottom: 10px; 
+            right: 5%; 
+            width: 90%;
+            height: 40%;
+            background: white;
+            border: 2px solid black;
+            border-radius: 10px;
+        }
+
+        /* Modulation Wheels */
+
+        div.mod-wheel-ctr,
+        div.volume-wheel-ctr {
+            width: 5%;
+            height: 35%;
+            position: absolute;
+            bottom: 0%; 
+            border-radius: 10px;
+        }
+        div.mod-wheel-ctr {
+            left: 7%; 
+        }
+        div.volume-wheel-ctr {
+            left: 13%; 
+        }
+
+        div.mod-wheel,
+        div.volume-wheel {
+            height: 90%;
+            background: white;
+            border-radius: 10px;
+        }
+        span.mod-wheel-label,
+        span.volume-wheel-label {
+            color: white;
+            font-size: 10%;
+        }
+
+        /* Control Panel */
+        div.control-panel-ctr {
+            position: absolute;
+            left: 5%;
+            bottom: 45%; 
+            height: 53%;
+            width: 90%;
+            background: #353535;
+            border-radius: 5px;
+        }
+
+        div.controls-octave-ctr {
+        }
+        div.controls-octave-up {
+        }
+        div.controls-octave-down {
+        }
+
+        div.oscillators-ctr {
+            height: 25%;
+            width: 50%;
+            border: 2px solid lightgray;
+        }
+
+        div.osc-sine-ctr,
+        div.osc-square-ctr,
+        div.osc-triangle-ctr,
+        div.osc-sawtooth-ctr {
+            display: inline-block;
+            height: 100%;
+            width: 25%;
+            margin-left: -4px;
+        }
+        div.osc-sine-knob,
+        div.osc-square-knob,
+        div.osc-triangle-knob,
+        div.osc-sawtooth-knob {
+            height: 80px;
+            width: 80px;
+            margin: auto;
+            padding-top: calc((100% - 80px)/2);
+            background: white;
+            border-radius: 50%;
+        }
+
+        div.osc-sine-label,
+        div.osc-square-label,
+        div.osc-triangle-label,
+        div.osc-sawtooth-label {
+            width: 10%; 
+            height: 90%;
+        }
+
+
+    </style>
+  </head>
+  <body>
+      <div class="synth-body">
+          <div class="control-panel-ctr">
+              <div class="oscillators-ctr">
+                  <div class="osc-sine-ctr">
+                      <div class="osc-sine-knob"></div>
+                      <span class="osc-sine-label"></span>
+                  </div>
+                  <div class="osc-square-ctr">
+                      <div class="osc-square-knob"></div>
+                      <span class="osc-square-label"></span>
+                  </div>
+                  <div class="osc-triangle-ctr">
+                      <div class="osc-triangle-knob"></div>
+                      <span class="osc-triangle-label"></span>
+                  </div>
+                  <div class="osc-sawtooth-ctr">
+                      <div class="osc-sawtooth-knob"></div>
+                      <div class="osc-sawtooth-label"></div>
+                  </div>
+              </div>
+              <div class="mod-wheel-ctr">
+                    <div class="mod-wheel"></div>
+                    <span class="mod-wheel-label">Pitch</span>
+              </div>
+              <div class="volume-wheel-ctr">
+                  <div class="volume-wheel"></div>
+                  <span class="volume-wheel-label">Mod</span>
+              </div>
+                <div class="controls-octaves-ctr"></div>
+                <div class="controls-octave-up"></div>
+                <div class="controls-octave-down"></div>
+          </div>
+            <div class="keyboard"></div>
+      </div>
+  </body>
+</html>
