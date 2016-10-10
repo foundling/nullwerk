@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>nullwerk</title>
     <style>
+
         /* Defaults */
         html, body {
             height: 100%;
@@ -21,12 +22,31 @@
             -webkit-user-select: none;
         }
         div.synth-body {
+
+            border: 20px solid gray;
             position: relative;
             margin: 20px auto;
             height: 750px;
             width: 1050px;
             background: #5a5a5a;
             border-radius: 10px;
+        }
+        /* Preset Window */
+
+        div.preset-window-ctr {
+            position: absolute;
+            bottom: 50%;
+            margin-left: 2px;
+            height: 20%;
+            width: 19%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+        }
+
+        span.preset-name {
+            color: whitesmoke;
         }
 
         /* Keyboard */
@@ -53,8 +73,7 @@
         }
 
 
-        /* Modulation Wheels */
-
+        /* Volume and Modulation Wheels */
         div.wheel-ctr {
             display: inline-block;
             height: 50%;
@@ -161,6 +180,7 @@
   </head>
   <body>
       <div class="synth-body">
+
           <div class="control-panel-ctr">
               <div class="oscillators-ctr">
                   <div class="osc-sine-ctr">
@@ -180,6 +200,13 @@
                       <div class="osc-sawtooth-knob"></div>
                       <div class="osc-sawtooth-label"></div>
                   </div>
+              </div>
+              <div class="preset-window-ctr">
+                  <!--
+                  <span class="preset-up">V</span>
+                  <span class="preset-down">V</span>
+                  -->
+                  <span class="preset-name">Nullwerk</span>
               </div>
               <div class="wheel-ctr">
                   <div class="mod-wheel-ctr">
