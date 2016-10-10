@@ -27,16 +27,30 @@
             background: #5a5a5a;
             border-radius: 10px;
         }
+
+        /* Keyboard */
         div.keyboard {
             position: absolute;
             bottom: 10px; 
             right: 5%; 
             width: 90%;
             height: 40%;
-            background: white;
-            border: 2px solid black;
-            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+
+        div.key {
+            width: calc(100% / 25);
+            height: 100%;
+        }
+        div.key-white {
+            background: whitesmoke;
+        }
+        div.key-black {
+            background: rgb(50,50,50);
+        }
+
 
         /* Modulation Wheels */
 
@@ -181,7 +195,34 @@
               <div class="controls-octave-up"></div>
               <div class="controls-octave-down"></div>
           </div>
-            <div class="keyboard"></div>
+          <div class="keyboard">
+
+              <div class="key key-white"></div>
+              <div class="key key-black"></div>
+              <div class="key key-white"></div>
+              <div class="key key-black"></div>
+              <div class="key key-white"></div>
+              <div class="key key-white"></div>
+              <div class="key key-black"></div>
+              <div class="key key-white"></div>
+              <div class="key key-black"></div>
+              <div class="key key-white"></div>
+              <div class="key key-black"></div>
+              <div class="key key-white"></div>
+              <div class="key key-white"></div>
+              <div class="key key-black"></div>
+              <div class="key key-white"></div>
+              <div class="key key-black"></div>
+              <div class="key key-white"></div>
+              <div class="key key-white"></div>
+              <div class="key key-black"></div>
+              <div class="key key-white"></div>
+              <div class="key key-black"></div>
+              <div class="key key-white"></div>
+              <div class="key key-black"></div>
+              <div class="key key-white"></div>
+              <div class="key key-white"></div>
+          </div>
       </div>
   </body>
 </html>
