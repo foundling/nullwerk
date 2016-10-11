@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>nullwerk</title>
+    <title>the ARS nullwerk</title>
     <style>
 
         /* Defaults */
@@ -136,6 +136,7 @@
         }
 
         div.oscillators-ctr {
+            display: flex;
             height: 25%;
             width: 43%;
         }
@@ -144,7 +145,6 @@
         div.osc-square-ctr,
         div.osc-triangle-ctr,
         div.osc-sawtooth-ctr {
-            display: inline-block;
             padding: 20px;
             height: 100%;
             width: 25%;
@@ -164,12 +164,13 @@
             border: 8px dotted limegreen;
         }
 
-        div.osc-sine-label,
-        div.osc-square-label,
-        div.osc-triangle-label,
-        div.osc-sawtooth-label {
+        span.osc-sine-label,
+        span.osc-square-label,
+        span.osc-triangle-label,
+        span.osc-sawtooth-label {
             width: 10%; 
             height: 90%;
+            color: white;
         }
 
         div.osc-sine-knob {
@@ -184,21 +185,20 @@
           <div class="control-panel-ctr">
               <div class="oscillators-ctr">
                   <div class="osc-sine-ctr">
-                      <div class="osc-sine-knob">
-                      </div>
-                      <span class="osc-sine-label"></span>
+                      <div class="osc-sine-knob"></div>
+                      <span class="osc-sine-label">sine</span>
                   </div>
                   <div class="osc-square-ctr">
                       <div class="osc-square-knob"></div>
-                      <span class="osc-square-label"></span>
+                      <span class="osc-square-label">sq</span>
                   </div>
                   <div class="osc-triangle-ctr">
                       <div class="osc-triangle-knob"></div>
-                      <span class="osc-triangle-label"></span>
+                      <span class="osc-triangle-label">tri</span>
                   </div>
                   <div class="osc-sawtooth-ctr">
                       <div class="osc-sawtooth-knob"></div>
-                      <div class="osc-sawtooth-label"></div>
+                      <span class="osc-sawtooth-label">tooth</span>
                   </div>
               </div>
               <div class="preset-window-ctr">
@@ -252,5 +252,35 @@
               <div class="key key-white"></div>
           </div>
       </div>
+      <script>
+          const knob = document.querySelector('.osc-sine-knob');
+          const container = document.querySelector('.oscillators-ctr');
+
+          let eventRecords = {
+              // get and cache fully qualified path
+              // map element path -> event
+          };
+
+          const compareSrcElements = function(ev1, ev2) {
+              return ev1.srcElement === ev2.srcElement;
+          }
+
+          knob.onmousedown = (event) => {
+              console.log('drag start');
+              console.log(event);
+          };  
+
+          document.body.onmouseup = (event) => {
+              console.log('drag end');
+              console.log(event);
+          };
+
+
+          let volume = 0; 
+          let diff = null;
+
+
+
+      </script>
   </body>
 </html>
