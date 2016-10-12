@@ -150,6 +150,12 @@
             width: 25%;
             margin-left: -4px;
         }
+
+        /* turn knob invisible */
+        .ghost-knob {
+            opacity: 0;
+        }
+
         div.osc-sine-knob,
         div.osc-square-knob,
         div.osc-triangle-knob,
@@ -185,7 +191,7 @@
           <div class="control-panel-ctr">
               <div class="oscillators-ctr">
                   <div class="osc-sine-ctr">
-                      <div class="osc-sine-knob"></div>
+                      <div class="osc-sine-knob" draggable="true"></div>
                       <span class="osc-sine-label">sine</span>
                   </div>
                   <div class="osc-square-ctr">
@@ -256,21 +262,28 @@
           const knob = document.querySelector('.osc-sine-knob');
           const container = document.querySelector('.oscillators-ctr');
 
-          let eventRecords = {
-              // get and cache fully qualified path
-              // map element path -> event
-          };
-
-          const compareSrcElements = function(ev1, ev2) {
-              return ev1.srcElement === ev2.srcElement;
-          }
-
-          knob.onmousedown = (event) => {
+          knob.ondragstart = function(event){
+              // override ghost image with transparent node existing in the dom (per html5 spec).
+              const ghost = this.cloneNode();
+              ghost.classList.add('ghost-knob');
+              document.body.appendChild(ghost);
+              event.dataTransfer.setDragImage(ghost, 0,0);
               console.log('drag start');
               console.log(event);
           };  
 
-          document.body.onmouseup = (event) => {
+          knob.ondrag = function(event) {
+          };  
+
+          knob.onclick = function(event) {
+              console.log('clicked');
+          }
+
+          document.body.dragend = function(event) {
+              console.log('dropped here', event);
+          }
+
+          knob.ondragend = function(event) {
               console.log('drag end');
               console.log(event);
           };
