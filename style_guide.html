@@ -25,14 +25,14 @@
 
             border: 20px solid gray;
             position: relative;
-            margin: 20px auto;
+            margin: auto;
             height: 750px;
             width: 1050px;
             background: #5a5a5a;
             border-radius: 10px;
         }
-        /* Preset Window */
 
+        /* Preset Window */
         div.preset-window-ctr {
             position: absolute;
             bottom: 50%;
@@ -44,7 +44,6 @@
             justify-content: center;
             font-size: 2em;
         }
-
         span.preset-name {
             color: whitesmoke;
         }
@@ -71,7 +70,6 @@
         div.key-black {
             background: rgb(50,50,50);
         }
-
 
         /* Volume and Modulation Wheels */
         div.wheel-ctr {
@@ -154,14 +152,16 @@
         /* turn knob invisible */
         .ghost-knob {
             opacity: 0;
+            height: 0;
+            position: absolute;
         }
 
         div.osc-sine-knob,
         div.osc-square-knob,
         div.osc-triangle-knob,
         div.osc-sawtooth-knob {
-            height: 100%;
-            width: 100%;
+            height: 50px;
+            width: 50px;
             margin: 80px;
             margin: auto;
             padding-top: calc((100% - 80px)/2);
@@ -190,6 +190,8 @@
 
           <div class="control-panel-ctr">
               <div class="oscillators-ctr">
+
+                  <div class="ghost-knob" draggable="true"></div>
                   <div class="osc-sine-ctr">
                       <div class="osc-sine-knob" draggable="true"></div>
                       <span class="osc-sine-label">sine</span>
@@ -262,37 +264,40 @@
           const knob = document.querySelector('.osc-sine-knob');
           const container = document.querySelector('.oscillators-ctr');
 
+          let volume = 0;
+          let startY; 
+          let ghost = document.querySelector('.ghost-knob');
+
           knob.ondragstart = function(event){
+
+              startY = knob.screenX;
+
               // override ghost image with transparent node existing in the dom (per html5 spec).
-              const ghost = this.cloneNode();
-              ghost.classList.add('ghost-knob');
               document.body.appendChild(ghost);
               event.dataTransfer.setDragImage(ghost, 0,0);
-              console.log('drag start');
-              console.log(event);
+              event.dataTransfer.effectAllowed = 'none';
+              event.dataTransfer.dropEffect = 'none';
+
+              // capture start Y - is this the right property?
+              startY = event.screenY;
           };  
 
           knob.ondrag = function(event) {
+
+              // capture current Y
+              currentY = event.screenY;
+
+              // calc y diff 
+              diff = currentY - startY;  
+
+              // weight it for volume - this should be a logarithmic scale.
+              volume = diff/10; 
+              degrees = Math.floor(360/diff);
+              knob.style.transform = `rotate(${degrees}deg)`;
+
+              console.log('volume: ', volume);
+              console.log('degrees: ',degrees);
           };  
-
-          knob.onclick = function(event) {
-              console.log('clicked');
-          }
-
-          document.body.dragend = function(event) {
-              console.log('dropped here', event);
-          }
-
-          knob.ondragend = function(event) {
-              console.log('drag end');
-              console.log(event);
-          };
-
-
-          let volume = 0; 
-          let diff = null;
-
-
 
       </script>
   </body>
