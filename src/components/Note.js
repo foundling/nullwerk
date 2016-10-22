@@ -4,31 +4,49 @@ export default class Note {
         
         const AudioContext = window.AudioContext || window.webkitAudioContext; 
         const context = new AudioContext();
-        const triangle = context.createOscillator();
-        const square = context.createOscillator();
-        const sine = context.createOscillator();
+        const defaultVolume = 0.1;
         const masterGain = context.createGain();
 
-        triangle.frequency.value = 220;
-        triangle.type = 'triangle';
-        triangle.start();
+        const waveformTypes = [
+            'sawtooth',
+            'sine', 
+            'square', 
+            'triangle'
+        ];
 
-        square.frequency.value = 440;
-        square.type = 'square';
-        square.start();
+        const nameToOscillator = (o, waveformType) => {
+            o[waveformType] = context.createOscillator();
+            o[waveformType]['type'] = waveformType;
+            o[waveformType]['frequency']['value'] = 440;
+            return o;
+        };
+        const nameToGainNode = (o, waveformType) => {
+            o[waveformType] = context.createGain();
+            o[waveformType]['gain']['level'] = defaultVolume;
+            return o;
+        };
+        const connectOscToItsGainNode = (oscName)  => {
+            oscillators[oscName].connect(oscGainNodes[oscName]);
+        };
+        const connectToMasterGain = (gainNodeName) => {
+            oscGainNodes[gainNodeName].connect(masterGain);
+        };
+        const startOscillator = (oscName)  => {
+            oscillators[oscName].start();
+        };
 
-        sine.frequency.value = 440;
-        sine.frequency.type = 'sine';
-        sine.start();
+        const oscillators = waveformTypes.reduce(nameToOscillator, {});
+        const oscGainNodes = waveformTypes.reduce(nameToGainNode, {});
+        Object.keys(oscillators).forEach(startOscillator);
+        Object.keys(oscillators).forEach(connectOscToItsGainNode);
+        Object.keys(oscGainNodes).forEach(connectToMasterGain);
 
-        masterGain.gain.value = 0;
-
-        triangle.connect(masterGain);
-        square.connect(masterGain);
         masterGain.connect(context.destination);
+        masterGain.gain.value = 0.1;
+
     }
 
-    changeFrequency() {
+    changeFrequency(oscName) {
         [square, sine, triange].forEach(function(wave) {
             wave.frequency.value = newFrequency;
 

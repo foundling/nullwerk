@@ -1,20 +1,22 @@
 <template>
-    <div>
-        <volume></volume>
-        <keyboard></keyboard>
-    </div>
+<div>
+    <volume></volume>
+    <keyboard></keyboard>
+</div>
 </template>
 
 <style>
 </style>
 
 <script>
-    import Keyboard from './components/Keyboard.vue';
-    import Volume from './components/Volume.vue';
-    export default {
-        components: {
-            Keyboard: Keyboard,
-            Volume: Volume
-        }
+import Keyboard from './components/Keyboard.vue';
+import Volume from './components/Volume.vue';
+
+export default {
+    components: {
+        Keyboard: Keyboard,
+        Volume: Volume
     }
+}
+
 </script>
