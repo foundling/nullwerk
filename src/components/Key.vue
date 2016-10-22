@@ -1,7 +1,5 @@
 <template>
-<div class="key" 
-    v-on:mousedown="playNote" 
-    v-on:mouseup="stopNote"></div> 
+    <div class="key"></div> 
 </template>
 
 <style>
@@ -18,7 +16,7 @@
 
 <script>
 
-    import Note from './Note';
+    import SoundEngine from './SoundEngine';
 
     export default {
         props: ['note'],
@@ -38,12 +36,6 @@
             }
         }, 
         methods: {
-            playNote: function() {
-                masterGain.gain.value = 0.2;
-            },
-            stopNote: function() {
-                masterGain.gain.value = 0;
-            }
         },
     };
 

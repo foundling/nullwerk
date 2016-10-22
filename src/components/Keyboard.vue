@@ -20,10 +20,10 @@
 
 <script>
     import Key from './Key';
-    import Note from './Note.js';
-    const note = new Note();
+    import SoundEngine from './SoundEngine.js';
+    const soundEngine = new SoundEngine();
 
-    console.log(note);
+    console.log(soundEngine);
     export default {
         components: {
             Key: Key
