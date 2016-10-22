@@ -16,6 +16,10 @@ export default class SoundEngine {
             return o;
         };
 
+        /*
+         * Build a map of oscillator name -> oscillator and gain objects
+         */
+
         this.oscillators = [ 'sawtooth', 'sine', 'square', 'triangle' ]
             .map(function(wfType) {
                 // create oscillators from waveform name
@@ -37,8 +41,10 @@ export default class SoundEngine {
                 return o;
             },{});
 
+        /*
+         * Wire osc nodes to their gain nodes and their gain nodes to the master gain 
+         */
         Object.keys(this.oscillators).forEach(oscName => {
-            // connect osc to gain node, gain node to master, start osc
             let oscNode = this.oscillators[oscName];
             oscNode.oscNode.connect(oscNode.gainNode);
             oscNode.gainNode.connect(masterGain);
@@ -52,6 +58,7 @@ export default class SoundEngine {
             this.oscillators[oscName].osc.frequency.value = newValue; 
         }); 
     }
+
     changeVolume(){
         masterGain.gain.volume += offset;
     }
