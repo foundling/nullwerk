@@ -4,28 +4,34 @@ export default class SoundEngine {
         
         const AudioContext = window.AudioContext || window.webkitAudioContext; 
         const context = new AudioContext();
-        const defaultVolume = 0.6;
+        const defaultMasterVolume = 0.2;
+        const defaultOscillatorVolume = 0.0;
         const masterGain = context.createGain();
-        masterGain.connect(context.destination);
-        masterGain.gain.value = 0.0;
+        masterGain.gain.value = defaultMasterVolume;
+
         this.masterGain = masterGain;
         this.oscillators = [ 'sawtooth', 'sine', 'square', 'triangle' ]
             /*
              * Build a map of oscillator name -> oscillator and gain objects
              */
-            .map(function(wfType) {
+            .map(function(waveformType) {
                 // create oscillators from waveform name
                 let oscNode = context.createOscillator();
-                oscNode.type = wfType;
+                oscNode.type = waveformType;
                 oscNode.frequency.value = 440;
                 return {
                     oscNode: oscNode
                 };
             })
             .map(function(oscNode) {
-                // create gain nodes
+                
+                // web audio api
                 oscNode.gainNode = context.createGain();
-                oscNode.gainNode.gain.value = defaultVolume;
+                oscNode.gainNode.gain.value = defaultOscillatorVolume; // this is raised and lowered based on keydown events
+
+                // my api
+                oscNode.volume = oscNode.gainNode.gain.value;
+                oscNode.controlLevel = oscNode.volume;
                 return oscNode;
             })
             .reduce(function(o, oscNode) {
@@ -42,6 +48,8 @@ export default class SoundEngine {
             oscNode.gainNode.connect(this.masterGain);
             oscNode.oscNode.start();
         });
+        masterGain.connect(context.destination);
+
 
             
     }
@@ -53,20 +61,33 @@ export default class SoundEngine {
     }
 
     setMasterVolume(amount){
-        this.masterGain.gain.value += amount;
-        console.log(`volume is now ${this.masterGain.gain.value}`); 
-    }
 
-    getMasterVolume() {
-        return this.masterGain.gain.value;
-    }
+        let potentialVolume = this.masterGain.gain.value + amount;
 
+        if (potentialVolume > 1) {
+            this.masterGain.gain.value = 1; 
+        } if (potentialVolume < 0) {
+            this.masterGain.gain.value = 0; 
+        } else {
+            this.masterGain.gain.value += amount;
+        }
+        console.log(this.masterGain.gain.value);
+    }
 
     setOscillatorVolume(oscillatorName, amount) {
         this.oscillators[oscillatorName].gainNode.gain.value += amount;
     }
 
+    muteNote() {
+        this.oscillators.forEach(osc => {
+            osc.level = 0;
+        });
+    }
+
     playNote() {
+        this.oscillators.forEach(osc => {
+            osc.level = osc.controlLevel;
+        });
     }
 
 
