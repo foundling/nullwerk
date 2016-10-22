@@ -1,13 +1,13 @@
 <template>
     <div class="volume-controls">
         <div 
-            v-on:click="setMasterVolume(0.1)"
+            v-on:click="setMasterVolume(0.05)"
             class="volume-up"> 
             <h1>^</h1>
         </div> 
 
         <div 
-            v-on:click="setMasterVolume(-0.1)"
+            v-on:click="setMasterVolume(-0.05)"
             class="volume-down"> 
             <h1>v</h1>
         </div> 
