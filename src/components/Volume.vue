@@ -11,7 +11,6 @@
             class="volume-down"> 
             <h1>v</h1>
         </div> 
-        <h1>{{ masterVolume }}</h1>
     </div>
 </template>
 
@@ -42,11 +41,6 @@
     import store from '../store'; 
 
     export default {
-        computed: {
-            masterVolume() {
-                return this.$store.state.soundEngine.getMasterVolume(); 
-            }
-        },
         methods: {
             setMasterVolume(amount) {
                 return this.$store.state.soundEngine.setMasterVolume(amount); 
