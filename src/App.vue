@@ -13,10 +13,7 @@ import Keyboard from './components/Keyboard.vue';
 import Volume from './components/Volume.vue';
 
 export default {
-    components: {
-        Keyboard: Keyboard,
-        Volume: Volume
-    }
-}
+    components: { Keyboard, Volume }
+};
 
 </script>

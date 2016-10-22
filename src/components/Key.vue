@@ -16,8 +16,6 @@
 
 <script>
 
-    import SoundEngine from './SoundEngine';
-
     export default {
         props: ['note'],
         components:{

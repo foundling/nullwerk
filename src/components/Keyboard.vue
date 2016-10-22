@@ -20,10 +20,7 @@
 
 <script>
     import Key from './Key';
-    import SoundEngine from './SoundEngine.js';
-    const soundEngine = new SoundEngine();
 
-    console.log(soundEngine);
     export default {
         components: {
             Key: Key

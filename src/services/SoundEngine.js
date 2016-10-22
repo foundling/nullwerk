@@ -8,19 +8,11 @@ export default class SoundEngine {
         const masterGain = context.createGain();
         masterGain.connect(context.destination);
         masterGain.gain.value = 0.0;
-
-        const wfTypeToOscillator = (o, waveformType) => {
-            o[waveformType] = context.createOscillator();
-            o[waveformType]['type'] = waveformType;
-            o[waveformType]['frequency']['value'] = 440;
-            return o;
-        };
-
-        /*
-         * Build a map of oscillator name -> oscillator and gain objects
-         */
-
+        this.masterGain = masterGain;
         this.oscillators = [ 'sawtooth', 'sine', 'square', 'triangle' ]
+            /*
+             * Build a map of oscillator name -> oscillator and gain objects
+             */
             .map(function(wfType) {
                 // create oscillators from waveform name
                 let oscNode = context.createOscillator();
@@ -50,6 +42,7 @@ export default class SoundEngine {
             oscNode.gainNode.connect(masterGain);
             oscNode.oscNode.start();
         });
+
             
     }
 
@@ -59,8 +52,12 @@ export default class SoundEngine {
         }); 
     }
 
-    changeVolume(){
-        masterGain.gain.volume += offset;
+    changeMasterVolume(amount){
+        masterGain.gain.volume += amount;
+    }
+
+    changeOscillatorVolume(oscillatorName, amount) {
+        this.oscillators[oscillatorName].gainNode.gain.level += amount;
     }
 
 }
