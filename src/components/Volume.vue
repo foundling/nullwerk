@@ -1,16 +1,18 @@
 <template>
-<div class="volume-controls">
-    <div class="volume-up" 
-        @mousedown="adjustVolume(0.1)">
-        <h1>^</h1>
-    </div> 
+    <div class="volume-controls">
+        <div 
+            v-on:click="setMasterVolume(0.1)"
+            class="volume-up"> 
+            <h1>^</h1>
+        </div> 
 
-    <div class="volume-down" 
-        @mousedown="adjustVolume(-0.1)">
-        <h1>v</h1>
-    </div> 
-</div>
-
+        <div 
+            v-on:click="setMasterVolume(-0.1)"
+            class="volume-down"> 
+            <h1>v</h1>
+        </div> 
+        <h1>{{ masterVolume }}</h1>
+    </div>
 </template>
 
 <style>
@@ -37,18 +39,19 @@
 
 <script>
 
-    export default {
-        components:{
-        },
-        data: function (){
-            return {
+    import store from '../store'; 
 
-            };
-        },
+    export default {
         computed: {
-        }, 
-        methods: {
+            masterVolume() {
+                return this.$store.state.soundEngine.getMasterVolume(); 
+            }
         },
+        methods: {
+            setMasterVolume(amount) {
+                return this.$store.state.soundEngine.setMasterVolume(amount); 
+            }
+        }
     };
 
 </script>

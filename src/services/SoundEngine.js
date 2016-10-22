@@ -25,7 +25,7 @@ export default class SoundEngine {
             .map(function(oscNode) {
                 // create gain nodes
                 oscNode.gainNode = context.createGain();
-                oscNode.gainNode.gain.level = defaultVolume;
+                oscNode.gainNode.gain.value = defaultVolume;
                 return oscNode;
             })
             .reduce(function(o, oscNode) {
@@ -39,25 +39,35 @@ export default class SoundEngine {
         Object.keys(this.oscillators).forEach(oscName => {
             let oscNode = this.oscillators[oscName];
             oscNode.oscNode.connect(oscNode.gainNode);
-            oscNode.gainNode.connect(masterGain);
+            oscNode.gainNode.connect(this.masterGain);
             oscNode.oscNode.start();
         });
 
             
     }
 
-    changeFrequency(newValue) {
+    setFrequency(newValue) {
         Object.keys(this.oscillators).forEach(function(oscName) {
             this.oscillators[oscName].osc.frequency.value = newValue; 
         }); 
     }
 
-    changeMasterVolume(amount){
-        masterGain.gain.volume += amount;
+    setMasterVolume(amount){
+        this.masterGain.gain.value += amount;
+        console.log(`volume is now ${this.masterGain.gain.value}`); 
     }
 
-    changeOscillatorVolume(oscillatorName, amount) {
-        this.oscillators[oscillatorName].gainNode.gain.level += amount;
+    getMasterVolume() {
+        return this.masterGain.gain.value;
     }
+
+
+    setOscillatorVolume(oscillatorName, amount) {
+        this.oscillators[oscillatorName].gainNode.gain.value += amount;
+    }
+
+    playNote() {
+    }
+
 
 }
