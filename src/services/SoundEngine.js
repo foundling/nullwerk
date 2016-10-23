@@ -11,11 +11,10 @@ export default class SoundEngine {
 
         this.masterGain = masterGain;
         this.oscillators = [ 'sawtooth', 'sine', 'square', 'triangle' ]
-            /*
-             * Build a map of oscillator name -> oscillator and gain objects
-             */
             .map(function(waveformType) {
-                // create oscillators from waveform name
+
+                /* Build a map of oscillator name -> oscillator and gain objects */
+
                 let oscNode = context.createOscillator();
                 oscNode.type = waveformType;
                 oscNode.frequency.value = 440;
@@ -24,14 +23,8 @@ export default class SoundEngine {
                 };
             })
             .map(function(oscNode) {
-                
-                // web audio api
                 oscNode.gainNode = context.createGain();
                 oscNode.gainNode.gain.value = defaultOscillatorVolume; // this is raised and lowered based on keydown events
-
-                // my api
-                oscNode.volume = oscNode.gainNode.gain.value;
-                oscNode.controlLevel = oscNode.volume;
                 return oscNode;
             })
             .reduce(function(o, oscNode) {
@@ -79,16 +72,18 @@ export default class SoundEngine {
     }
 
     muteNote() {
-        this.oscillators.forEach(osc => {
-            osc.level = 0;
+        console.log('mute note');
+        Object.keys(this.oscillators).forEach(oscName => {
+            this.oscillators[oscName].gainNode.gain.value = 0.0; // this is raised and lowered based on keydown events
         });
     }
 
-    playNote() {
-        this.oscillators.forEach(osc => {
-            osc.level = osc.controlLevel;
+    playNote(frequency) {
+        console.log('play note');
+        Object.keys(this.oscillators).forEach(oscName => {
+            this.oscillators[oscName].oscNode.frequency.value = frequency; // this is raised and lowered based on keydown events
+            this.oscillators[oscName].gainNode.gain.value = 0.2; // this is raised and lowered based on keydown events
         });
     }
-
 
 }

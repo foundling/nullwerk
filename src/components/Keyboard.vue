@@ -1,6 +1,8 @@
 <template>
     <div class="keyboard">
-        <key v-for="index in 25" :index="index - 1" ></key>
+        <key 
+            v-for="index in 25" 
+            :index="index - 1" ></key>
     </div>
 </template>
 
@@ -20,6 +22,7 @@
 
 <script>
     import Key from './Key';
+    import store from '../store';
 
     export default {
         components: {
@@ -27,7 +30,8 @@
         },
         data: function() {
             return {
+                currentNoteIndex: null,
             };
-        }
+        },
     };
 </script>

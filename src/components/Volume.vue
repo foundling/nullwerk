@@ -43,7 +43,7 @@
     export default {
         methods: {
             setMasterVolume(amount) {
-                return this.$store.state.soundEngine.setMasterVolume(amount); 
+                this.$store.state.soundEngine.setMasterVolume(amount); 
             }
         }
     };
