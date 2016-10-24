@@ -1,22 +1,45 @@
 const SoundEngine = function() {
 
+    /*
+      SoundEngine is an abstraction for the web audio api.
+
+      Public Methods:
+      
+        setMasterVolume
+        setOscillatorVolume
+        playNote
+        muteNote
+
+      Private Methods:
+
+        _createNote
+        _indexToFrequency
+
+    */
+    
+    /* Init */
+
+    const DEFAULT_MASTER_VOLUME = 0.2;
+    const DEFAULT_OSCILLATOR_VOLUME = 0.1; 
     const context = new (window.AudioContext || window.webkitAudioContext)(); 
     const masterGain = context.createGain();
-    const DEFAULT_MASTER_VOLUME = 0.2;
-    const DEFAULT_OSCILLATOR_VOLUME = 0.1;
 
-    masterGain.gain.value = DEFAULT_MASTER_VOLUME;
+    this.setMasterVolume(DEFAULT_MASTER_VOLUME);
     masterGain.connect(context.destination);
 
+    /* Methods */
+    
     function setMasterVolume(amount) {
+        
+        /* keep in bounds of 0 and 1 */
 
         let potentialVolume = masterGain.gain.value + amount;
 
         if (potentialVolume > 1) {
 
-            masterGain.gain.value = 1; 
+            masterGain.gain.value = 1;
 
-        } if (potentialVolume < 0) {
+        } elese if (potentialVolume < 0) {
 
             masterGain.gain.value = 0; 
 
@@ -41,16 +64,26 @@ const SoundEngine = function() {
     };
 
     function muteNote() {
-
+        
+        /* 
+            
+            With web audio, notes are discardable things, 
+            so start & stop are create & destroy for a node. 
+        
+        */
+        
         this.oscillators.forEach(node => node.osc.stop(0));
 
     }
 
     function playNote(keyIndex) {
         
-        /* It's a web Audio best practice to create new oscillators on each play */
+        /* In web audio, create new oscillators on each play */
 
+        /* Key Index */
         const frequency = _indexToFrequency(keyIndex);
+    
+        /* Create a Note from 4 Waveforms */
         this.oscillators = _createNote(frequency); 
 
     }
@@ -58,8 +91,22 @@ const SoundEngine = function() {
 
     function _createNote(frequency) {
 
+        /*
+         
+          Build a list of 4 objects (nodes) containing oscillator and gain properties.
+          Waves:
+            
+            sawtooth
+            sine
+            square
+            triangle
+            
+        */
+      
         const oscillators = [ 
-
+            
+                /* to alter wave complexity, programmatically push to / pop from this array */
+            
                 'sawtooth', 
                 'sine', 
                 'square', 
@@ -67,13 +114,15 @@ const SoundEngine = function() {
 
             ]
             .map(name => { 
-
+    
+                /* create a node with a name property */
+                
                 return { name: name };
 
             }) 
             .map(node => {
 
-                /* { name } -> { oscillator node } */
+                /* give the node an osc property and initialize it */
 
                 node.osc = context.createOscillator();
                 node.osc.type = node.name;
@@ -84,7 +133,7 @@ const SoundEngine = function() {
             })
             .map(node => {
 
-                /* { oscillator node } => { oscillator & gain node } */
+                /* give the node a gain property and initialize it */
 
                 node.gain = context.createGain();
                 node.gain.gain.value = DEFAULT_OSCILLATOR_VOLUME; 
@@ -99,10 +148,18 @@ const SoundEngine = function() {
                 node.osc.connect(node.gain);
                 node.gain.connect(masterGain);
                 masterGain.connect(context.destination);
-                node.osc.start(0);
-
+                
                 return node;
+                
+            })
+            .map(node => {
 
+                /* start the note */
+                
+                node.osc.start(0);
+        
+                return node;
+                
             });
 
             return oscillators;
@@ -116,10 +173,12 @@ const SoundEngine = function() {
     }
 
     return {
+        
         playNote,
         muteNote,
         setMasterVolume,
         setOscillatorVolume
+
     };
 
 }
