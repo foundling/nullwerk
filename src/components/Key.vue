@@ -2,7 +2,8 @@
     <div 
         v-on:mousedown="startNote(index)"
         v-on:mouseup="stopNote(index)"
-        class="key {{ keyColor(index) }}-key">
+        v-bind:class="{ 'black-key': isBlackKey }"
+        class="key">
     </div> 
 </template>
 
@@ -24,16 +25,10 @@
     import store from '../store';
 
     export default {
-        props: ['index'],
+        props: ['index', 'blackKeys'],
         computed: {
-            keyColor: function(index) {
-            
-                return index in [
-                    1, 3, 6, 8, 10,
-                    12, 14, 17, 19, 21,
-                    23
-                ] ? 'black' : 'white';
-
+            isBlackKey: function() {
+                return this.blackKeys.includes(this.index);
             }
         }, 
         methods: {

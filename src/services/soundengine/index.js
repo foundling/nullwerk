@@ -24,9 +24,11 @@ const SoundEngine = function() {
     const context = new (window.AudioContext || window.webkitAudioContext)(); 
     const masterGain = context.createGain();
 
-    this.setMasterVolume(DEFAULT_MASTER_VOLUME);
+    setMasterVolume(DEFAULT_MASTER_VOLUME);
     masterGain.connect(context.destination);
 
+    this.oscillators = null;
+    
     /* Methods */
     
     function setMasterVolume(amount) {
@@ -39,7 +41,7 @@ const SoundEngine = function() {
 
             masterGain.gain.value = 1;
 
-        } elese if (potentialVolume < 0) {
+        } else if (potentialVolume < 0) {
 
             masterGain.gain.value = 0; 
 
