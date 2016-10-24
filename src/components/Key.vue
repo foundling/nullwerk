@@ -2,7 +2,7 @@
     <div 
         v-on:mousedown="startNote(index)"
         v-on:mouseup="stopNote(index)"
-        class="key">
+        class="key {{ keyColor(index) }}-key">
     </div> 
 </template>
 
@@ -10,11 +10,13 @@
     .key {
         height: 400px;
         width: 5%;
-        background: whitesmoke;
         border: 1px solid rgb(40,40,40); 
     }
-    .black {
+    .black-key {
         background: rgb(40,40,40);
+    }
+    .white-key {
+        background: whitesmoke;
     }
 </style>
 
@@ -23,19 +25,16 @@
 
     export default {
         props: ['index'],
-        components:{
-        },
-        data: function (){
-            return {
-            };
-        },
         computed: {
-            isBlackKey: function() {
-                console.log(arguments);
-                return {
-                    black: 'black'
-                }
-            }
+            keyColor: function(index) {
+            
+                const whiteKeys = [
+                    0,2,4,5,7,9,11,12,
+                    13,15,17,18,20,22,24,25
+                ];
+                
+                return (index in whiteKeys) ? 'white' : 'black';
+
         }, 
         methods: {
             startNote(index) {
