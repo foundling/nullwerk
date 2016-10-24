@@ -19,7 +19,9 @@ export default class SoundEngine {
 
             ]
             .map(name => { 
+
                 return { name: name };
+
             }) 
             .map(node => {
 
@@ -59,7 +61,9 @@ export default class SoundEngine {
     setFrequency(newValue) {
 
         this.oscillators.forEach(function(node) {
+
             node.osc.frequency.value = newValue; 
+
         }); 
 
     }
