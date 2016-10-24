@@ -1,16 +1,64 @@
-export default class SoundEngine {
+const SoundEngine = function() {
 
-    constructor() {
+    const context = new (window.AudioContext || window.webkitAudioContext)(); 
+    const masterGain = context.createGain();
+    const DEFAULT_MASTER_VOLUME = 0.2;
+    const DEFAULT_OSCILLATOR_VOLUME = 0.1;
+
+    masterGain.gain.value = DEFAULT_MASTER_VOLUME;
+    masterGain.connect(context.destination);
+
+    function setMasterVolume(amount) {
+
+        let potentialVolume = masterGain.gain.value + amount;
+
+        if (potentialVolume > 1) {
+
+            masterGain.gain.value = 1; 
+
+        } if (potentialVolume < 0) {
+
+            masterGain.gain.value = 0; 
+
+        } else {
+
+            masterGain.gain.value += amount;
+
+        }
+
+    };
+
+    function setOscillatorVolume(name, amt) {
+
+        this.oscillators
+            .filter(node => {
+                return node.name === name;
+            })
+            .forEach(node => {
+                node.gain.gain.value += amount;
+            });
+
+    };
+
+    function muteNote() {
+
+        this.oscillators.forEach(node => node.osc.stop(0));
+
+    }
+
+    function playNote(keyIndex) {
         
-        const context = new (window.AudioContext || window.webkitAudioContext); 
-        const defaultMasterVolume = 0.2;
-        const defaultOscillatorVolume = 0.0;
-        const masterGain = context.createGain();
+        /* It's a web Audio best practice to create new oscillators on each play */
 
-        masterGain.gain.value = defaultMasterVolume;
-        masterGain.connect(context.destination);
+        const frequency = _indexToFrequency(keyIndex);
+        this.oscillators = _createNote(frequency); 
 
-        this.oscillators = [ 
+    }
+
+
+    function _createNote(frequency) {
+
+        const oscillators = [ 
 
                 'sawtooth', 
                 'sine', 
@@ -29,7 +77,7 @@ export default class SoundEngine {
 
                 node.osc = context.createOscillator();
                 node.osc.type = node.name;
-                node.osc.frequency.value = 440;
+                node.osc.frequency.value = frequency;
 
                 return node;
 
@@ -39,7 +87,7 @@ export default class SoundEngine {
                 /* { oscillator node } => { oscillator & gain node } */
 
                 node.gain = context.createGain();
-                node.gain.gain.value = defaultOscillatorVolume; // this is raised and lowered based on keydown events
+                node.gain.gain.value = DEFAULT_OSCILLATOR_VOLUME; 
 
                 return node;
 
@@ -50,73 +98,30 @@ export default class SoundEngine {
 
                 node.osc.connect(node.gain);
                 node.gain.connect(masterGain);
-                node.osc.start();
+                masterGain.connect(context.destination);
+                node.osc.start(0);
 
                 return node;
 
             });
 
-    }
-
-    setFrequency(newValue) {
-
-        this.oscillators.forEach(function(node) {
-
-            node.osc.frequency.value = newValue; 
-
-        }); 
+            return oscillators;
 
     }
 
-    setMasterVolume(amount){
+    function _indexToFrequency(keyIndex) {
 
-        let potentialVolume = this.masterGain.gain.value + amount;
-
-        if (potentialVolume > 1) {
-
-            this.masterGain.gain.value = 1; 
-
-        } if (potentialVolume < 0) {
-
-            this.masterGain.gain.value = 0; 
-
-        } else {
-
-            this.masterGain.gain.value += amount;
-
-        }
-
-    }
-
-    setOscillatorVolume(name, amt) {
-
-        this.oscillators
-            .filter(node => node.name === name)
-            .forEach(node => this.oscillators[oscillatorName].gain.gain.value += amount);
-
-    }
-
-    muteNote() {
-
-        this.oscillators.forEach(node => node.gain.gain.value = 0);
-
-    }
-
-    playNote(keyIndex) {
-        
-        const frequency = this._indexToFrequency(keyIndex);
-
-        this.oscillators.forEach(node => {
-
-            node.osc.frequency.value = frequency;
-            node.gain.gain.value = 0.2; 
-
-        });
-
-    }
-
-    _indexToFrequency(keyIndex) {
         return 440 * Math.pow(Math.pow(2, 1/12), keyIndex); 
+
     }
+
+    return {
+        playNote,
+        muteNote,
+        setMasterVolume,
+        setOscillatorVolume
+    };
 
 }
+
+export default new SoundEngine(); 
