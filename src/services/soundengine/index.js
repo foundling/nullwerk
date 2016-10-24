@@ -73,11 +73,17 @@ export default class SoundEngine {
         let potentialVolume = this.masterGain.gain.value + amount;
 
         if (potentialVolume > 1) {
+
             this.masterGain.gain.value = 1; 
+
         } if (potentialVolume < 0) {
+
             this.masterGain.gain.value = 0; 
+
         } else {
+
             this.masterGain.gain.value += amount;
+
         }
 
     }
@@ -99,9 +105,12 @@ export default class SoundEngine {
     playNote(keyIndex) {
         
         const frequency = this._indexToFrequency(keyIndex);
+
         this.oscillators.forEach(node => {
+
             node.osc.frequency.value = frequency;
             node.gain.gain.value = 0.2; 
+
         });
 
     }
