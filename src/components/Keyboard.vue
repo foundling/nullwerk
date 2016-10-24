@@ -15,23 +15,12 @@
         align-items: center;
         justify-items: center;
     }
-    .key {
-        border-radius: 5px;
-    }
 </style>
 
 <script>
     import Key from './Key';
-    import store from '../store';
 
     export default {
-        components: {
-            Key: Key
-        },
-        data: function() {
-            return {
-                currentNoteIndex: null,
-            };
-        },
+        components: { Key: Key },
     };
 </script>
