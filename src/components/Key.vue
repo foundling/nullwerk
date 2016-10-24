@@ -28,13 +28,13 @@
         computed: {
             keyColor: function(index) {
             
-                const whiteKeys = [
-                    0,2,4,5,7,9,11,12,
-                    13,15,17,18,20,22,24,25
-                ];
+                return index in [
+                    0,2,4,5,
+                    7,9,11,12,
+                    13,15,17,18,
+                    20,22,24,25
+                ] ? 'white' : 'black';
                 
-                return (index in whiteKeys) ? 'white' : 'black';
-
         }, 
         methods: {
             startNote(index) {
