@@ -2,7 +2,8 @@
 <div 
     v-on:mousedown="startNote(index)"
     v-on:mouseup="stopNote(index)"
-    class="key"></div> 
+    class="key">
+</div> 
 </template>
 
 <style>
@@ -19,10 +20,6 @@
 
 <script>
     import store from '../store';
-    import FrequencyCalculator from '../services/frequencyCalculator';
-
-    const fc = new FrequencyCalculator();
-
 
     export default {
         props: ['index'],
@@ -42,8 +39,7 @@
         }, 
         methods: {
             startNote(index) {
-                var frequency = fc.indexToFrequency(index); 
-                this.$store.state.soundEngine.playNote(frequency)
+                this.$store.state.soundEngine.playNote(index)
             },
             stopNote() {
                 this.$store.state.soundEngine.muteNote()

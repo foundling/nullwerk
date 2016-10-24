@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import SoundEngine from '../services/SoundEngine';
+import SoundEngine from '../services/soundengine';
 Vue.use(Vuex);
 
 const soundEngine = new SoundEngine();
