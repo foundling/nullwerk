@@ -1,9 +1,9 @@
 <template>
-<div 
-    v-on:mousedown="startNote(index)"
-    v-on:mouseup="stopNote(index)"
-    class="key">
-</div> 
+    <div 
+        v-on:mousedown="startNote(index)"
+        v-on:mouseup="stopNote(index)"
+        class="key">
+    </div> 
 </template>
 
 <style>
@@ -46,5 +46,4 @@
             },
         }, 
     };
-
 </script>
