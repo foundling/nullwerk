@@ -29,12 +29,12 @@
             keyColor: function(index) {
             
                 return index in [
-                    0,2,4,5,
-                    7,9,11,12,
-                    13,15,17,18,
-                    20,22,24,25
-                ] ? 'white' : 'black';
-                
+                    1, 3, 6, 8, 10,
+                    12, 14, 17, 19, 21,
+                    23
+                ] ? 'black' : 'white';
+
+            }
         }, 
         methods: {
             startNote(index) {
