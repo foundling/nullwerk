@@ -1,0 +1,1 @@
+- drag on a note results in an infinite note.
