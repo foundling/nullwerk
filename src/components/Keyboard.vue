@@ -2,7 +2,8 @@
     <div class="keyboard">
         <key 
             v-for="index in 25" 
-            :index="index - 1" ></key>
+            :index="index - 1" 
+            :blackKeys="blackKeys"></key>
     </div>
 </template>
 
@@ -15,22 +16,23 @@
         align-items: center;
         justify-items: center;
     }
-    .key {
-        border-radius: 5px;
-    }
 </style>
 
 <script>
     import Key from './Key';
-    import store from '../store';
 
     export default {
-        components: {
-            Key: Key
-        },
         data: function() {
             return {
+                blackKeys: [
+                    1, 3, 
+                    6, 8, 10,
+                    13,15,
+                    18, 20, 22,
+                ]
+
             };
         },
+        components: { Key: Key },
     };
 </script>

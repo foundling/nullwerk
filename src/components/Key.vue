@@ -1,54 +1,43 @@
 <template>
-<div 
-    v-on:mousedown="startNote(index)"
-    v-on:mouseup="stopNote(index)"
-    class="key"></div> 
+    <div 
+        v-on:mousedown="startNote(index)"
+        v-on:mouseup="stopNote(index)"
+        v-bind:class="{ 'black-key': isBlackKey }"
+        class="key">
+    </div> 
 </template>
 
 <style>
     .key {
         height: 400px;
         width: 5%;
-        background: whitesmoke;
         border: 1px solid rgb(40,40,40); 
     }
-    .black {
+    .black-key {
         background: rgb(40,40,40);
+    }
+    .white-key {
+        background: whitesmoke;
     }
 </style>
 
 <script>
     import store from '../store';
-    import FrequencyCalculator from '../services/frequencyCalculator';
-
-    const fc = new FrequencyCalculator();
-
 
     export default {
-        props: ['index'],
-        components:{
-        },
-        data: function (){
-            return {
-            };
-        },
+        props: ['index', 'blackKeys'],
         computed: {
             isBlackKey: function() {
-                console.log(arguments);
-                return {
-                    black: 'black'
-                }
+                return this.blackKeys.includes(this.index);
             }
         }, 
         methods: {
             startNote(index) {
-                var frequency = fc.indexToFrequency(index); 
-                this.$store.state.soundEngine.playNote(frequency)
+                this.$store.state.soundEngine.playNote(index)
             },
             stopNote() {
                 this.$store.state.soundEngine.muteNote()
             },
         }, 
     };
-
 </script>
