@@ -1,4 +1,4 @@
-const SoundEngine = function() {
+const SoundEngine = function () {
 
     /*
       SoundEngine is an abstraction for the web audio api.
@@ -51,7 +51,7 @@ const SoundEngine = function() {
 
         }
 
-    };
+    }
 
     function setOscillatorVolume(name, amt) {
 
@@ -63,7 +63,7 @@ const SoundEngine = function() {
                 node.gain.gain.value += amount;
             });
 
-    };
+    }
 
     function muteNote() {
         
@@ -74,7 +74,11 @@ const SoundEngine = function() {
         
         */
         
-        this.oscillators.forEach(node => node.osc.stop(0));
+        this.oscillators.forEach(node => {
+            node.osc.forEach(osc => {
+                osc.stop(0);
+            });
+        });
 
     }
 
@@ -83,15 +87,15 @@ const SoundEngine = function() {
         /* In web audio, create new oscillators on each play */
 
         /* Key Index */
-        const frequency = _indexToFrequency(keyIndex);
+        const fundamentalFrequency = _indexToFrequency(keyIndex);
     
         /* Create a Note from 4 Waveforms */
-        this.oscillators = _createNote(frequency); 
+        this.oscillators = _createNote(fundamentalFrequency); 
 
     }
 
 
-    function _createNote(frequency) {
+    function _createNote(fundamentalFrequency) {
 
         /*
          
@@ -124,11 +128,42 @@ const SoundEngine = function() {
             }) 
             .map(node => {
 
-                /* give the node an osc property and initialize it */
+                /* build array of oscillators per waveform type that correspond to specified overtones */
+                /* how to best specify volume? well, these overtones each will be some proportion of the overall volume */
 
-                node.osc = context.createOscillator();
-                node.osc.type = node.name;
-                node.osc.frequency.value = frequency;
+                const overtones = [ 
+                    {
+                        harmonic: 1, 
+                        relativeVolume: 1 
+                    }, 
+                    {
+                        harmonic: 2, 
+                        relativeVolume: 1 
+                    }, 
+                    {
+                        harmonic: 3, 
+                        relativeVolume: 1 
+                    }, 
+                    {
+                        harmonic: 4, 
+                        relativeVolume: 1 
+                    }, 
+                    {
+                        harmonic: 5, 
+                        relativeVolume: 1 
+                    }, 
+                    {
+                        harmonic: 6, 
+                        relativeVolume: 1 
+                    }, 
+                ];
+
+                node.osc = overtones.map((overtone) => {
+                    const osc = context.createOscillator();
+                    osc.type = node.name;
+                    osc.frequency.value = fundamentalFrequency * overtone.harmonic; 
+                    return osc;
+                });
 
                 return node;
 
@@ -145,9 +180,11 @@ const SoundEngine = function() {
             })
             .map(node => {
 
-                /* Connect osc to gain, gain to master. start osc. */
+                /* Connect array of oscillators to gain, gain to master. */
 
-                node.osc.connect(node.gain);
+                node.osc.forEach(osc => {
+                    osc.connect(node.gain);
+                });
                 node.gain.connect(masterGain);
                 masterGain.connect(context.destination);
                 
@@ -156,9 +193,11 @@ const SoundEngine = function() {
             })
             .map(node => {
 
-                /* start the note */
+                /* start each oscillators */
                 
-                node.osc.start(0);
+                node.osc.forEach(osc => {
+                    osc.start(0);
+                });
         
                 return node;
                 
@@ -183,6 +222,6 @@ const SoundEngine = function() {
 
     };
 
-}
+};
 
 export default new SoundEngine(); 
