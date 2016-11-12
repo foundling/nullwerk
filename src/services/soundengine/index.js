@@ -250,7 +250,8 @@ const SoundEngine = function () {
         playNote,
         muteNote,
         setMasterVolume,
-        setOscillatorVolume
+        setOscillatorVolume,
+        setOctave
 
     };
 
