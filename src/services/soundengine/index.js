@@ -6,6 +6,7 @@ const SoundEngine = function () {
       Public Methods:
       
         setMasterVolume
+        setOctave
         setOscillatorVolume
         playNote
         muteNote
@@ -27,10 +28,38 @@ const SoundEngine = function () {
     setMasterVolume(DEFAULT_MASTER_VOLUME);
     masterGain.connect(context.destination);
 
-    this.oscillators = null;
-    
+    let oscillators = null;
+    let octave = 0;
+    let waveforms = [
+
+        /* to alter wave complexity, programmatically push to / pop from this array */
+
+        {
+            name: 'sine',
+            on: true
+        }, 
+        {
+            name: 'square',
+            on: true
+        }, 
+        {
+            name: 'sawtooth',
+            on: true
+        }, 
+        {
+            name: 'triangle',
+            on: true
+        }
+    ];   
+
     /* Methods */
     
+    function setOctave(direction) {
+
+        octave += direction;
+
+    }
+
     function setMasterVolume(amount) {
         
         /* keep in bounds of 0 and 1 */
@@ -55,7 +84,7 @@ const SoundEngine = function () {
 
     function setOscillatorVolume(name, amt) {
 
-        this.oscillators
+        oscillators
             .filter(node => {
                 return node.name === name;
             })
@@ -74,7 +103,7 @@ const SoundEngine = function () {
         
         */
         
-        this.oscillators.forEach(node => {
+        oscillators.forEach(node => {
             node.osc.forEach(osc => {
                 osc.stop(0);
             });
@@ -84,13 +113,19 @@ const SoundEngine = function () {
 
     function playNote(keyIndex) {
         
-        /* In web audio, create new oscillators on each play */
+        /* In web audio, create new oscillators on each play. */
 
-        /* Key Index */
-        const fundamentalFrequency = _indexToFrequency(keyIndex);
+        /* Map the key index to a frequency, depending on current octave. */
+        const frequencyAtKey = _indexToFrequency(keyIndex);
     
-        /* Create a Note from 4 Waveforms */
-        this.oscillators = _createNote(fundamentalFrequency); 
+        /*
+         * Create a note comprised of N oscillators for each of 4 standard waveforms. 
+         * N is the number of overtones per waveform. N >= 1. 
+         */
+
+        oscillators = _createNote(frequencyAtKey); 
+        console.log(oscillators);
+        
 
     }
 
@@ -100,8 +135,8 @@ const SoundEngine = function () {
         /*
          
           Build a list of 4 objects (nodes) containing oscillator and gain properties.
-          Waves:
-            
+
+          Waveforms:
             sawtooth
             sine
             square
@@ -109,21 +144,15 @@ const SoundEngine = function () {
             
         */
       
-        const oscillators = [ 
-            
-                /* to alter wave complexity, programmatically push to / pop from this array */
-            
-                'sawtooth', 
-                'sine', 
-                'square', 
-                'triangle'
-
-            ]
-            .map(name => { 
+        const oscillators = waveforms
+            .filter(wf => {
+                return wf.on;
+            })
+            .map(wf => { 
     
-                /* create a node with a name property */
+                /* create a node with a name property corresponding to the waveform's name */
                 
-                return { name: name };
+                return { name: wf.name };
 
             }) 
             .map(node => {
@@ -134,27 +163,27 @@ const SoundEngine = function () {
                 const overtones = [ 
                     {
                         harmonic: 1, 
-                        relativeVolume: 1 
+                        relativevolume: 1 
                     }, 
                     {
                         harmonic: 2, 
-                        relativeVolume: 1 
+                        relativevolume: 1 
                     }, 
                     {
                         harmonic: 3, 
-                        relativeVolume: 1 
+                        relativevolume: 1 
                     }, 
                     {
                         harmonic: 4, 
-                        relativeVolume: 1 
+                        relativevolume: 1 
                     }, 
                     {
                         harmonic: 5, 
-                        relativeVolume: 1 
+                        relativevolume: 1 
                     }, 
                     {
                         harmonic: 6, 
-                        relativeVolume: 1 
+                        relativevolume: 1 
                     }, 
                 ];
 
@@ -180,7 +209,7 @@ const SoundEngine = function () {
             })
             .map(node => {
 
-                /* Connect array of oscillators to gain, gain to master. */
+                /* connect array of oscillators to gain, gain to master. */
 
                 node.osc.forEach(osc => {
                     osc.connect(node.gain);
@@ -209,7 +238,10 @@ const SoundEngine = function () {
 
     function _indexToFrequency(keyIndex) {
 
-        return 440 * Math.pow(Math.pow(2, 1/12), keyIndex); 
+        /* use current octave value to generate proper fundamental frequency */
+
+        const fundamentalFrequencyAtOctave = 440 * Math.pow(2, octave);
+        return fundamentalFrequencyAtOctave * Math.pow(Math.pow(2, 1/12), keyIndex); 
 
     }
 
