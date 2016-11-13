@@ -1,6 +1,9 @@
+import MIDI from './midi';
+
 const SoundEngine = function () {
 
     /*
+     
       Public Methods:
       
         setMasterVolume
@@ -47,6 +50,75 @@ const SoundEngine = function () {
             on: true
         }
     ];   
+
+    function onMIDIStateChange(event) {
+        const newState = event.target.state;
+        console.log(newState === 'connected' ? 'connected!' : 'disconnected!');
+    };
+
+    function onMIDIMessage(msg){
+
+        // [ command and channel byte, note, velocity data ]
+ 
+        const data = msg.data;
+
+        const command = data[0] >> 4;
+        const channel = data[0] & 0xf;
+        const type = data[0] & 0xf0;
+        const noteNumber = data[1];
+        const velocity = data[2];
+
+        switch(type) {
+            case 144: // noteOn message
+                noteOn(noteNumber, velocity);
+                break;
+            case 128: // noteOn message
+                noteOff();
+                break;
+        }
+
+    };
+
+    function onMIDIConnect(midiAccess) {
+
+        const inputs = midiAccess.inputs.values();
+
+        for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
+            input.value.onmidimessage = onMIDIMessage;
+            input.value.onmidistatechange = onMIDIStateChange;
+        }
+
+    }
+
+    function onMIDIFail(error) {
+
+        console.log(`Midi Fail: ${error.name} `);
+        console.log(error);
+
+    }
+
+    function fromMIDI(noteNumber) {
+
+        const freq = Math.pow(2, (noteNumber - 69)/12) * c4Hertz;
+        return freq;
+
+    }
+
+    function noteOn(noteNumber, velocity) {
+        console.log('note on: ', noteNumber);
+
+        const frequencyAtKey = fromMIDI(noteNumber);
+        playNote(null, frequencyAtKey);
+
+    };
+
+    function noteOff() {
+        console.log('note off.');
+        muteNote();  
+    };
+
+    MIDI.init().then(onMIDIConnect, onMIDIFail);
+
 
     /* Methods */
     
@@ -107,19 +179,23 @@ const SoundEngine = function () {
 
     }
 
-    function playNote(keyIndex) {
-        
-        /* In web audio, create new oscillators on each play. */
+    function playNote(keyIndex, freq) {
 
-        /* Map the key index to a frequency, depending on current octave. */
-        const frequencyAtKey = _indexToFrequency(keyIndex);
-        console.log(frequencyAtKey);
+        /* 
+            In web audio, it's a best practice to create new oscillators on each noteOn.
+
+            Map the key index to a frequency, depending on current octave.
     
-        /*
-         * Create a note comprised of N oscillators for each of 4 standard waveforms. 
-         * N is the number of overtones per waveform. N >= 1. 
-         */
+            Create a note comprised of N oscillators for each of 4 standard waveforms. 
+            N is the number of overtones per waveform. N >= 1. 
+         
 
+            If 'freq' is supplied, it's coming from MIDI.
+            Otherwise, convert 'keyIndex' to freq. 
+
+        */
+
+        let frequencyAtKey = freq ? freq : _indexToFrequency(keyIndex);
         oscillators = _createNote(frequencyAtKey); 
 
     }
