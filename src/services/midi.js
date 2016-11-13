@@ -1,28 +1,30 @@
 if (typeof navigator.requestMIDIAccess === 'function') {
 
-    navigator.requestMIDIAccess().then(onSuccess, onFailure);
+    navigator.requestMIDIAccess({
+
+        sysex: false
+
+    }).then(onSuccess, onFailure);
 
 }
 
 function onSuccess (midiAccess) {
 
     const inputs = midiAccess.inputs.values();
-    for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
+    for(let input = inputs.next(); input && !input.done; input = inputs.next()) {
         input.value.onmidimessage = onMIDIMessage;
     }
-    console.log(inputs);
 
 }
 
 function onFailure () {
-
+    console.log('midi fail');
 }
 
 function onMIDIMessage(message) {
 
     // [ command and channel, note, velocity data ]
     const data = message.data;
-    console.log(data);
 
     const command = data[0] >> 4;
     const channel = data[0] & 0xf;
@@ -30,12 +32,17 @@ function onMIDIMessage(message) {
     const note = data[1];
     const velocity = data[2];
 
+
+    if (note) {
+        console.log(note);
+    }
+
     switch(type) {
         case 144: // noteOn message
             noteOn(note, velocity);
             break;
         case 128: // noteOn message
-            noteOf(note, velocity);
+            noteOff(note, velocity);
             break;
     }
 

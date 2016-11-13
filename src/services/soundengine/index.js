@@ -1,13 +1,11 @@
 const SoundEngine = function () {
 
     /*
-      SoundEngine is an abstraction for the web audio api.
-
       Public Methods:
       
         setMasterVolume
-        setOctave
         setOscillatorVolume
+        setOctave
         playNote
         muteNote
 
@@ -24,6 +22,7 @@ const SoundEngine = function () {
     const DEFAULT_OSCILLATOR_VOLUME = 0.1; 
     const context = new (window.AudioContext || window.webkitAudioContext)(); 
     const masterGain = context.createGain();
+    const c4Hertz = 261.626;
 
     setMasterVolume(DEFAULT_MASTER_VOLUME);
     masterGain.connect(context.destination);
@@ -31,9 +30,6 @@ const SoundEngine = function () {
     let oscillators = null;
     let octave = 0;
     let waveforms = [
-
-        /* to alter wave complexity, programmatically push to / pop from this array */
-
         {
             name: 'sine',
             on: true
@@ -117,6 +113,7 @@ const SoundEngine = function () {
 
         /* Map the key index to a frequency, depending on current octave. */
         const frequencyAtKey = _indexToFrequency(keyIndex);
+        console.log(frequencyAtKey);
     
         /*
          * Create a note comprised of N oscillators for each of 4 standard waveforms. 
@@ -124,8 +121,6 @@ const SoundEngine = function () {
          */
 
         oscillators = _createNote(frequencyAtKey); 
-        console.log(oscillators);
-        
 
     }
 
@@ -240,7 +235,7 @@ const SoundEngine = function () {
 
         /* use current octave value to generate proper fundamental frequency */
 
-        const fundamentalFrequencyAtOctave = 440 * Math.pow(2, octave);
+        const fundamentalFrequencyAtOctave = c4Hertz * Math.pow(2, octave);
         return fundamentalFrequencyAtOctave * Math.pow(Math.pow(2, 1/12), keyIndex); 
 
     }
