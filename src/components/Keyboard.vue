@@ -10,11 +10,12 @@
 <style>
     .keyboard {
         height: 400px;
-        width: 90%;
+        width: 100%;
         background: whitesmoke;
         display: flex;
         align-items: center;
         justify-items: center;
+        position: relative;
     }
 </style>
 
