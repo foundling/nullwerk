@@ -21,8 +21,8 @@ const SoundEngine = function () {
     
     /* Init */
 
-    const DEFAULT_MASTER_VOLUME = 0.2;
-    const DEFAULT_OSCILLATOR_VOLUME = 0.1; 
+    const DEFAULT_MASTER_VOLUME = 0.0;
+    const DEFAULT_OSCILLATOR_VOLUME = 0.0; 
     const context = new (window.AudioContext || window.webkitAudioContext)(); 
     const masterGain = context.createGain();
     const c4Hertz = 261.626;

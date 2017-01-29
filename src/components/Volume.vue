@@ -1,26 +1,27 @@
 <template>
     <div class="volume-controls">
         <div 
-            v-on:click="setMasterVolume(0.05)"
+            v-on:click="setMasterVolume(0.1)"
             class="volume-up"> 
-            <h1>^</h1>
+            <h1>+</h1>
         </div> 
 
         <div 
-            v-on:click="setMasterVolume(-0.05)"
+            v-on:click="setMasterVolume(-0.1)"
             class="volume-down"> 
-            <h1>v</h1>
+            <h1>-</h1>
         </div> 
     </div>
 </template>
 
 <style>
     .volume-controls {
-        display: flex;
+        display: inline-flex;
     }
     .volume-up,
     .volume-down {
-        display: flex;
+        border-radius: 5%;
+        display: inline-flex;
         align-items: center; 
         justify-content: center;
         height: 80px;

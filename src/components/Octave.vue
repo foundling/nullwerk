@@ -16,18 +16,26 @@
 
 <style>
     .octave-controls {
-        display: flex;
+        display: inline-flex;
     }
     .octave-up,
     .octave-down {
+        border-radius: calc(80px/20);
+        color: whitesmoke;
+        font-size: xx-small;
         display: flex;
         align-items: center; 
         justify-content: center;
-        height: 80px;
+        height: 20px;
         width: 80px;
-        background: darkgray;
+        background: black;
         border: 1px solid black;
         font-family: Arial;
+    }
+    .octave-up {
+        margin-right: 10px;
+    }
+    .octave-down {
     }
 
     h1 {

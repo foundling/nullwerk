@@ -12,14 +12,14 @@
 
 <style>
     .key {
-        height: 400px;
+        height: 100%;
         border: 1px solid rgb(40,40,40); 
     }
     .black-key {
         position: absolute;
         top: 0px;
         width: calc(100% / 30);
-        height: 50%;
+        height: 65%;
         background: rgb(40,40,40);
     }
     .white-key {
@@ -34,14 +34,6 @@
 
     export default {
         data: function() {
-            /*
-             blackKeys: [
-                    1, 3, 
-                    6, 8, 10,
-                    13,15,
-                    18, 20, 22,
-                ]
-                */
                 return {
                     keyWidthPercent: {
                         white: 100/15,
@@ -54,7 +46,6 @@
         computed: {
             isBlackKey: function() {
                 return this.blackKeys.includes(this.index);
-                console.log(this);
             },
             offset: function() {
                 let whiteKeysToTheLeft = [ ...Array(this.index).keys() ]
@@ -62,7 +53,6 @@
                     .length;
 
                 let offset = whiteKeysToTheLeft * this.keyWidthPercent.white - (this.keyWidthPercent.black / 2) ; 
-                console.log(this.index, whiteKeysToTheLeft, offset + '%');
                 return offset + '%';
             }
         }, 
@@ -73,6 +63,7 @@
             stopNote() {
                 this.$store.state.soundEngine.muteNote()
             },
+
         }, 
     };
 </script>
