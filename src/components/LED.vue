@@ -31,10 +31,10 @@
         },
         components: {
         },
-        props: ['color', 'active', 'octave'],
+        props: ['color', 'octave', 'level', 'currentOctave'],
         computed: {
                 // check current octave range in sound engine and return true if matches prop. 
-                isActive: function() { return this.octave === 0}
+                isActive: function() { return this.octave === this.currentOctave}
         }, 
         methods: {}, 
     };

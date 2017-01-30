@@ -1,7 +1,7 @@
 <template>
     <div class="octave-controls">
         <div 
-            v-on:click="setOctave(+1)"
+            v-on:click="increase"
             class="octave-up"> 
             <h1>+</h1>
         </div> 
@@ -50,6 +50,9 @@
 
     export default {
         methods: {
+            increase: function() {
+                this.$emit('increase');
+            },
             setOctave(direction) {
                 this.$store.state.soundEngine.setOctave(direction); 
             }

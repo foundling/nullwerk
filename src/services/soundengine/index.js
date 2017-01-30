@@ -120,12 +120,20 @@ const SoundEngine = function () {
     MIDI.init().then(onMIDIConnect, onMIDIFail);
 
 
-    /* Methods */
-    
     function setOctave(direction) {
 
         octave += direction;
 
+        if (octave < -2) {
+            octave = -2;
+        } else if (octave > 2) {
+            octave = 2;
+        }
+
+    }
+
+    function getOctave() {
+        return octave;
     }
 
     function setMasterVolume(amount) {
@@ -148,6 +156,10 @@ const SoundEngine = function () {
 
         }
 
+    }
+
+    function getMasterVolume() {
+        return masterGain.gain.value;
     }
 
     function setOscillatorVolume(name, amt) {
@@ -322,6 +334,7 @@ const SoundEngine = function () {
         muteNote,
         setMasterVolume,
         setOscillatorVolume,
+        getOctave,
         setOctave
 
     };

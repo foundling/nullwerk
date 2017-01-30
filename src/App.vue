@@ -1,57 +1,76 @@
 <template>
 <div class="synth-container">
         <div class="master-pitch-container">
-            <div class="LED-container">
-                <LED v-bind="{octave: -2}" color="red"></LED>
-                <LED v-bind="{octave: -1}" color="yellow"></LED>
-                <LED v-bind="{octave: 0}" color="green"></LED>
-                <LED v-bind="{octave: 1}" color="yellow"></LED>
-                <LED v-bind="{octave: 2}" color="red"></LED>
+            <div class="led-container">
+                <label>Octave</label>
+                <led 
+                v-for="octave in octaves" 
+                v-bind:color="octave.color" 
+                v-bind:currentOctave="currentOctave" 
+                v-bind:level="octave.level"></led>
             </div>
-            <octave></octave>
+            <div class="octave-buttons-container">
+                <btn button-label="+" v-on:adjust="adjust(+1)"></btn>
+                <btn button-label="-" v-on:adjust="adjust(-1)"></btn>
+            </div>
         </div>
         <div class="waveforms-and-options-container">
             <div class="waveforms-container">
+                <label>Waveforms</label>
                 <knob></knob>
                 <knob></knob>
                 <knob></knob>
                 <knob></knob>
             </div>
             <div class="waveforms-options-container">
+                <label>Waveform Options</label>
                 <knob></knob>
                 <knob></knob>
                 <knob></knob>
                 <knob></knob>
             </div>
         </div>
-        <div class="filter-container">
-            <knob></knob>
-            <knob></knob>
-            <knob></knob>
-            <knob></knob>
-        </div>
         <div class="master-volume-container">
+            <label>Master Volume</label>
+            <!--
+            
+
             <volume></volume>
+
+            -->
+            <knob diameter="150%"></knob>
         </div>
-        <div class="wheels-container">
+        <div class="filter-container">
+            <label>Filter</label>
+            <knob></knob>
+            <knob></knob>
+            <knob></knob>
+            <knob></knob>
+        </div>
+       <div class="wheels-container">
+            <label>Wheels</label>
             <wheel></wheel>
             <wheel></wheel>
         </div>
         <div class="envelope-container">
+            <label>Envelope</label>
             <slider></slider>
             <slider></slider>
             <slider></slider>
             <slider></slider>
         </div>
         <div class="lfo-container">
+            <label>LFO-Container</label>
             <knob></knob>
             <knob></knob>
             <knob></knob>
             <knob></knob>
         </div>
         <div class="sequencer-container">
+            <label>Sequence</label>
         </div>
     <div class="keyboard-container">
+        <label>Octave</label>
         <keyboard></keyboard>
     </div>
 </div>
@@ -71,6 +90,9 @@
         width: 100%;
         font-size: 0em;
     }
+    .synth-container > div > * {
+        font-size: initial;
+    }
     .controls-upper,
     .controls-lower {
         display: inline-flex;
@@ -88,7 +110,7 @@
     .sequencer-container,
     .lfo-container,
     .sequencer-container {
-        min-width: 250px;
+        min-width: calc(100% / 3);
         width: 25%;
         height: 30%;
         display: inline-flex;
@@ -106,8 +128,12 @@
         flex-direction: column;
         background: gray;
     }
-    .LED-container {
+    .led-container {
         padding-bottom: 20px;
+    }
+    .octave-buttons-container {
+        display: inline-flex;
+        vertical-align: bottom;
     }
     .waveforms-and-options-container {
         background: lightgreen;
@@ -140,22 +166,45 @@
     @media(max-width: 500px) {
         .keyboard-container {
             transform: rotate(90deg);
+            width: 100%;
         }
     }
 </style>
 
 <script>
 
+import soundEngine from './services/soundengine';
 import Keyboard from './components/Keyboard';
 import Volume from './components/Volume';
 import Octave from './components/Octave';
 import Slider from './components/Slider';
 import Knob from './components/Knob';
 import Wheel from './components/Wheel';
-import Button from './components/Button';
-import LED from './components/LED';
+import Btn from './components/Btn';
+import Led from './components/Led';
 
 export default {
+    data: function() {
+        return {
+            octaves: [
+                { color: 'red', level: -2 },
+                { color: 'yellow', level: -1 },
+                { color: 'green', level: 0 },
+                { color: 'yellow', level: -1 },
+                { color: 'red', level: 2 },
+            ]
+        }
+    },
+    methods: {
+        adjust: (value) => { 
+            soundEngine.setOctave(value);
+        }
+    },
+    computed: {
+        currentOctave: function() {
+            return soundEngine.getOctave();
+        }
+    },
     components: { 
 
         Keyboard, 
@@ -164,7 +213,8 @@ export default {
         Slider, 
         Knob,
         Wheel, 
-        LED
+        Btn,
+        Led
 
     }
 };
