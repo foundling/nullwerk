@@ -27,14 +27,11 @@
     import store from '../store';
 
     export default {
-        created: function(){ 
-        },
-        components: {
-        },
         props: ['color', 'octave', 'level', 'currentOctave'],
         computed: {
-                // check current octave range in sound engine and return true if matches prop. 
-                isActive: function() { return this.octave === this.currentOctave}
+            isActive: function() { 
+                return this.octave === this.currentOctave;
+            }
         }, 
         methods: {}, 
     };

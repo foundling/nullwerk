@@ -4,10 +4,10 @@
             <div class="led-container">
                 <label>Octave</label>
                 <led 
-                v-for="octave in octaves" 
-                v-bind:color="octave.color" 
+                v-for="led in leds" 
+                v-bind:color="led.color" 
                 v-bind:currentOctave="currentOctave" 
-                v-bind:level="octave.level"></led>
+                v-bind:level="led.octave"></led>
             </div>
             <div class="octave-buttons-container">
                 <btn button-label="+" v-on:adjust="adjust(+1)"></btn>
@@ -174,6 +174,7 @@
 <script>
 
 import soundEngine from './services/soundengine';
+
 import Keyboard from './components/Keyboard';
 import Volume from './components/Volume';
 import Octave from './components/Octave';
@@ -186,12 +187,12 @@ import Led from './components/Led';
 export default {
     data: function() {
         return {
-            octaves: [
-                { color: 'red', level: -2 },
-                { color: 'yellow', level: -1 },
-                { color: 'green', level: 0 },
-                { color: 'yellow', level: -1 },
-                { color: 'red', level: 2 },
+            leds: [
+                { color: 'red', octave: -2 },
+                { color: 'yellow', octave: -1 },
+                { color: 'green', octave: 0 },
+                { color: 'yellow', octave: -1 },
+                { color: 'red', octave: 2 },
             ]
         }
     },
