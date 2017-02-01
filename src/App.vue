@@ -7,11 +7,17 @@
                 v-for="led in leds" 
                 v-bind:color="led.color" 
                 v-bind:currentOctave="currentOctave" 
-                v-bind:level="led.octave"></led>
+                v-bind:octave="led.octave"></led>
             </div>
             <div class="octave-buttons-container">
-                <btn button-label="+" v-on:adjust="adjust(+1)"></btn>
-                <btn button-label="-" v-on:adjust="adjust(-1)"></btn>
+                <btn 
+                button-label="-" 
+                v-on:adjust="adjustOctave(-1)">
+                </btn>
+                <btn 
+                button-label="+" 
+                v-on:adjust="adjustOctave(+1)">
+                </btn>
             </div>
         </div>
         <div class="waveforms-and-options-container">
@@ -110,7 +116,7 @@
     .sequencer-container,
     .lfo-container,
     .sequencer-container {
-        min-width: calc(100% / 3);
+        min-width: calc(100% / 2);
         width: 25%;
         height: 30%;
         display: inline-flex;
@@ -173,7 +179,7 @@
 
 <script>
 
-import soundEngine from './services/soundengine';
+import store from './store';
 
 import Keyboard from './components/Keyboard';
 import Volume from './components/Volume';
@@ -191,19 +197,19 @@ export default {
                 { color: 'red', octave: -2 },
                 { color: 'yellow', octave: -1 },
                 { color: 'green', octave: 0 },
-                { color: 'yellow', octave: -1 },
+                { color: 'yellow', octave: 1 },
                 { color: 'red', octave: 2 },
             ]
         }
     },
     methods: {
-        adjust: (value) => { 
-            soundEngine.setOctave(value);
+        adjustOctave(direction) { 
+            this.$store.commit('SET_OCTAVE', { direction: direction });
         }
     },
     computed: {
-        currentOctave: function() {
-            return soundEngine.getOctave();
+        currentOctave() { 
+            return this.$store.getters.currentOctave;
         }
     },
     components: { 

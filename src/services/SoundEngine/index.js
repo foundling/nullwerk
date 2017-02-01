@@ -1,37 +1,20 @@
 import MIDI from './midi';
 
-const SoundEngine = function () {
+const SoundEngine = function ({ initialVolume, initialOctave }) {
 
-    /*
-     
-      Public Methods:
-      
-        setMasterVolume
-        setOscillatorVolume
-        setOctave
-        playNote
-        muteNote
+    this.octave = initialOctave;
+    this.volume = initialVolume;
 
-      Private Methods:
-
-        _createNote
-        _indexToFrequency
-
-    */
-    
-    /* Init */
-
-    const DEFAULT_MASTER_VOLUME = 0.0;
-    const DEFAULT_OSCILLATOR_VOLUME = 0.0; 
+    const DEFAULT_MASTER_VOLUME = initialVolume;
+    const DEFAULT_OSCILLATOR_VOLUME = initialVolume; 
     const context = new (window.AudioContext || window.webkitAudioContext)(); 
     const masterGain = context.createGain();
     const c4Hertz = 261.626;
 
-    setMasterVolume(DEFAULT_MASTER_VOLUME);
     masterGain.connect(context.destination);
+    MIDI.init().then(onMIDIConnect, onMIDIFail);
 
     let oscillators = null;
-    let octave = 0;
     let waveforms = [
         {
             name: 'sine',
@@ -117,25 +100,12 @@ const SoundEngine = function () {
         muteNote();  
     };
 
-    MIDI.init().then(onMIDIConnect, onMIDIFail);
-
-
     function setOctave(direction) {
 
-        octave += direction;
-
-        if (octave < -2) {
-            octave = -2;
-        } else if (octave > 2) {
-            octave = 2;
-        }
+        if (Math.abs(direction + this.octave) > 2) return;
+        this.octave += direction;
 
     }
-
-    function getOctave() {
-        return octave;
-    }
-
     function setMasterVolume(amount) {
         
         /* keep in bounds of 0 and 1 */
@@ -323,22 +293,23 @@ const SoundEngine = function () {
 
         /* use current octave value to generate proper fundamental frequency */
 
-        const fundamentalFrequencyAtOctave = c4Hertz * Math.pow(2, octave);
+        const fundamentalFrequencyAtOctave = c4Hertz * Math.pow(2, this.octave);
         return fundamentalFrequencyAtOctave * Math.pow(Math.pow(2, 1/12), keyIndex); 
 
     }
 
     return {
         
+        volume: this.volume,
+        octave: this.octave,
         playNote,
         muteNote,
         setMasterVolume,
         setOscillatorVolume,
-        getOctave,
         setOctave
 
     };
 
 };
 
-export default new SoundEngine(); 
+export default SoundEngine; 

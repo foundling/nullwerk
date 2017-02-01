@@ -5,21 +5,21 @@
         class="LED"></div> 
 </template>
 
-<style>
+<style scoped>
     
     .LED {
-        height: 4px;
-        width: 4px;
+        display: inline-flex;
+        height: 8px;
+        width: 8px;
+        margin: 5px;
         padding: 5px;
         border-radius: 50%;
-        margin: 5px;
-        display: inline-flex;
-        opacity: 0.6;
+        opacity: 0.2;
     }
 
     .LED.active {
+        /*border: 1px solid white; */
         opacity: 1;
-        border: 1px solid whitesmoke;
     }
 </style>
 
@@ -27,7 +27,7 @@
     import store from '../store';
 
     export default {
-        props: ['color', 'octave', 'level', 'currentOctave'],
+        props: ['color', 'octave', 'currentOctave'],
         computed: {
             isActive: function() { 
                 return this.octave === this.currentOctave;
