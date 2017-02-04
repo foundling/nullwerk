@@ -10,7 +10,7 @@
             <v-touch 
             v-bind:pan-options="{ direction: 'horizontal' }"
             v-on:pan="onPan"
-            v-bind:style="styleData.bar"
+            v-bind:style="barStyle"
             class="slider-bar"></v-touch>
         </div> 
 
@@ -35,7 +35,6 @@
         height: 100%;
 
         background: black;
-        border-radius: 5%; 
         border: 1px solid black;
         height: 90%;
         width: 100%;
@@ -78,6 +77,7 @@
 
         },
         created: function() {
+            console.log(this);
             this.$data.styleData = this.buildStyleData();
         },
         data: function() {
@@ -86,42 +86,21 @@
             };
         },
         computed: {
-            sliderOffset() {
-                return '' + this.sliderOffsetLeft || '0%'; 
+            barStyle() {
+                return this.$data.styleData.bar
             }
         },
         methods: {
-            /*
-
-
-            hammer slider example from here: https://blog.madewithenvy.com/build-your-own-touch-slider-with-hammerjs-af99665d2869#.v7wtv34ui
-            var sliderEl = document.querySelector( '.slider' ); // NEW: our element
-            var slideCount = 3; // NEW: the total # of slides
-            var sliderManager = new Hammer.Manager( sliderEl );
-            sliderManager.add( new Hammer.Pan({ threshold: 0, pointers: 0 }) );
-            sliderManager.on( 'pan', function( e ) {
-                  var percentage = 100 / slideCount * e.deltaX / window.innerWidth; // NEW: our % calc
-                    sliderEl.style.transform = 'translateX( ' + percentage + '% )'; // NEW: our CSS transform
-                });
-
-            */
-            addPercent() {
-            }
+            // good hammer slider example from here: 
+            // https://blog.madewithenvy.com/build-your-own-touch-slider-with-hammerjs-af99665d2869#.v7wtv34ui
             onPan(e) {
-            },
-            handleDragStart(ev) {
-            },
-            handleDrag(ev) {
-                // don't update value here, update when dropped.
-                function addPercent(a, b) {
-                    return (parseInt(a) + parseInt(b)) + '%';
-                }
-                const slideBar = ev.target;
-                const parentNode = ev.target.parentNode;
-                const sliderWidth = slideBar.clientWidth;
-                const offsetLeftPx = slideBar.offsetLeft;
-                const offsetLeftPercent = Math.floor(slideBar.offsetLeft / parentNode.clientWidth * 100);
-                this.styleData.bar.left = addPercent( this.styleData.bar.left.replace('%',''), offsetLeftPercent );
+
+                const currentOffset = e.target.offsetLeft / e.target.parentNode.clientWidth;
+                const percentage =  Math.floor(currentOffset + ((e.deltaX  + e.target.clientWidth) / e.target.parentNode.clientWidth * 100));
+                const sliderWidth = Math.floor((e.target.clientWidth / e.target.parentNode.clientWidth) * 100);
+
+                if (percentage < 0 || percentage + sliderWidth > 100 ) return;
+                this.$data.styleData.bar.left = percentage + '%';
             },
             buildStyleData() {
 
@@ -135,8 +114,8 @@
 
                     bar.height = this.barHeight;
                     bar.width = this.barWidth;
-                    bar.bottom = '0%';
-                    bar.left = '2%';
+                    bar.bottom = '0';
+                    bar.left = '0';
 
                 } else {
 
@@ -145,8 +124,8 @@
 
                     bar.height = this.barHeight;
                     bar.width = this.barWidth; 
-                    bar.bottom = '0%';
-                    bar.left = '0%';
+                    bar.bottom = '0';
+                    bar.left = '0';
 
                 }
 
