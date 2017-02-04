@@ -5,7 +5,7 @@
 
         <slot 
         v-bind:style="{ color: color }" 
-        name="label">button</slot>
+        name="label"></slot>
 
     </div>
 </template>

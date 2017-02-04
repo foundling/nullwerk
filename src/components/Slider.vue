@@ -4,21 +4,25 @@
     class="slider-container" 
     v-bind:style="styleData">
 
-        <div 
+        <v-touch 
+        v-on:mousedown="handleMousedown"
         v-bind:style="styleData.slot"
         class="slider-slot">
-            <v-touch 
-            v-bind:pan-options="{ direction: 'horizontal' }"
+
+        <slot><v-touch 
+            v-bind:pan-options="{ direction: direction }"
             v-on:pan="onPan"
             v-bind:style="barStyle"
-            class="slider-bar"></v-touch>
-        </div> 
+            class="slider-bar"></v-touch></slot>
+
+        </v-touch> 
 
     </div>
 
 </template>
 
 <style>
+
     .slider-container {
 
         width: 100%;
@@ -33,7 +37,6 @@
 
         position: relative;
         height: 100%;
-
         background: black;
         border: 1px solid black;
         height: 90%;
@@ -77,7 +80,6 @@
 
         },
         created: function() {
-            console.log(this);
             this.$data.styleData = this.buildStyleData();
         },
         data: function() {
@@ -87,12 +89,15 @@
         },
         computed: {
             barStyle() {
-                return this.$data.styleData.bar
+                return this.$data.styleData.bar;
             }
         },
         methods: {
             // good hammer slider example from here: 
             // https://blog.madewithenvy.com/build-your-own-touch-slider-with-hammerjs-af99665d2869#.v7wtv34ui
+            handleMousedown(e) {
+                console.log(e);
+            },
             onPan(e) {
 
                 const currentOffset = e.target.offsetLeft / e.target.parentNode.clientWidth;
@@ -104,8 +109,17 @@
             },
             buildStyleData() {
 
-                const slot = {}; 
-                const bar = {};
+                let slot = {
+                    height: '100%',
+                    width: this.barWidth
+                }
+
+                let bar = {
+                    height: this.barHeight,
+                    width: this.barWidth,
+                    bottom: 0,
+                    left: 0
+                }
                 
                 if (this.direction === 'horizontal') {
 
@@ -114,18 +128,12 @@
 
                     bar.height = this.barHeight;
                     bar.width = this.barWidth;
-                    bar.bottom = '0';
-                    bar.left = '0';
+                    bar.bottom = 0;
+                    bar.left = 0;
 
                 } else {
 
-                    slot.height = '100%';
-                    slot.width = this.barWidth;
-
-                    bar.height = this.barHeight;
-                    bar.width = this.barWidth; 
-                    bar.bottom = '0';
-                    bar.left = '0';
+                    
 
                 }
 

@@ -1,124 +1,152 @@
 <template>
-<div class="synth-container">
 
-        <!--Master Pitch-->
-        <div class="master-pitch-container">
+    <div class="synth-container">
+
+            <!--Master Pitch-->
+            <div class="master-pitch-container">
+                <div 
+                    title="octave meter"
+                    class="led-container">
+
+                    <led 
+                    diameter="15%"
+                    v-for="led in leds" 
+                    v-bind:color="led.color" 
+                    v-bind:currentOctave="currentOctave" 
+                    v-bind:octave="led.octave"></led>
+
+                </div>
+
+                <!-- Octave -->
+                <div 
+                title="octave"
+                class="octave-buttons-container">
+                    <btn 
+                    title="octave +1"
+                    class="octave-button-up" 
+                    v-on:adjust="adjustOctave(+1)">
+                        <i 
+                        v-bind:style="{ color: palette.black }" 
+                        class="fa fa-caret-up" 
+                        slot="label"></i>
+                    </btn>
+                    <btn 
+                    title="octave -1"
+                    class="octave-button-down" 
+                    v-on:adjust="adjustOctave(-1)">
+                        <i 
+                        v-bind:style="{color: palette.black}" 
+                        class="fa fa-caret-down" 
+                        slot="label"></i>
+                    </btn>
+                </div>
+            </div>
+
+            <!-- Master Volume Knob -->
             <div 
-                title="octave meter"
-                class="led-container">
+                title="Master Volume. Swipe up to increase. Swipe down to decrease. Tap to mute."
+                class="master-volume-container">
 
-                <led 
-                diameter="15%"
-                v-for="led in leds" 
-                v-bind:color="led.color" 
-                v-bind:currentOctave="currentOctave" 
-                v-bind:octave="led.octave"></led>
+                <div class="volume-container">
+                    <led color="red"></led>
+                    <led color="red"></led>
+                    <led color="red"></led>
+                    <led color="red"></led>
+                    <led color="red"></led>
+                </div>
+
+                <knob
+                color="black" 
+                diameter="60%"></knob>
 
             </div>
-            <div 
-            title="octave"
-            class="octave-buttons-container">
-                <btn 
-                title="octave +1"
-                class="octave-button-up" 
-                v-on:adjust="adjustOctave(+1)">
-                    <i 
-                    v-bind:style="{color: palette.white}" 
-                    class="fa fa-caret-up" 
-                    slot="label"></i>
-                </btn>
-                <btn 
-                title="octave -1"
-                class="octave-button-down" 
-                v-on:adjust="adjustOctave(-1)">
-                    <i 
-                    v-bind:style="{color: palette.white}" 
-                    class="fa fa-caret-down" 
-                    slot="label"></i>
-                </btn>
+
+            <!-- Waveforms -->
+            <div class="waveforms-and-options-container">
+                <div class="waveforms-container">
+                    <knob 
+                    v-bind:bg-image="waveForms.square.img"
+                    diameter="25%">
+                    </knob>
+                    <knob 
+                    v-bind:bg-image="waveForms.triangle.img"
+                    diameter="25%"></knob>
+                    <knob 
+                    v-bind:bg-image="waveForms.sawtooth.img"
+                    diameter="25%"></knob>
+                    <knob 
+                    v-bind:bg-image="waveForms.sine.img"
+                    diameter="25%"></knob>
+                </div>
+                <div class="waveform-level-container">
+                    <slider 
+                    direction="horizontal"
+                    barHeight="100%"
+                    barWidth="10%">
+                    </slider>
+                </div>
             </div>
+
+            <!-- Envelope -->
+            <div class="envelope-container">
+                <slider
+                    direction="vertical"
+                    barHeight="10%"
+                    barWidth="100%"></slider>
+                <slider
+                    direction="vertical"
+                    barHeight="10%"
+                    barWidth="100%"></slider>
+                <slider
+                    direction="vertical"
+                    barHeight="10%"
+                    barWidth="100%"></slider>
+                <slider
+                    direction="vertical"
+                    barHeight="10%"
+                    barWidth="100%"></slider>
         </div>
 
-        <!-- master volume knob -->
-        <div 
-            title="Master Volume. Swipe up to increase. Swipe down to decrease. Tap to mute."
-            class="master-volume-container">
-
-            <div class="volume-container">
-                <led color="red"></led>
-                <led color="red"></led>
-                <led color="red"></led>
-                <led color="red"></led>
-                <led color="red"></led>
-            </div>
-
-            <knob
-            color="black" 
-            diameter="60%"></knob>
-
-        </div>
-
-        <!-- waveforms -->
-        <div class="waveforms-and-options-container">
-            <div class="waveforms-container">
-                <knob 
-                v-bind:bg-image="waveForms.square.img"
-                diameter="25%">
-                </knob>
-                <knob 
-                v-bind:bg-image="waveForms.triangle.img"
-                diameter="25%"></knob>
-                <knob 
-                v-bind:bg-image="waveForms.sawtooth.img"
-                diameter="25%"></knob>
-                <knob 
-                v-bind:bg-image="waveForms.sine.img"
-                diameter="25%"></knob>
-            </div>
-            <div class="waveform-level-container">
-                <slider 
-                direction="horizontal"
-                barHeight="100%"
-                barWidth="10%">
-                </slider>
-            </div>
-        </div>
-        <div class="filter-container">
-        </div>
-       <div class="wheels-container">
+        <!-- Modulation Wheels -->
+        <div class="wheels-container">
             <wheel></wheel>
             <wheel></wheel>
         </div>
-        <div class="envelope-container">
-            <slider
-                direction="vertical"
-                barHeight="10%"
-                barWidth="100%"></slider>
-            <slider
-                direction="vertical"
-                barHeight="10%"
-                barWidth="100%"></slider>
-            <slider
-                direction="vertical"
-                barHeight="10%"
-                barWidth="100%"></slider>
-            <slider
-                direction="vertical"
-                barHeight="10%"
-                barWidth="100%"></slider>
+           
+        <!-- Signature Sign -->
+        <div class="title-container">
+            <h1>The ARS Nullwerk</h1>
         </div>
-        <div class="lfo-container">
-            <knob></knob>
-            <knob></knob>
-            <knob></knob>
-            <knob></knob>
+
+        <!-- Keyboard -->
+        <div class="keyboard-container">
+            <keyboard></keyboard>
         </div>
+
+        <!-- Sequencer -->
         <div class="sequencer-container">
+
+            <ul v-for="button in sequencer.buttons">
+                <li>
+                    <btn></btn>
+                </li>
+            </ul>
+
         </div>
-    <div class="keyboard-container">
-        <keyboard></keyboard>
+
+        <!-- Sequencer -->
+        <div class="sequencer-container">
+
+            <ul v-for="item in sequencer.menu">
+                <li>
+                <h1>{{ item }}</h1>
+                </li>
+            </ul>
+
+        </div>
+
     </div>
-</div>
+
 </template>
 
 <style>
@@ -130,6 +158,9 @@
     html, body {
         height: 100%;
         font-family: Helvetica;
+    }
+    h1 {
+        color: black;
     }
     .synth-container {
         height: 100%;
@@ -151,9 +182,11 @@
     .master-pitch-container,
     .waveforms-and-options-container,
     .filter-container,
+    .sequencer-container,
     .wheels-container,
     .envelope-container,
     .sequencer-container,
+    .title-container,
     .lfo-container,
     .sequencer-container {
         min-width: calc(100% / 2);
@@ -163,6 +196,10 @@
         align-items: center;
         justify-content: center;
         vertical-align:top;
+    }
+    .title-container > h1 {
+        color: black;
+        font-size: 5vw;
     }
     .wheels-container {
         background: aquamarine;
@@ -226,6 +263,7 @@
     }
     .sequencer-container {
         background: yellow;
+        width: 100%;
     }
     .keyboard-container {
         height: 40%;
@@ -242,87 +280,92 @@
         .keyboard-container {
             transform: rotate(90deg);
             width: 100%;
+            margin-bottom: 100px;
         }
     }
 </style>
 
 <script>
 
-import store from './store';
-const palette = {
-    red: 'red',
-    yellow: 'yellow',
-    lime: 'lime',
-    black: 'rgb(40,40,40)',
-    white: 'whitesmoke'
-}
+    import store from './store';
+    const palette = {
+        red: 'red',
+        yellow: 'yellow',
+        lime: 'lime',
+        black: 'rgb(40,40,40)',
+    }
 
-import Keyboard from './components/Keyboard';
-import Volume from './components/Volume';
-import Octave from './components/Octave';
-import Slider from './components/Slider';
-import Knob from './components/Knob';
-import Wheel from './components/Wheel';
-import Btn from './components/Btn';
-import Led from './components/Led';
+    import Keyboard from './components/Keyboard';
+    import Volume from './components/Volume';
+    import Octave from './components/Octave';
+    import Slider from './components/Slider';
+    import Knob from './components/Knob';
+    import Wheel from './components/Wheel';
+    import Btn from './components/Btn';
+    import Led from './components/Led';
 
-export default {
-    data: function() {
-        return {
-            palette,
-            leds: [
-                { color: palette['red'], octave: 2 },
-                { color: palette['yellow'], octave: 1 },
-                { color: palette['lime'], octave: 0 },
-                { color: palette['yellow'], octave: -1 },
-                { color: palette['red'], octave: -2 },
-            ],
-            volumeKnobs: [
-                {},
-                {},
-                {},
-                {},
-            ],
-            waveForms: {
-                square: {
-                    img: '/static/img/square_wave_outline.png' 
+    export default {
+
+        data: function() {
+
+            return {
+
+                palette,
+                leds: [
+                    { color: palette['red'], octave: 2 },
+                    { color: palette['yellow'], octave: 1 },
+                    { color: palette['lime'], octave: 0 },
+                    { color: palette['yellow'], octave: -1 },
+                    { color: palette['red'], octave: -2 },
+                ],
+                sequencer: {
+                    menu: [
+                        'contribute',
+                        'faq',
+                        'issues'
+                    ],
+                    buttons: [ 
+                        ...Array(8).keys()
+                    ]
                 },
-                triangle: {
-                    img: '/static/img/triangle_wave_outline.png' 
-                },
-                sawtooth: {
-                    img: '/static/img/sawtooth_wave_outline.png' 
-                },
-                sine: {
-                    img: '/static/img/sine_wave_outline.png' 
+                waveForms: {
+                    square: {
+                        img: '/static/img/square_wave_outline.png' 
+                    },
+                    triangle: {
+                        img: '/static/img/triangle_wave_outline.png' 
+                    },
+                    sawtooth: {
+                        img: '/static/img/sawtooth_wave_outline.png' 
+                    },
+                    sine: {
+                        img: '/static/img/sine_wave_outline.png' 
+                    }
                 }
             }
+        },
+        methods: {
+            adjustOctave(direction) { 
+                this.$store.commit('SET_OCTAVE', { direction: direction });
+            }
+        },
+        computed: {
+            currentOctave() { 
+                return this.$store.getters.currentOctave;
+            }
+        },
+        components: { 
 
+            Keyboard, 
+            Volume, 
+            Octave, 
+            Slider, 
+            Knob,
+            Wheel, 
+            Btn,
+            Led
 
         }
-    },
-    methods: {
-        adjustOctave(direction) { 
-            this.$store.commit('SET_OCTAVE', { direction: direction });
-        }
-    },
-    computed: {
-        currentOctave() { 
-            return this.$store.getters.currentOctave;
-        }
-    },
-    components: { 
-
-        Keyboard, 
-        Volume, 
-        Octave, 
-        Slider, 
-        Knob,
-        Wheel, 
-        Btn,
-        Led
-
-    }
-};
+    };
 
 </script>
