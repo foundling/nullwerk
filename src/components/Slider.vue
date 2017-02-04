@@ -1,9 +1,19 @@
 <template>
 
-    <div class="slider-container"> 
-        <div class="slider-slot">
-            <div class="slider-bar"></div>
+    <div 
+    class="slider-container" 
+    v-bind:style="styleData">
+
+        <div 
+        v-bind:style="styleData.slot"
+        class="slider-slot">
+            <v-touch 
+            v-bind:pan-options="{ direction: 'horizontal' }"
+            v-on:pan="onPan"
+            v-bind:style="styleData.bar"
+            class="slider-bar"></v-touch>
         </div> 
+
     </div>
 
 </template>
@@ -11,13 +21,11 @@
 <style>
     .slider-container {
 
-
-        width: 25%;
+        width: 100%;
         height: 100%;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-
         background: lightgray;
 
     }
@@ -25,38 +33,126 @@
 
         position: relative;
         height: 100%;
-        width: 15%;
 
         background: black;
         border-radius: 5%; 
         border: 1px solid black;
         height: 90%;
-        width: 20%;
+        width: 100%;
 
     }
     .slider-bar {
         position: absolute;
         background: lightgray;
-        bottom: 40%;
-        width: 100%;
-        height: 10%;
     }
 
 </style>
 
 <script>
+    import Vue from 'vue';
+    import VueTouch from 'vue-touch';
     import store from '../store';
 
+    Vue.use(VueTouch);
+
+
     export default {
-        data: function() {
-            return {};
+        components: {
         },
-        props: [],
-        computed: {
-        }, 
-        methods: {
-            startDrag: function() {
+        props: {
+            direction: {
+                type: String,
+                default: 'vertical',
+                validator: function(dir) {
+                    return dir === 'horizontal' || dir === 'vertical';
+                },
+            },
+            barWidth: {
+                type: String,
+                validator: (s) => s.endsWith('%')
+            },
+            barHeight: {
+                type: String,
+                validator: (s) => s.endsWith('%')
             }
-        }, 
+
+        },
+        created: function() {
+            this.$data.styleData = this.buildStyleData();
+        },
+        data: function() {
+            return {
+                styleData: null
+            };
+        },
+        computed: {
+            sliderOffset() {
+                return '' + this.sliderOffsetLeft || '0%'; 
+            }
+        },
+        methods: {
+            /*
+
+
+            hammer slider example from here: https://blog.madewithenvy.com/build-your-own-touch-slider-with-hammerjs-af99665d2869#.v7wtv34ui
+            var sliderEl = document.querySelector( '.slider' ); // NEW: our element
+            var slideCount = 3; // NEW: the total # of slides
+            var sliderManager = new Hammer.Manager( sliderEl );
+            sliderManager.add( new Hammer.Pan({ threshold: 0, pointers: 0 }) );
+            sliderManager.on( 'pan', function( e ) {
+                  var percentage = 100 / slideCount * e.deltaX / window.innerWidth; // NEW: our % calc
+                    sliderEl.style.transform = 'translateX( ' + percentage + '% )'; // NEW: our CSS transform
+                });
+
+            */
+            addPercent() {
+            }
+            onPan(e) {
+            },
+            handleDragStart(ev) {
+            },
+            handleDrag(ev) {
+                // don't update value here, update when dropped.
+                function addPercent(a, b) {
+                    return (parseInt(a) + parseInt(b)) + '%';
+                }
+                const slideBar = ev.target;
+                const parentNode = ev.target.parentNode;
+                const sliderWidth = slideBar.clientWidth;
+                const offsetLeftPx = slideBar.offsetLeft;
+                const offsetLeftPercent = Math.floor(slideBar.offsetLeft / parentNode.clientWidth * 100);
+                this.styleData.bar.left = addPercent( this.styleData.bar.left.replace('%',''), offsetLeftPercent );
+            },
+            buildStyleData() {
+
+                const slot = {}; 
+                const bar = {};
+                
+                if (this.direction === 'horizontal') {
+
+                    slot.height = '100%';
+                    slot.width = '100%';
+
+                    bar.height = this.barHeight;
+                    bar.width = this.barWidth;
+                    bar.bottom = '0%';
+                    bar.left = '2%';
+
+                } else {
+
+                    slot.height = '100%';
+                    slot.width = this.barWidth;
+
+                    bar.height = this.barHeight;
+                    bar.width = this.barWidth; 
+                    bar.bottom = '0%';
+                    bar.left = '0%';
+
+                }
+
+                return { slot, bar };
+            }
+        },
+        
     };
 </script>

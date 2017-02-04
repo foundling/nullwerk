@@ -1,30 +1,59 @@
 <template>
 
-<div class="knob" v-bind:style="{ 'height': diameter || defaultDiameter }">
-        <label>knob</label>
-    </div> 
+<div 
+    class="knob-container" 
+    v-bind:style="{width: diameter }">
+
+    <div 
+    draggable="true"
+    class="knob"
+    v-on:click="engageKnob"
+    v-bind:style='{ backgroundImage: "url(" + bgImage + ")", transform: "rotate(" + degreesRotated + "deg)" }'></div>
+
+</div> 
 
 </template>
 
 <style>
     
-    /* 
-    try this out, responsive circles: 
-    http://codepen.io/nordstromdesign/pen/sJlth
-    */
+    /* responsive circles: http://codepen.io/nordstromdesign/pen/sJlth */
+
+
+    .knob-container {
+      position: relative;
+      /* width: passed in via props as 'diameter' */
+      min-width: 50px;
+      max-width: 125px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5%;
+    }
+
+    .knob-label {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     .knob {
-        border-radius: 50%;
-        background: black;
-        margin-left: 15px;
-        margin-right: 15px;
+
         position: relative;
-    }
+        border-radius: 50%;
+        width: 100%;
+        height: auto;
+        padding-bottom: 100%;
+        background: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-    label {
-        position: absolute;
-        bottom: 0px;
-    }
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 40%;
 
+    }
 
 </style>
 
@@ -32,23 +61,31 @@
     import store from '../store';
 
     export default {
-        components: {
-        },
-        props: ['diameter'],
-        computed: {}, 
+        props: [ 
+
+            'diameter', 
+            'toggleable', 
+            'color', 
+            'bgImage',
+            'width' 
+
+        ],
         data: function() {
             return {
-                defaultDiameter: '35px'
-            }
+                degreesRotated: 0,
+                dragData: {
+                    startY: null,
+                    currentY: null
+                }
+            };
         },
         methods: {
-            parseDiameter() {
-                // this should either be a percentage or a pixel width.
-                if (this.diameter.endsWith('%')) {
-                    return parseInt(this.diameter.slice(3));
-                }
-                return parseFloat(this.diameter);
-            }
-        }, 
+            engageKnob(){
+                console.log(this.name);
+            },
+            disengageKnob(){
+                console.log(this.name);
+            },
+        } 
     };
 </script>

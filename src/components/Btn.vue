@@ -1,6 +1,12 @@
 <template>
-    <div class="button" v-on:click="adjust">
-        <h1>{{ buttonLabel }}</h1>
+    <div 
+        class="button" 
+        v-on:click="adjust">
+
+        <slot 
+        v-bind:style="{ color: color }" 
+        name="label">button</slot>
+
     </div>
 </template>
 
@@ -10,10 +16,8 @@
         display: inline-flex;
         justify-content: center;
         align-items: center;
-        height: 20px;
         border-radius: 15%;
         width: 40px;
-        background: black;
         margin-left: 5px;
         margin-right: 5px;
     }
@@ -28,8 +32,10 @@
     import store from '../store';
 
     export default {
-        props: ['buttonLabel'],
-        computed: {}, 
+        props: [
+            'buttonLabel', 
+            'color'
+        ],
         methods: {
             adjust: function() {
                 this.$emit('adjust');

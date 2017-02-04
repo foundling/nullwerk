@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "vue": "^2.0.0-rc.8",
+    "vue-touch": "^2.0.0-beta.4",
     "vuex": "^2.0.0"
   },
   "devDependencies": {
