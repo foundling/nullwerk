@@ -5,14 +5,16 @@
     v-bind:style="styleData">
 
         <div 
-        v-bind:style="styleData.slot"
-        class="slider-slot">
+        v-bind:style="styleData.track"
+        class="slider-track">
 
-        <slot><v-touch 
-            v-bind:pan-options="{ direction: direction }"
+        <slot>
+            <v-touch 
+            v-bind:pan-options="{ direction: direction, threshold: 0 }"
             v-on:pan="moveSlider"
             v-bind:style="barStyle"
-            class="slider-bar"></v-touch></slot>
+            class="slider-bar"></v-touch>
+        </slot>
 
         </div>
 
@@ -32,7 +34,7 @@
         background: lightgray;
 
     }
-    .slider-slot {
+    .slider-track {
 
         position: relative;
         height: 100%;
@@ -53,20 +55,17 @@
     import Vue from 'vue';
     import VueTouch from 'vue-touch';
     import store from '../store';
+    import { computeWidth, log } from '../utils';
 
     Vue.use(VueTouch);
 
-
     export default {
-        components: {
-        },
+        components: {},
         props: {
             direction: {
                 type: String,
                 default: 'vertical',
-                validator: function(direction) {
-                    return [ 'horizontal', 'vertical' ].includes(direction);
-                },
+                validator: direction => [ 'horizontal', 'vertical' ].includes(direction),
             },
             barWidth: {
                 type: String,
@@ -89,59 +88,79 @@
         computed: {
             barStyle() {
                 return this.styleData.bar;
+            },
+            trackStyle() {
+                return this.styleData.track;
             }
+
         },
         methods: {
 
             // good hammer slider example from here: 
             // https://blog.madewithenvy.com/build-your-own-touch-slider-with-hammerjs-af99665d2869#.v7wtv34ui
 
-            handleMousedown(e) {
-                console.log(e);
-            },
             moveSlider(e) {
+
+                //get ref to elements
                 const slideBar = e.target;
-                const currentOffset = slideBar.offsetLeft / e.target.parentNode.clientWidth;
-                console.log('current offset:', currentOffset);
+                const slideTrack = e.target.parentNode;
 
-                const percentage =  Math.floor(currentOffset + ((e.deltaX  + e.target.clientWidth) / e.target.parentNode.clientWidth * 100));
-                const sliderWidth = Math.floor((e.target.clientWidth / e.target.parentNode.clientWidth) * 100);
+                // get element widths in pixels
+                const slideBarWidth = computeWidth(slideBar);
+                const slideTrackWidth = computeWidth(slideTrack);
 
-                if (percentage < 0 || percentage + sliderWidth > 100 ) return;
+                // get slideBar offset pixels
+                const slideBarOffsetLeft = slideBar.offsetLeft;
 
-                this.styleData.bar.left = percentage + '%';
+                // set boundaries in pixels
+                const minOffset = 0;
+                const maxOffset = slideTrackWidth - slideBarWidth;
+
+                // get current offset
+                const offsetLeft = this.barStyle.transformPx + e.deltaX;
+
+                // set barStyle.transformPx to a valid value
+                if (offsetLeft < minOffset) {
+                    this.barStyle.transformPx = minOffset;
+                }
+                else if (offsetLeft > maxOffset) {
+                    this.barStyle.transformPx = maxOffset;
+                }
+                else {
+                    this.barStyle.transformPx = offsetLeft;
+                }
+                //update slider el's style with value
+                slideBar.style.transform = 'translateX(' + this.barStyle.transformPx + 'px)';
+
             },
             buildStyleData() {
 
-                let slot = {
+                /* default is 'vertical' */
+                let track = {
                     height: '100%',
                     width: this.barWidth
                 }
 
                 let bar = {
+                    transformPx: 0,
                     height: this.barHeight,
                     width: this.barWidth,
-                    bottom: 0,
-                    left: 0
                 }
                 
                 if (this.direction === 'horizontal') {
 
-                    slot.height = '100%';
-                    slot.width = '100%';
+                    track.height = '100%';
+                    track.width = '100%';
 
                     bar.height = this.barHeight;
                     bar.width = this.barWidth;
+                    bar.transformPx = 0;
                     bar.bottom = 0;
                     bar.left = 0;
 
-                } else {
+                } 
 
-                    
-
-                }
-
-                return { slot, bar };
+                return { track, bar };
             }
         },
         
