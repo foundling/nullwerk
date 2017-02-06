@@ -26,7 +26,7 @@
                     class="octave-button-up" 
                     v-on:adjust="adjustOctave(+1)">
                         <i 
-                        v-bind:style="{ color: palette.black }" 
+                        v-bind:style="{ color: palette.white }" 
                         class="fa fa-caret-up" 
                         slot="label"></i>
                     </btn>
@@ -35,7 +35,7 @@
                     class="octave-button-down" 
                     v-on:adjust="adjustOctave(-1)">
                         <i 
-                        v-bind:style="{color: palette.black}" 
+                        v-bind:style="{color: palette.white}" 
                         class="fa fa-caret-down" 
                         slot="label"></i>
                     </btn>
@@ -293,6 +293,7 @@
         yellow: 'yellow',
         lime: 'lime',
         black: 'rgb(40,40,40)',
+        white: 'whitesmoke'
     }
 
     import Keyboard from './components/Keyboard';

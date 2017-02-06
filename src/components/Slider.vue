@@ -4,18 +4,17 @@
     class="slider-container" 
     v-bind:style="styleData">
 
-        <v-touch 
-        v-on:mousedown="handleMousedown"
+        <div 
         v-bind:style="styleData.slot"
         class="slider-slot">
 
         <slot><v-touch 
             v-bind:pan-options="{ direction: direction }"
-            v-on:pan="onPan"
+            v-on:pan="moveSlider"
             v-bind:style="barStyle"
             class="slider-bar"></v-touch></slot>
 
-        </v-touch> 
+        </div>
 
     </div>
 
@@ -65,8 +64,8 @@
             direction: {
                 type: String,
                 default: 'vertical',
-                validator: function(dir) {
-                    return dir === 'horizontal' || dir === 'vertical';
+                validator: function(direction) {
+                    return [ 'horizontal', 'vertical' ].includes(direction);
                 },
             },
             barWidth: {
@@ -80,7 +79,7 @@
 
         },
         created: function() {
-            this.$data.styleData = this.buildStyleData();
+            this.styleData = this.buildStyleData();
         },
         data: function() {
             return {
@@ -89,23 +88,28 @@
         },
         computed: {
             barStyle() {
-                return this.$data.styleData.bar;
+                return this.styleData.bar;
             }
         },
         methods: {
+
             // good hammer slider example from here: 
             // https://blog.madewithenvy.com/build-your-own-touch-slider-with-hammerjs-af99665d2869#.v7wtv34ui
+
             handleMousedown(e) {
                 console.log(e);
             },
-            onPan(e) {
+            moveSlider(e) {
+                const slideBar = e.target;
+                const currentOffset = slideBar.offsetLeft / e.target.parentNode.clientWidth;
+                console.log('current offset:', currentOffset);
 
-                const currentOffset = e.target.offsetLeft / e.target.parentNode.clientWidth;
                 const percentage =  Math.floor(currentOffset + ((e.deltaX  + e.target.clientWidth) / e.target.parentNode.clientWidth * 100));
                 const sliderWidth = Math.floor((e.target.clientWidth / e.target.parentNode.clientWidth) * 100);
 
                 if (percentage < 0 || percentage + sliderWidth > 100 ) return;
-                this.$data.styleData.bar.left = percentage + '%';
+
+                this.styleData.bar.left = percentage + '%';
             },
             buildStyleData() {
 
