@@ -7,15 +7,14 @@
         <div 
         v-bind:style="styleData.track"
         class="slider-track">
-
-        <slot>
-            <v-touch 
-            v-bind:pan-options="{ direction: direction, threshold: 0 }"
-            v-on:pan="moveSlider"
-            v-bind:style="barStyle"
-            class="slider-bar"></v-touch>
-        </slot>
-
+            <slot>
+                <v-touch 
+                v-bind:pan-options="{ direction: direction, threshold: 0 }"
+                v-on:pan="moveSlider"
+                v-on:panend="moveSliderEnd"
+                v-bind:style="barStyle"
+                class="slider-bar"></v-touch>
+            </slot>
         </div>
 
     </div>
@@ -45,6 +44,7 @@
 
     }
     .slider-bar {
+        -webkit-transform: translateX(0px);
         position: absolute;
         background: lightgray;
     }
@@ -82,7 +82,10 @@
         },
         data: function() {
             return {
-                styleData: null
+                styleData: null,
+                sliderPosition: {
+                    lastCalc: 0
+                }
             };
         },
         computed: {
@@ -99,38 +102,39 @@
             // good hammer slider example from here: 
             // https://blog.madewithenvy.com/build-your-own-touch-slider-with-hammerjs-af99665d2869#.v7wtv34ui
 
+
             moveSlider(e) {
 
-                //get ref to elements
                 const slideBar = e.target;
                 const slideTrack = e.target.parentNode;
 
-                // get element widths in pixels
                 const slideBarWidth = computeWidth(slideBar);
                 const slideTrackWidth = computeWidth(slideTrack);
 
-                // get slideBar offset pixels
-                const slideBarOffsetLeft = slideBar.offsetLeft;
+                const minLeftOffset = 0;
+                const maxLeftOffset = slideTrackWidth - slideBarWidth;
 
-                // set boundaries in pixels
-                const minOffset = 0;
-                const maxOffset = slideTrackWidth - slideBarWidth;
-
-                // get current offset
-                const offsetLeft = this.barStyle.transformPx + e.deltaX;
+                const diff = e.deltaX - this.sliderPosition.lastCalc;
+                const offsetLeft = this.barStyle.transformPx + diff;
+                this.sliderPosition.lastCalc = offsetLeft;
 
                 // set barStyle.transformPx to a valid value
-                if (offsetLeft < minOffset) {
-                    this.barStyle.transformPx = minOffset;
+                if (offsetLeft < minLeftOffset) {
+                    this.barStyle.transformPx = minLeftOffset;
                 }
-                else if (offsetLeft > maxOffset) {
-                    this.barStyle.transformPx = maxOffset;
+                else if (offsetLeft > maxLeftOffset) {
+                    this.barStyle.transformPx = maxLeftOffset;
                 }
                 else {
                     this.barStyle.transformPx = offsetLeft;
                 }
-                //update slider el's style with value
+
+                //update slider el's style with value. [todo] turn into a computed property.
                 slideBar.style.transform = 'translateX(' + this.barStyle.transformPx + 'px)';
+            },
+            moveSliderEnd(e) {
+
+                this.lastCalc = 0;
 
             },
             buildStyleData() {
@@ -142,7 +146,6 @@
                 }
 
                 let bar = {
-                    transformPx: 0,
                     height: this.barHeight,
                     width: this.barWidth,
                 }
