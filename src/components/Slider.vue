@@ -83,9 +83,8 @@
         data: function() {
             return {
                 styleData: null,
-                sliderPosition: {
-                    lastCalc: 0
-                }
+                initialOffset: 0,
+                offset: 0
             };
         },
         computed: {
@@ -102,7 +101,6 @@
             // good hammer slider example from here: 
             // https://blog.madewithenvy.com/build-your-own-touch-slider-with-hammerjs-af99665d2869#.v7wtv34ui
 
-
             moveSlider(e) {
 
                 const slideBar = e.target;
@@ -111,31 +109,29 @@
                 const slideBarWidth = computeWidth(slideBar);
                 const slideTrackWidth = computeWidth(slideTrack);
 
+                /* calculate boundaries */
                 const minLeftOffset = 0;
                 const maxLeftOffset = slideTrackWidth - slideBarWidth;
 
-                const diff = e.deltaX - this.sliderPosition.lastCalc;
-                const offsetLeft = this.barStyle.transformPx + diff;
-                this.sliderPosition.lastCalc = offsetLeft;
+                const diff = e.deltaX - this.initialOffset;
 
-                // set barStyle.transformPx to a valid value
-                if (offsetLeft < minLeftOffset) {
-                    this.barStyle.transformPx = minLeftOffset;
+                /* make sure offset is a valid value */
+                if (this.initialOffset + diff < minLeftOffset) {
+                    this.offset = minLeftOffset;
                 }
-                else if (offsetLeft > maxLeftOffset) {
-                    this.barStyle.transformPx = maxLeftOffset;
+                else if (this.initialOffset + diff > maxLeftOffset) {
+                    this.offset = maxLeftOffset;
                 }
                 else {
-                    this.barStyle.transformPx = offsetLeft;
+                    this.offset = diff;
                 }
+            
+                /* update dom */
+                slideBar.style.transform = 'translateX(' + this.offset + 'px)';
 
-                //update slider el's style with value. [todo] turn into a computed property.
-                slideBar.style.transform = 'translateX(' + this.barStyle.transformPx + 'px)';
             },
-            moveSliderEnd(e) {
-
-                this.lastCalc = 0;
-
+            moveSliderEnd() {
+                this.initialOffset = this.offset; 
             },
             buildStyleData() {
 
