@@ -66,23 +66,23 @@
             <div class="waveforms-and-options-container">
                 <div class="waveforms-container">
                     <knob 
-                    v-for="waveform in waveforms.knobs" 
+                    v-for="waveform in waveforms" 
                     v-on:toggle="toggleWaveformSlider"
                     v-bind:active="waveform.active"
-                    v-bind:bg-image="waveform.img"
-                    v-bind:bg-image-inverse="waveform.imgInverse"
+                    v-bind:bg-image-active="waveform.img.active"
+                    v-bind:bg-image-inactive="waveform.img.inactive"
                     v-bind:waveform="waveform.name"
+                    v-bind:color="waveform.color"
                     diameter="25%">
                     </knob>
                 </div>
                 <div class="waveform-level-container">
                     <slider 
-                    v-for="slider in waveforms.sliders" 
-                    v-bind:color="slider.color"
-                    v-bind:visible="slider.visible"
-                    v-bind:direction="slider.direction"
-                    v-bind:waveform="slider.waveform"
-                    v-bind:active="slider.active"
+                    v-for="waveform in waveforms" 
+                    v-bind:color="waveform.color"
+                    v-bind:direction="waveform.slider.direction"
+                    v-bind:waveform="waveform.name"
+                    v-bind:active="waveform.active"
                     barHeight="100%"
                     barWidth="10%">
                     </slider>
@@ -351,40 +351,61 @@
                         ...Array(8).keys()
                     ]
                 },
-                waveforms: {
-                    knobs: [
-                        {
-                            active: false,
-                            name: 'square',
-                            img: '/static/img/square_wave.png', 
-                            imgInverse: '/static/img/square_wave_inverse.png' 
+                waveforms: [
+                    {
+                        name: 'square',
+                        active: true,
+                        color: 'crimson',
+                        img: {
+                            inactive: '/static/img/square_wave.png',
+                            active: '/static/img/square_wave_inverse.png'
                         },
-                        {
-                            active: false,
-                            name: 'triangle',
-                            img: '/static/img/triangle_wave.png',
-                            imgInverse: '/static/img/triangle_wave_inverse.png' 
-                        },
-                        {
-                            active: false,
-                            name: 'sawtooth',
-                            img: '/static/img/sawtooth_wave.png', 
-                            imgInverse: '/static/img/sawtooth_wave_inverse.png' 
-                        },
-                        {
-                            active: false,
-                            name: 'sine',
-                            img: '/static/img/sine_wave.png', 
-                            imgInverse: '/static/img/sine_wave_inverse.png' 
+                        slider: {
+                            direction: 'horizontal',
+                            level: 0
+
                         }
-                    ],
-                    sliders: [
-                        { color: palette.yellow, active: false, direction: 'horizontal', waveform: 'square'},
-                        { color: palette.brown, active: false, direction: 'horizontal', waveform: 'triangle'},
-                        { color: palette.white, active: false, direction: 'horizontal', waveform: 'sawtooth'},
-                        { color: palette.blue, active: true, direction: 'horizontal', waveform: 'sine'},
-                    ]
-                }
+                    },
+                    {
+                        name: 'triangle',
+                        active: true,
+                        color: 'darkcyan',
+                        img: {
+                            inactive: '/static/img/triangle_wave.png',
+                            active: '/static/img/triangle_wave_inverse.png'
+                        },
+                        slider: {
+                            direction: 'horizontal',
+                            level: 0
+                        }
+                    },
+                    {
+                        name: 'sawtooth',
+                        active: true,
+                        color: 'goldenrod',
+                        img: {
+                            inactive: '/static/img/sawtooth_wave.png',
+                            active: '/static/img/sawtooth_wave_inverse.png'
+                        },
+                        slider: {
+                            direction: 'horizontal',
+                            level: 0,
+                        }
+                    },
+                    {
+                        name: 'sine',
+                        active: true,
+                        color: 'deepskyblue',
+                        img: {
+                            inactive: '/static/img/sine_wave.png',
+                            active: '/static/img/sine_wave_inverse.png'
+                        },
+                        slider: {
+                            direction: 'horizontal',
+                            level: 0
+                        }
+                    }
+                ]
             }
         },
         methods: {
@@ -397,11 +418,9 @@
             },
             toggleWaveformSlider({ waveform }) {
 
-                for (let i = 0, max = this.waveforms.sliders.length; i < max; ++i) {
-                    let slider = this.waveforms.sliders[i];
-                    if (slider.waveform === waveform) {
-                        slider.active = !slider.active;
-                        console.log('toggled ', waveform, 'active to', slider.active,'.');
+                for (let i = 0, max = this.waveforms.length; i < max; ++i) {
+                    if (this.waveforms[i].name === waveform) {
+                        this.waveforms[i].active = !this.waveforms[i].active;
                     }
                 };
             },

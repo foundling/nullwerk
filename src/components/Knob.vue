@@ -61,34 +61,35 @@
     import store from '../store';
 
     export default {
-        props: [ 
+        props: { 
 
-            'diameter', 
-            'toggleable', 
-            'color', 
-            'bgImage',
-            'bgImageInverse',
-            'width',
-            'waveform',
+            active: {
+                type: Boolean,
+                default: false
+            },
+            diameter: String, 
+            toggleable: Boolean, 
+            color: String, 
+            bgImageActive: String,
+            bgImageInactive: String,
+            width: String,
+            waveform: String,
 
-        ],
+        },
         computed: {
             styleData() {
                 return {
-                    backgroundImage: `url(${ this.active ? this.bgImageInverse : this.bgImage })`,
-                    backgroundColor: this.active ? 'black' : 'white'
+                    backgroundImage: `url(${ this.active ? this.bgImageActive : this.bgImageInactive })`,
+                    backgroundColor: this.active ? this.color : 'white'
                 };
             },
 
         },
         data: function() {
-            return {
-                active: true,
-            };
+            return {};
         },
         methods: {
             toggleActive(){
-                this.active = !this.active;
                 this.$emit('toggle', {
                     waveform: this.waveform
                 });

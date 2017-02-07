@@ -1,6 +1,7 @@
 <template>
 
     <div 
+    v-show="active"
     class="slider-container">
 
         <div 
