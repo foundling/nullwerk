@@ -4,6 +4,8 @@ const SoundEngine = function ({ initialVolume, initialOctave }) {
 
     this.octave = initialOctave;
     this.volume = initialVolume;
+    this.active = true;
+    this.savedVolumeSetting = null;
 
     const DEFAULT_MASTER_VOLUME = initialVolume;
     const DEFAULT_OSCILLATOR_VOLUME = initialVolume; 
@@ -128,6 +130,18 @@ const SoundEngine = function ({ initialVolume, initialOctave }) {
 
     }
 
+    function disable() {
+        this.savedVolumeSetting = this.getMasterVolume();
+        console.log(this);
+        this.setMasterVolume(0);
+        this.active = false;
+    }
+
+    function enable () {
+        console.log(this.savedVolumeSetting);
+        this.setMasterVolume(this.savedVolumeSetting);
+        this.active = true;
+    }
     function getMasterVolume() {
         return masterGain.gain.value;
     }
@@ -302,11 +316,15 @@ const SoundEngine = function ({ initialVolume, initialOctave }) {
         
         volume: this.volume,
         octave: this.octave,
+        active: this.active,
+        savedVolumeSetting: this.savedVolumeSetting,
         playNote,
         muteNote,
         setMasterVolume,
         setOscillatorVolume,
-        setOctave
+        setOctave,
+        enable,
+        disable,
 
     };
 

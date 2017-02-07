@@ -6,5 +6,9 @@ export default {
     },
     currentVolume (state) {
         return state.soundEngine.volume;
+    },
+    soundActive (state) {
+        return state.soundEngine.active;
     }
+
 };

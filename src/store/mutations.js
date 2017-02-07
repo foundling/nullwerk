@@ -12,6 +12,15 @@ const mutations = {
         state.soundEngine.setMasterVolume(amount);
     },
 
+    TOGGLE_MASTER_VOLUME (state) {
+
+        if (state.soundEngine.active) {
+            state.soundEngine.enable();
+        } else {
+            state.soundEngine.disable();
+        }
+    },
+
     SET_OCTAVE (state, { direction }) {
         state.soundEngine.setOctave(direction);
     }

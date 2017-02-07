@@ -2,13 +2,13 @@
 
 <div 
     class="knob-container" 
-    v-bind:style="{width: diameter }">
+    v-bind:style="{ width: diameter }">
 
     <div 
     draggable="true"
-    class="knob"
-    v-on:click="engageKnob"
-    v-bind:style='{ backgroundImage: "url(" + bgImage + ")", transform: "rotate(" + degreesRotated + "deg)" }'></div>
+    v-on:click="toggleActive"
+    v-bind:style="styleData"
+    class="knob"></div>
 
 </div> 
 
@@ -67,24 +67,23 @@
             'toggleable', 
             'color', 
             'bgImage',
-            'width' 
+            'bgImageInverse',
+            'width',
+            'waveform',
 
         ],
         data: function() {
             return {
-                degreesRotated: 0,
-                dragData: {
-                    startY: null,
-                    currentY: null
+                styleData: {
+                    backgroundImage: "url(" + this.bgImage + ")", 
                 }
             };
         },
         methods: {
-            engageKnob(){
-                console.log(this.name);
-            },
-            disengageKnob(){
-                console.log(this.name);
+            toggleActive(){
+                this.$emit('toggle', {
+                    waveform: this.waveform
+                });
             },
         } 
     };

@@ -1,8 +1,7 @@
 <template>
 
     <div 
-    class="slider-container" 
-    v-bind:style="styleData">
+    class="slider-container">
 
         <div 
         v-bind:style="styleData.track"
@@ -16,7 +15,6 @@
                 class="slider-bar"></v-touch>
             </slot>
         </div>
-
     </div>
 
 </template>
@@ -24,29 +22,20 @@
 <style>
 
     .slider-container {
-
         width: 100%;
         height: 100%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background: lightgray;
+        position: absolute; 
+        bottom: 0px;
+        left: 0px;
+        opacity: 0.7;
 
     }
     .slider-track {
-
-        position: relative;
-        height: 100%;
-        background: black;
-        border: 1px solid black;
-        height: 90%;
-        width: 100%;
 
     }
     .slider-bar {
         -webkit-transform: translateX(0px);
         position: absolute;
-        background: lightgray;
     }
 
 </style>
@@ -62,6 +51,9 @@
     export default {
         components: {},
         props: {
+            waveform: String,
+            visible: Boolean,
+            color: String,
             direction: {
                 type: String,
                 default: 'vertical',
@@ -132,31 +124,18 @@
             },
             buildStyleData() {
 
-                /* default is 'vertical' */
-                let track = {
-                    height: '100%',
-                    width: this.barWidth
-                }
-
-                let bar = {
-                    height: this.barHeight,
-                    width: this.barWidth,
-                }
+                let styleData = {
+                    bar: { 
+                        display: this.visible ? 'initial' : 'none',
+                        height: this.barHeight,
+                        width: this.barWidth,
+                        bottom: '0px',
+                        left: '0px',
+                        background: this.color
+                    }
+                };
                 
-                if (this.direction === 'horizontal') {
-
-                    track.height = '100%';
-                    track.width = '100%';
-
-                    bar.height = this.barHeight;
-                    bar.width = this.barWidth;
-                    bar.transformPx = 0;
-                    bar.bottom = 0;
-                    bar.left = 0;
-
-                } 
-
-                return { track, bar };
+                return styleData; 
             }
         },
         
