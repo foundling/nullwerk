@@ -98,9 +98,6 @@
         },
         methods: {
 
-            // good hammer slider example from here: 
-            // https://blog.madewithenvy.com/build-your-own-touch-slider-with-hammerjs-af99665d2869#.v7wtv34ui
-
             moveSlider(e) {
 
                 const slideBar = e.target;
@@ -109,11 +106,11 @@
                 const slideBarWidth = computeWidth(slideBar);
                 const slideTrackWidth = computeWidth(slideTrack);
 
-                /* calculate boundaries */
+                /* calculate min/max offset boundaries */
                 const minLeftOffset = 0;
                 const maxLeftOffset = slideTrackWidth - slideBarWidth;
 
-                const diff = e.deltaX - this.initialOffset;
+                const diff = (this.initialOffset + e.deltaX) - this.initialOffset;
 
                 /* make sure offset is a valid value */
                 if (this.initialOffset + diff < minLeftOffset) {
@@ -123,7 +120,7 @@
                     this.offset = maxLeftOffset;
                 }
                 else {
-                    this.offset = diff;
+                    this.offset = this.initialOffset + diff;
                 }
             
                 /* update dom */
