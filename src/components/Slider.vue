@@ -4,6 +4,7 @@
     class="slider-container">
 
         <div 
+        v-show="active"
         v-bind:style="styleData.track"
         class="slider-track">
             <slot>
@@ -52,7 +53,7 @@
         components: {},
         props: {
             waveform: String,
-            visible: Boolean,
+            active: Boolean,
             color: String,
             direction: {
                 type: String,
@@ -82,11 +83,7 @@
         computed: {
             barStyle() {
                 return this.styleData.bar;
-            },
-            trackStyle() {
-                return this.styleData.track;
             }
-
         },
         methods: {
 
@@ -126,7 +123,7 @@
 
                 let styleData = {
                     bar: { 
-                        display: this.visible ? 'initial' : 'none',
+                        display: this.active ? 'initial' : 'none',
                         height: this.barHeight,
                         width: this.barWidth,
                         bottom: '0px',

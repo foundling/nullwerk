@@ -72,15 +72,23 @@
             'waveform',
 
         ],
+        computed: {
+            styleData() {
+                return {
+                    backgroundImage: `url(${ this.active ? this.bgImageInverse : this.bgImage })`,
+                    backgroundColor: this.active ? 'black' : 'white'
+                };
+            },
+
+        },
         data: function() {
             return {
-                styleData: {
-                    backgroundImage: "url(" + this.bgImage + ")", 
-                }
+                active: true,
             };
         },
         methods: {
             toggleActive(){
+                this.active = !this.active;
                 this.$emit('toggle', {
                     waveform: this.waveform
                 });

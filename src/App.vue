@@ -66,21 +66,23 @@
             <div class="waveforms-and-options-container">
                 <div class="waveforms-container">
                     <knob 
-                    v-on:toggle="toggleWaveform"
-                    v-for="waveform in waveforms" 
+                    v-for="waveform in waveforms.knobs" 
+                    v-on:toggle="toggleWaveformSlider"
                     v-bind:active="waveform.active"
                     v-bind:bg-image="waveform.img"
+                    v-bind:bg-image-inverse="waveform.imgInverse"
                     v-bind:waveform="waveform.name"
                     diameter="25%">
                     </knob>
                 </div>
                 <div class="waveform-level-container">
                     <slider 
-                    v-for="slider in waveformSliders" 
+                    v-for="slider in waveforms.sliders" 
                     v-bind:color="slider.color"
                     v-bind:visible="slider.visible"
                     v-bind:direction="slider.direction"
                     v-bind:waveform="slider.waveform"
+                    v-bind:active="slider.active"
                     barHeight="100%"
                     barWidth="10%">
                     </slider>
@@ -115,7 +117,8 @@
            
         <!-- Signature Sign -->
         <div class="title-container">
-            <h1>The ARS Nullwerk</h1>
+            <h1 class="make">ARS</h1>
+            <h1 class="model">Nullwerk</h1>
         </div>
 
         <!-- Keyboard -->
@@ -157,7 +160,7 @@
     }
     html, body {
         height: 100%;
-        font-family: Helvetica;
+        font-family: Arial, Helvetica;
     }
     h1 {
         color: black;
@@ -200,9 +203,15 @@
     .envelope-container > .slider-container {
         position: relative;
     }
-    .title-container > h1 {
+    h1.make,
+    h1.model {
+        margin-left: 10px;
+        margin-right: 10px;
         color: black;
         font-size: 5vw;
+    }
+    h1.make {
+        font-weight: 100;
     }
     .wheels-container {
         background: aquamarine;
@@ -332,12 +341,6 @@
                     { color: palette.yellow, octave: -1 },
                     { color: palette.red, octave: -2 },
                 ],
-                waveformSliders: [
-                    { color: palette.yellow, visible: false, direction: 'horizontal', waveform: 'square'},
-                    { color: palette.brown, visible: false, direction: 'horizontal', waveform: 'triangle'},
-                    { color: palette.white, visible: false, direction: 'horizontal', waveform: 'sawtooth'},
-                    { color: palette.blue, visible: true, direction: 'horizontal', waveform: 'sine'},
-                ],
                 sequencer: {
                     menu: [
                         'contribute',
@@ -349,30 +352,38 @@
                     ]
                 },
                 waveforms: {
-                    square: {
-                        active: false,
-                        name: 'square',
-                        img: '/static/img/square_wave.png', 
-                        imgInverse: '/static/img/square_wave_inverse.png' 
-                    },
-                    triangle: {
-                        active: false,
-                        name: 'triangle',
-                        img: '/static/img/triangle_wave.png',
-                        imgInverse: '/static/img/triangle_wave_inverse.png' 
-                    },
-                    sawtooth: {
-                        active: false,
-                        name: 'sawtooth',
-                        img: '/static/img/sawtooth_wave.png', 
-                        imgInverse: '/static/img/sawtooth_wave_inverse.png' 
-                    },
-                    sine: {
-                        active: false,
-                        name: 'sine',
-                        img: '/static/img/sine_wave.png', 
-                        imgInverse: '/static/img/sine_wave_inverse.png' 
-                    }
+                    knobs: [
+                        {
+                            active: false,
+                            name: 'square',
+                            img: '/static/img/square_wave.png', 
+                            imgInverse: '/static/img/square_wave_inverse.png' 
+                        },
+                        {
+                            active: false,
+                            name: 'triangle',
+                            img: '/static/img/triangle_wave.png',
+                            imgInverse: '/static/img/triangle_wave_inverse.png' 
+                        },
+                        {
+                            active: false,
+                            name: 'sawtooth',
+                            img: '/static/img/sawtooth_wave.png', 
+                            imgInverse: '/static/img/sawtooth_wave_inverse.png' 
+                        },
+                        {
+                            active: false,
+                            name: 'sine',
+                            img: '/static/img/sine_wave.png', 
+                            imgInverse: '/static/img/sine_wave_inverse.png' 
+                        }
+                    ],
+                    sliders: [
+                        { color: palette.yellow, active: false, direction: 'horizontal', waveform: 'square'},
+                        { color: palette.brown, active: false, direction: 'horizontal', waveform: 'triangle'},
+                        { color: palette.white, active: false, direction: 'horizontal', waveform: 'sawtooth'},
+                        { color: palette.blue, active: true, direction: 'horizontal', waveform: 'sine'},
+                    ]
                 }
             }
         },
@@ -384,18 +395,15 @@
                 this.$store.commit('TOGGLE_MASTER_VOLUME');
                 console.log(this.$store.getters.soundActive);
             },
-            toggleWaveform({ waveform }) {
-                // todo: consolidate waveform related ui elements, so propagation works.
-                // on waveform button click, hide/show appropriate slider. 
-                const isActive = this.waveforms[waveform].active; 
-                console.log(waveform);
-                console.log(isActive);
-                this.waveformSliders.forEach(wfs => {
-                    if (wfs.waveform === 'waveform') {
-                        wfs.visible === !wfs.visible;
+            toggleWaveformSlider({ waveform }) {
+
+                for (let i = 0, max = this.waveforms.sliders.length; i < max; ++i) {
+                    let slider = this.waveforms.sliders[i];
+                    if (slider.waveform === waveform) {
+                        slider.active = !slider.active;
+                        console.log('toggled ', waveform, 'active to', slider.active,'.');
                     }
-                });
-                this.waveforms[waveform].active = isActive ? false : true; 
+                };
             },
         },
         computed: {
