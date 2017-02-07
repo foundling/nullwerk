@@ -1,24 +1,31 @@
 <template>
-
-    <v-touch 
-    v-show="waveform.active"
-    v-bind:pan-options="{ direction: waveform.slider.direction, threshold: 0 }"
-    v-on:pan="moveSlider"
-    v-on:panend="moveSliderEnd"
-    v-bind:style="barStyle"
-    class="slider-bar"></v-touch>
+<!--
+    v-for="waveform in waveforms" 
+    v-bind:color="waveform.color"
+    v-bind:direction="waveform.slider.direction"
+    v-bind:waveform="waveform.name"
+    v-bind:active="waveform.active"
+    barHeight="100%"
+    barWidth="10%"
+-->
+<div class="slider-container">
+    <slot></slot>
+</div>
 
 </template>
 
 <style>
 
-    .slider-track {
+    .slider-container {
         width: 100%;
         height: 100%;
         position: absolute; 
         bottom: 0px;
         left: 0px;
         opacity: 0.7;
+
+    }
+    .slider-track {
 
     }
     .slider-bar {
@@ -32,25 +39,36 @@
     import Vue from 'vue';
     import VueTouch from 'vue-touch';
     import store from '../store';
+    import Slider from './Slider';
     import { computeWidth, log } from '../utils';
 
     Vue.use(VueTouch);
 
     export default {
-        components: {},
+        components: {
+            Slider
+        },
         props: {
             waveform: Object,
-            barHeight: {
+            waveforms: Array,
+            active: Boolean,
+            color: String,
+            direction: {
                 type: String,
-                validator: (s) => s.endsWith('%')
+                default: 'vertical',
+                validator: direction => [ 'horizontal', 'vertical' ].includes(direction),
             },
             barWidth: {
                 type: String,
                 validator: (s) => s.endsWith('%')
+            },
+            barHeight: {
+                type: String,
+                validator: (s) => s.endsWith('%')
             }
+
         },
         created: function() {
-            console.log(this);
             this.styleData = this.buildStyleData();
         },
         data: function() {
@@ -103,12 +121,12 @@
 
                 let styleData = {
                     bar: { 
-                        display: this.waveform.active ? 'initial' : 'none',
+                        display: this.active ? 'initial' : 'none',
                         height: this.barHeight,
                         width: this.barWidth,
                         bottom: '0px',
                         left: '0px',
-                        background: this.waveform.color
+                        background: this.color
                     }
                 };
                 

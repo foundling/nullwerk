@@ -79,18 +79,16 @@
                 <div class="waveform-level-container">
                     <slider 
                     v-for="waveform in waveforms" 
-                    v-bind:color="waveform.color"
-                    v-bind:direction="waveform.slider.direction"
-                    v-bind:waveform="waveform.name"
-                    v-bind:active="waveform.active"
-                    barHeight="100%"
-                    barWidth="10%">
+                    v-bind:waveform="waveform"
+                    bar-height="100%"
+                    bar-width="10%">
                     </slider>
                 </div>
             </div>
 
             <!-- Envelope -->
             <div class="envelope-container">
+                <!--
                 <slider
                     direction="vertical"
                     barHeight="10%"
@@ -107,6 +105,7 @@
                     direction="vertical"
                     barHeight="10%"
                     barWidth="100%"></slider>
+                    -->
         </div>
 
         <!-- Modulation Wheels -->
