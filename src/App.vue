@@ -24,7 +24,7 @@
                     <btn 
                     title="octave +1"
                     class="octave-button-up" 
-                    v-on:adjust="adjustOctave(+1)">
+                    v-on:press="adjustOctave(+1)">
                         <i 
                         v-bind:style="{ color: palette.white }" 
                         class="fa fa-caret-up" 
@@ -33,7 +33,7 @@
                     <btn 
                     title="octave -1"
                     class="octave-button-down" 
-                    v-on:adjust="adjustOctave(-1)">
+                    v-on:press="adjustOctave(-1)">
                         <i 
                         v-bind:style="{color: palette.white}" 
                         class="fa fa-caret-down" 
@@ -58,7 +58,7 @@
                 <knob
                 v-on:toggle="toggleSound"
                 color="black" 
-                diameter="60%"></knob>
+                diameter="50%"></knob>
 
             </div>
 
@@ -126,26 +126,7 @@
         </div>
 
         <!-- Sequencer -->
-        <div class="sequencer-container">
-
-            <ul v-for="button in sequencer.buttons">
-                <li>
-                    <btn></btn>
-                </li>
-            </ul>
-
-        </div>
-
-        <!-- Sequencer -->
-        <div class="sequencer-container">
-
-            <ul v-for="item in sequencer.menu">
-                <li>
-                <h1>{{ item }}</h1>
-                </li>
-            </ul>
-
-        </div>
+        <sequencer v-bind:sequencer="sequencer"></sequencer>
 
     </div>
 
@@ -309,10 +290,12 @@
         black: 'rgb(40,40,40)',
         white: 'whitesmoke',
         blue: 'blue',
-        brown: 'brown'
+        brown: 'brown',
+        cyan: 'darkcyan'
     };
 
     import Keyboard from './components/Keyboard';
+    import Sequencer from './components/Sequencer';
     import Volume from './components/Volume';
     import Octave from './components/Octave';
     import Slider from './components/Slider';
@@ -326,7 +309,6 @@
         data: function() {
 
             return {
-
                 masterVolume: {
                     active: true,
                     level: 0,
@@ -341,14 +323,22 @@
                     { color: palette.red, octave: -2 },
                 ],
                 sequencer: {
+                    mode: 'stop',
+                    modes: ['stop', 'play', 'pause', 'record'],
                     menu: [
                         'contribute',
                         'faq',
                         'issues'
                     ],
-                    buttons: [ 
-                        ...Array(8).keys()
-                    ]
+                    buttons: [ ...Array(16).keys() ].map(key => {
+                        return {
+                            backgroundColor: palette.cyan,
+                            label: {
+                                content: parseInt(key) + 1,
+                                color: palette.white,
+                            }
+                        };
+                    })
                 },
                 waveforms: [
                     {
@@ -432,6 +422,7 @@
         components: { 
 
             Keyboard, 
+            Sequencer, 
             Volume, 
             Octave, 
             Slider, 

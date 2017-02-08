@@ -1,10 +1,11 @@
 <template>
     <div 
         class="button" 
-        v-on:click="adjust">
+        v-bind:style="buttonStyle"
+        v-on:click="press">
 
         <slot 
-        v-bind:style="{ color: color }" 
+        v-bind:style="buttonLabelStyle"
         name="label"></slot>
 
     </div>
@@ -16,10 +17,6 @@
         display: inline-flex;
         justify-content: center;
         align-items: center;
-        border-radius: 15%;
-        width: 40px;
-        margin-left: 5px;
-        margin-right: 5px;
     }
     h1 {
         font-size: 1em;
@@ -33,12 +30,36 @@
 
     export default {
         props: [
-            'buttonLabel', 
-            'color'
+            'label', 
+            'color',
+            'backgroundColor',
+            'diameter',
+            'width',
+            'height',
+            'border'
         ],
+        computed: {
+            buttonStyle() {
+                return {
+                    backgroundColor: this.backgroundColor,
+                    borderRadius: this.diameter ? this.diameter + '%' : 'none',
+                    width: this.width ? this.width + '%' : this.diameter + '%', 
+                    height: this.height ? this.height + '%' : this.diameter + '%',
+                };
+            },
+            buttonLabelStyle() {
+                return {
+                    color: this.color,
+                    width: this.diameter,
+                    height: this.diameter,
+                    borderRadius: '50%'
+                };
+            },
+
+        },
         methods: {
-            adjust: function() {
-                this.$emit('adjust');
+            press: function() {
+                this.$emit('press');
             }
         }, 
     };

@@ -1,12 +1,13 @@
 <template>
 
     <v-touch 
-    v-show="waveform.active"
-    v-bind:pan-options="{ direction: waveform.slider.direction, threshold: 0 }"
-    v-on:pan="moveSlider"
-    v-on:panend="moveSliderEnd"
-    v-bind:style="barStyle"
-    class="slider-bar"></v-touch>
+        v-show="waveform.active"
+        v-bind:pan-options="{ direction: waveform.slider.direction, threshold: 0 }"
+        v-on:pan="moveSlider"
+        v-on:panend="moveSliderEnd"
+        v-bind:style="barStyle"
+        class="slider-bar">
+    </v-touch>
 
 </template>
 
@@ -39,7 +40,9 @@
     export default {
         components: {},
         props: {
-            waveform: Object,
+            waveform: {
+                type: Object,
+            },
             barHeight: {
                 type: String,
                 validator: (s) => s.endsWith('%')
