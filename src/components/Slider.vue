@@ -71,6 +71,19 @@
 
             moveSlider(e) {
 
+                /* 
+
+                This is due for a refactor. Notes on the somewhat confusing approach below:
+
+                - I'm calculating the *additional* deltaX on each pan event because 
+                e.deltaX is cumulative across events that make up a pan action. 
+                the additional amount of each deltaX from the last reading lets me know
+                how much to move the slider to the left or right.
+                - I'm then using that left or right px value in a css3 translateX transform. 
+                - finally, I'm updating the offset for use in the next calculation.
+
+                */
+
                 const slideBar = e.target;
                 const slideTrack = e.target.parentNode;
 
@@ -81,7 +94,6 @@
                 const minLeftOffset = 0;
                 const maxLeftOffset = slideTrackWidth - slideBarWidth;
 
-                // couldn't the initial offset go away, and just 
                 const diff = (this.initialOffset + e.deltaX) - this.initialOffset;
 
                 /* make sure offset is a valid value */
