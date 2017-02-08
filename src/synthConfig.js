@@ -94,7 +94,7 @@ export default {
             }
         }
     ],
-    envelopeFilters: [
+    envelopeParameters: [
 
         {
             name: 'attack',

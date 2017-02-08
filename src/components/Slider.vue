@@ -7,6 +7,7 @@
     v-on:panend="moveSliderEnd"
     v-bind:style="barStyle"
     class="slider-bar">
+        <slot name="label"></slot>
     </v-touch>
 
 </template>
@@ -24,6 +25,17 @@
     .slider-bar {
         -webkit-transform: translateX(0px);
         position: absolute;
+        display: flex;
+        align-content: center;
+        justify-items: center;
+    }
+    .slider-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+        font-weight: 100;
     }
 
 </style>
@@ -39,6 +51,13 @@
     export default {
         components: {},
         props: {
+            opacity: {
+                type: Number,
+                default: 1,
+            },
+            content: {
+                type: String,
+            },
             controlSource: {
                 type: Object,
             },
@@ -69,6 +88,9 @@
             };
         },
         computed: {
+            abbreviatedLabel() {
+                return this.content.charAt(0).toUpperCase();
+            },
             barStyle() {
                 return this.styleData.bar;
             },
@@ -117,12 +139,13 @@
 
                 let styleData = {
                     bar: { 
-                        display: this.controlSource.active ? 'initial' : 'none',
+                        display: this.controlSource.active ? 'flex' : 'none',
                         height: this.barHeight,
                         width: this.barWidth,
                         bottom: '0px',
                         left: '0px',
-                        background: this.color
+                        background: this.color,
+                        opacity: this.opacity
                     }
                 };
                 

@@ -108,14 +108,18 @@
             <div class="envelope-container">
 
                 <div 
-                    v-for="filter in envelopeFilters"
+                    v-for="parameter in envelopeParameters"
                     class="envelope-slider-container">
+                    <h1 
+                        class="envelope-slider-label">{{ parameter.name | abbreviate }}</h1>
 
                     <slider 
-                    v-bind:control-source="filter.slider"
-                    v-bind:direction="filter.slider.direction"
-                    v-bind:color="filter.color"
-                    bar-height="10%"
+                    v-bind:opacity="0.4"
+                    v-bind:content="parameter.name"
+                    v-bind:control-source="parameter.slider"
+                    v-bind:direction="parameter.slider.direction"
+                    v-bind:color="parameter.color"
+                    bar-height="15%"
                     bar-width="100%">
                     </slider>
                 </div>
@@ -160,6 +164,7 @@
     }
     h1 {
         color: black;
+        user-select: none;
     }
     .synth-container {
         height: 100%;
@@ -204,6 +209,15 @@
         position: relative;
         width: 25%;
         height: 100%;
+    }
+    h1.envelope-slider-label {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: black;
     }
     h1.make,
     h1.model {
@@ -277,7 +291,7 @@
         background: #e8e8e8;
     }
     .envelope-container {
-        background: orange;
+        background: whitesmoke;
     }
     .lfo-container {
         background: lightblue;
@@ -344,6 +358,9 @@
             currentOctave() { 
                 return this.$store.getters.currentOctave;
             }
+        },
+        filters: {
+            abbreviate: s => s.charAt(0).toUpperCase(),
         },
         components: { 
 
