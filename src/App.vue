@@ -2,8 +2,10 @@
 
     <div class="synth-container">
 
-            <!--Master Pitch-->
+            <!--Master Pitch Container -->
             <div class="master-pitch-container">
+
+                <!-- Octave LED Meter -->
                 <div 
                     title="octave meter"
                     class="led-container">
@@ -13,7 +15,8 @@
                     v-for="led in leds" 
                     v-bind:color="led.color" 
                     v-bind:currentOctave="currentOctave" 
-                    v-bind:octave="led.octave"></led>
+                    v-bind:octave="led.octave">
+                    </led>
 
                 </div>
 
@@ -21,32 +24,40 @@
                 <div 
                 title="octave"
                 class="octave-buttons-container">
+
                     <btn 
                     title="octave +1"
                     class="octave-button-up" 
                     v-on:press="adjustOctave(+1)">
+
                         <i 
                         v-bind:style="{ color: palette.white }" 
                         class="fa fa-caret-up" 
-                        slot="label"></i>
+                        slot="label">
+                        </i>
+
                     </btn>
                     <btn 
                     title="octave -1"
                     class="octave-button-down" 
                     v-on:press="adjustOctave(-1)">
+
                         <i 
                         v-bind:style="{color: palette.white}" 
                         class="fa fa-caret-down" 
-                        slot="label"></i>
+                        slot="label">
+                        </i>
+
                     </btn>
                 </div>
             </div>
 
-            <!-- Master Volume Knob -->
+            <!-- Master Volume Knob Container -->
             <div 
                 title="Master Volume. Swipe up to increase. Swipe down to decrease. Tap to mute."
                 class="master-volume-container">
 
+                <!-- Master LED Readings --> 
                 <div class="volume-container">
                     <led color="red"></led>
                     <led color="red"></led>
@@ -55,15 +66,18 @@
                     <led color="red"></led>
                 </div>
 
+                <!-- Master Volume Knob -->
                 <knob
                 v-on:toggle="toggleSound"
                 color="black" 
-                diameter="50%"></knob>
+                diameter="50%">
+                </knob>
 
             </div>
 
             <!-- Waveforms -->
             <div class="waveforms-and-options-container">
+
                 <div class="waveforms-container">
                     <knob 
                     v-for="waveform in waveforms" 
@@ -76,6 +90,7 @@
                     diameter="25%">
                     </knob>
                 </div>
+
                 <div class="waveform-level-container">
                     <slider 
                     v-for="waveform in waveforms" 
@@ -84,49 +99,42 @@
                     bar-width="10%">
                     </slider>
                 </div>
+
             </div>
 
             <!-- Envelope -->
             <div class="envelope-container">
-                <!--
-                <slider
-                    direction="vertical"
-                    barHeight="10%"
-                    barWidth="100%"></slider>
-                <slider
-                    direction="vertical"
-                    barHeight="10%"
-                    barWidth="100%"></slider>
-                <slider
-                    direction="vertical"
-                    barHeight="10%"
-                    barWidth="100%"></slider>
-                <slider
-                    direction="vertical"
-                    barHeight="10%"
-                    barWidth="100%"></slider>
-                    -->
-        </div>
 
-        <!-- Modulation Wheels -->
-        <div class="wheels-container">
-            <wheel></wheel>
-            <wheel></wheel>
-        </div>
-           
-        <!-- Signature Sign -->
-        <div class="title-container">
-            <h1 class="make">ARS</h1>
-            <h1 class="model">Nullwerk</h1>
-        </div>
+                <slider 
+                v-for="slider in envelope.sliders"
+                direction="vertical"
+                barHeight="10%"
+                barWidth="100%">
+                </slider>
 
-        <!-- Keyboard -->
-        <div class="keyboard-container">
-            <keyboard></keyboard>
-        </div>
+            </div>
 
-        <!-- Sequencer -->
-        <sequencer v-bind:sequencer="sequencer"></sequencer>
+            <!-- Modulation Wheels Container -->
+            <div class="wheels-container">
+                <wheel></wheel>
+                <wheel></wheel>
+            </div>
+               
+            <!-- Signature Sign Container -->
+            <div class="title-container">
+                <h1 class="make">ARS</h1>
+                <h1 class="model">1</h1>
+            </div>
+
+            <!-- Keyboard Container -->
+            <div class="keyboard-container">
+                <keyboard></keyboard>
+            </div>
+
+            <!-- Sequencer Container -->
+            <sequencer 
+            v-bind:sequencer="sequencer">
+            </sequencer>
 
     </div>
 
@@ -180,15 +188,23 @@
         justify-content: center;
         vertical-align:top;
     }
+    .title-container {
+        font-weight: 100;
+        font-family: Helvetica Neue;
+    }
     .envelope-container > .slider-container {
         position: relative;
     }
     h1.make,
     h1.model {
         margin-left: 10px;
-        margin-right: 10px;
         color: black;
         font-size: 5vw;
+    }
+    h1.model {
+        margin-left: 34px;
+        margin-top: -16px;
+        font-size: 200px;
     }
     h1.make {
         font-weight: 100;
@@ -322,6 +338,10 @@
                     { color: palette.yellow, octave: -1 },
                     { color: palette.red, octave: -2 },
                 ],
+                envelope: {
+                    sliders: [
+                    ]
+                },
                 sequencer: {
                     mode: 'stop',
                     modes: ['stop', 'play', 'pause', 'record'],

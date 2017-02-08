@@ -1,13 +1,12 @@
 {
   "name": "nullwerk",
   "version": "1.0.0",
-  "description": "An HTML5 Synth",
+  "description": "the ARS Nullwerk - an HTML5 Synth.",
   "author": "Alex Ramsdell <alexramsdell@gmail.com>",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",
-    "test": "",
     "start": "npm run dev"
   },
   "dependencies": {
