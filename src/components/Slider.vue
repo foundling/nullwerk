@@ -39,15 +39,15 @@
     export default {
         components: {},
         props: {
-            color: {
-                type: String,
-            },
             controlSource: {
                 type: Object,
             },
             direction: {
                 type: String,
-                validator: (s) => ['vertical','horizontal'].includes(s)
+                validator: (s) => ['horizontal','vertical'].includes(s) 
+            },
+            color: { 
+                type: String,
             },
             barHeight: {
                 type: String,
@@ -56,7 +56,7 @@
             barWidth: {
                 type: String,
                 validator: (s) => s.endsWith('%')
-            }
+            },
         },
         created: function() {
             this.styleData = this.buildStyleData();
@@ -81,57 +81,69 @@
             moveSlider(e) {
 
                 /* 
-
-                This is due for a refactor. Notes on the somewhat confusing approach below:
-
-                - I'm calculating the *additional* deltaX on each pan event because 
-                e.deltaX is cumulative across events that make up a pan action. 
-                the additional amount of each deltaX from the last reading lets me know
-                how much to move the slider to the left or right.
-                - I'm then using that left or right px value in a css3 translateX transform. 
-                - finally, I'm updating the offset for use in the next calculation.
+                Notes on the approach below:
+                1. 
 
                 */
+                const dimensionType = this.direction === 'horizontal' ? 'width' : 'height'; 
+                const sign = this.direction === 'horizontal' ? 1 : -1; 
+                const delta = sign * e['delta' + this.axis];
 
                 const slideBar = e.target;
                 const slideTrack = e.target.parentNode;
 
-                /* get correct delta property, X or Y */
-                const delta = e[`delta${ this.axis }`];
-
-
-                /* dimension is a generalization of Width or Height */
-                const slideBarDimension = toComputedProp(slideBar, this.direction === 'vertical' ? 'height' : 'width');
-                const slideTrackDimension = toComputedProp(slideTrack, this.direction === 'vertical' ? 'height' : 'width');
-
-                /*
-                console.log(this.axis);
-                console.log(delta);
-                console.log(slideBar);
-                console.log(slideTrack);
-                console.log(slideBarDimension);
-                console.log(slideTrackDimension);
-                */
+                const slideBarDimension = toComputedProp(slideBar, dimensionType);
+                const slideTrackDimension = toComputedProp(slideTrack, dimensionType);
 
                 /* calculate min/max offset boundaries */
-                const minOffset = 0;
-                const maxOffset = slideTrackDimension - slideBarDimension;
+
 
                 const diff = (this.initialOffset + delta) - this.initialOffset;
 
-                /* make sure offset is a valid value */
-                if (this.initialOffset + diff < minOffset) {
-                    this.offset = minOffset;
+                if (this.axis === 'X') {
+
+                    const minOffset = 0;
+                    const maxOffset = (slideTrackDimension - slideBarDimension);
+                    console.log('offset: ', this.offset);
+                    console.log('minoffset:', minOffset);
+                    console.log('maxoffset:', maxOffset);
+                    console.log('');
+
+                    /* make sure offset is a valid value */
+                    if (this.initialOffset + diff < minOffset) {
+                        this.offset = minOffset;
+                    }
+                    else if (this.initialOffset + diff > maxOffset) {
+                        this.offset = maxOffset;
+                    }
+                    else {
+                        this.offset = this.initialOffset + diff;
+                    }
+                    slideBar.style.transform = `translate${ this.axis }(${ this.offset }px)`;
+
+                } else {
+                    
+                    const minOffset = 0;
+                    const maxOffset = (slideTrackDimension - slideBarDimension);
+                    console.log('delta: ', delta);
+                    console.log('offset: ', this.offset);
+                    console.log('minoffset:', minOffset);
+                    console.log('maxoffset:', maxOffset);
+                    console.log('');
+                    /* make sure offset is a valid value */
+                    if (this.initialOffset + diff < minOffset) {
+                        this.offset = minOffset;
+                    }
+                    else if (this.initialOffset + diff > maxOffset) {
+                        this.offset = maxOffset;
+                    }
+                    else {
+                        this.offset = this.initialOffset + diff;
+                    }
+
+                    slideBar.style.transform = `translate${ this.axis }(${ sign * this.offset }px)`;
                 }
-                else if (this.initialOffset + diff > maxOffset) {
-                    this.offset = maxOffset;
-                }
-                else {
-                    this.offset = this.initialOffset + diff;
-                }
-            
-                /* update dom with translateX or translateY */
-                slideBar.style.transform = `translate${ this.axis }(${ this.offset }px)`;
+                               /* update dom */
 
             },
             moveSliderEnd() {
@@ -141,7 +153,7 @@
 
                 let styleData = {
                     bar: { 
-                        display: this.active ? 'initial' : 'none',
+                        display: this.controlSource.active ? 'initial' : 'none',
                         height: this.barHeight,
                         width: this.barWidth,
                         bottom: '0px',
