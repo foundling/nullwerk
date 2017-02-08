@@ -82,7 +82,7 @@
                     <knob 
                     v-for="waveform in waveforms" 
                     v-on:toggle="toggleWaveformSlider"
-                    v-bind:active="waveform.active"
+                    v-bind:active="waveform.slider.active"
                     v-bind:bg-image-active="waveform.img.active"
                     v-bind:bg-image-inactive="waveform.img.inactive"
                     v-bind:waveform="waveform.name"
@@ -94,7 +94,9 @@
                 <div class="waveform-level-container">
                     <slider 
                     v-for="waveform in waveforms" 
-                    v-bind:waveform="waveform"
+                    v-bind:control-source="waveform.slider"
+                    v-bind:direction="waveform.slider.direction"
+                    v-bind:color="waveform.color"
                     bar-height="100%"
                     bar-width="10%">
                     </slider>
@@ -105,12 +107,18 @@
             <!-- Envelope -->
             <div class="envelope-container">
 
-                <slider 
-                v-for="slider in envelope.sliders"
-                direction="vertical"
-                barHeight="10%"
-                barWidth="100%">
-                </slider>
+                <div 
+                    v-for="filter in envelopeFilters"
+                    class="envelope-slider-container">
+
+                    <slider 
+                    v-bind:control-source="filter.slider"
+                    v-bind:direction="filter.slider.direction"
+                    v-bind:color="filter.color"
+                    bar-height="10%"
+                    bar-width="100%">
+                    </slider>
+                </div>
 
             </div>
 
@@ -192,8 +200,10 @@
         font-weight: 100;
         font-family: Helvetica Neue;
     }
-    .envelope-container > .slider-container {
+    .envelope-slider-container { 
         position: relative;
+        width: 25%;
+        height: 100%;
     }
     h1.make,
     h1.model {
@@ -320,13 +330,12 @@
             },
             toggleSound() {
                 this.$store.commit('TOGGLE_MASTER_VOLUME');
-                console.log(this.$store.getters.soundActive);
             },
             toggleWaveformSlider({ waveform }) {
 
                 for (let i = 0, max = this.waveforms.length; i < max; ++i) {
                     if (this.waveforms[i].name === waveform) {
-                        this.waveforms[i].active = !this.waveforms[i].active;
+                        this.waveforms[i].slider.active = !this.waveforms[i].slider.active;
                     }
                 };
             },

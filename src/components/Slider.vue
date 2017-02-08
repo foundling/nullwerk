@@ -1,8 +1,8 @@
 <template>
 
     <v-touch 
-    v-show="waveform.active"
-    v-bind:pan-options="{ direction: waveform.slider.direction, threshold: 0 }"
+    v-show="controlSource.active"
+    v-bind:pan-options="{ direction: direction, threshold: 0 }"
     v-on:pan="moveSlider"
     v-on:panend="moveSliderEnd"
     v-bind:style="barStyle"
@@ -32,15 +32,22 @@
     import Vue from 'vue';
     import VueTouch from 'vue-touch';
     import store from '../store';
-    import { computeWidth, log } from '../utils';
+    import { toComputedProp, log } from '../utils';
 
     Vue.use(VueTouch);
 
     export default {
         components: {},
         props: {
-            waveform: {
+            color: {
+                type: String,
+            },
+            controlSource: {
                 type: Object,
+            },
+            direction: {
+                type: String,
+                validator: (s) => ['vertical','horizontal'].includes(s)
             },
             barHeight: {
                 type: String,
@@ -52,7 +59,6 @@
             }
         },
         created: function() {
-            console.log(this);
             this.styleData = this.buildStyleData();
         },
         data: function() {
@@ -65,6 +71,9 @@
         computed: {
             barStyle() {
                 return this.styleData.bar;
+            },
+            axis() {
+                return this.direction === 'horizontal' ? 'X' : 'Y';
             }
         },
         methods: {
@@ -87,28 +96,42 @@
                 const slideBar = e.target;
                 const slideTrack = e.target.parentNode;
 
-                const slideBarWidth = computeWidth(slideBar);
-                const slideTrackWidth = computeWidth(slideTrack);
+                /* get correct delta property, X or Y */
+                const delta = e[`delta${ this.axis }`];
+
+
+                /* dimension is a generalization of Width or Height */
+                const slideBarDimension = toComputedProp(slideBar, this.direction === 'vertical' ? 'height' : 'width');
+                const slideTrackDimension = toComputedProp(slideTrack, this.direction === 'vertical' ? 'height' : 'width');
+
+                /*
+                console.log(this.axis);
+                console.log(delta);
+                console.log(slideBar);
+                console.log(slideTrack);
+                console.log(slideBarDimension);
+                console.log(slideTrackDimension);
+                */
 
                 /* calculate min/max offset boundaries */
-                const minLeftOffset = 0;
-                const maxLeftOffset = slideTrackWidth - slideBarWidth;
+                const minOffset = 0;
+                const maxOffset = slideTrackDimension - slideBarDimension;
 
-                const diff = (this.initialOffset + e.deltaX) - this.initialOffset;
+                const diff = (this.initialOffset + delta) - this.initialOffset;
 
                 /* make sure offset is a valid value */
-                if (this.initialOffset + diff < minLeftOffset) {
-                    this.offset = minLeftOffset;
+                if (this.initialOffset + diff < minOffset) {
+                    this.offset = minOffset;
                 }
-                else if (this.initialOffset + diff > maxLeftOffset) {
-                    this.offset = maxLeftOffset;
+                else if (this.initialOffset + diff > maxOffset) {
+                    this.offset = maxOffset;
                 }
                 else {
                     this.offset = this.initialOffset + diff;
                 }
             
-                /* update dom */
-                slideBar.style.transform = 'translateX(' + this.offset + 'px)';
+                /* update dom with translateX or translateY */
+                slideBar.style.transform = `translate${ this.axis }(${ this.offset }px)`;
 
             },
             moveSliderEnd() {
@@ -118,12 +141,12 @@
 
                 let styleData = {
                     bar: { 
-                        display: this.waveform.active ? 'initial' : 'none',
+                        display: this.active ? 'initial' : 'none',
                         height: this.barHeight,
                         width: this.barWidth,
                         bottom: '0px',
                         left: '0px',
-                        background: this.waveform.color
+                        background: this.color
                     }
                 };
                 
