@@ -1,12 +1,12 @@
 <template>
 
     <v-touch 
-        v-show="waveform.active"
-        v-bind:pan-options="{ direction: waveform.slider.direction, threshold: 0 }"
-        v-on:pan="moveSlider"
-        v-on:panend="moveSliderEnd"
-        v-bind:style="barStyle"
-        class="slider-bar">
+    v-show="waveform.active"
+    v-bind:pan-options="{ direction: waveform.slider.direction, threshold: 0 }"
+    v-on:pan="moveSlider"
+    v-on:panend="moveSliderEnd"
+    v-bind:style="barStyle"
+    class="slider-bar">
     </v-touch>
 
 </template>
@@ -20,7 +20,6 @@
         bottom: 0px;
         left: 0px;
         opacity: 0.7;
-
     }
     .slider-bar {
         -webkit-transform: translateX(0px);
@@ -82,6 +81,7 @@
                 const minLeftOffset = 0;
                 const maxLeftOffset = slideTrackWidth - slideBarWidth;
 
+                // couldn't the initial offset go away, and just 
                 const diff = (this.initialOffset + e.deltaX) - this.initialOffset;
 
                 /* make sure offset is a valid value */

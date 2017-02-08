@@ -4,6 +4,11 @@ import store from './store';
 
 /* eslint-disable no-new */
 new Vue({
+    data: function() {
+        return {
+            val: 'hi'
+        };
+    },
     el: '#app',
     store,
     components: { App },
