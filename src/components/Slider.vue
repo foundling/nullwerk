@@ -80,70 +80,34 @@
 
             moveSlider(e) {
 
-                /* 
-                Notes on the approach below:
-                1. 
-
-                */
                 const dimensionType = this.direction === 'horizontal' ? 'width' : 'height'; 
                 const sign = this.direction === 'horizontal' ? 1 : -1; 
-                const delta = sign * e['delta' + this.axis];
 
                 const slideBar = e.target;
-                const slideTrack = e.target.parentNode;
-
                 const slideBarDimension = toComputedProp(slideBar, dimensionType);
+
+                const slideTrack = e.target.parentNode;
                 const slideTrackDimension = toComputedProp(slideTrack, dimensionType);
 
-                /* calculate min/max offset boundaries */
-
-
+                const delta = sign * e['delta' + this.axis];
                 const diff = (this.initialOffset + delta) - this.initialOffset;
 
-                if (this.axis === 'X') {
+                const minOffset = 0;
+                const maxOffset = (slideTrackDimension - slideBarDimension);
 
-                    const minOffset = 0;
-                    const maxOffset = (slideTrackDimension - slideBarDimension);
-                    console.log('offset: ', this.offset);
-                    console.log('minoffset:', minOffset);
-                    console.log('maxoffset:', maxOffset);
-                    console.log('');
-
-                    /* make sure offset is a valid value */
-                    if (this.initialOffset + diff < minOffset) {
-                        this.offset = minOffset;
-                    }
-                    else if (this.initialOffset + diff > maxOffset) {
-                        this.offset = maxOffset;
-                    }
-                    else {
-                        this.offset = this.initialOffset + diff;
-                    }
-                    slideBar.style.transform = `translate${ this.axis }(${ this.offset }px)`;
-
-                } else {
-                    
-                    const minOffset = 0;
-                    const maxOffset = (slideTrackDimension - slideBarDimension);
-                    console.log('delta: ', delta);
-                    console.log('offset: ', this.offset);
-                    console.log('minoffset:', minOffset);
-                    console.log('maxoffset:', maxOffset);
-                    console.log('');
-                    /* make sure offset is a valid value */
-                    if (this.initialOffset + diff < minOffset) {
-                        this.offset = minOffset;
-                    }
-                    else if (this.initialOffset + diff > maxOffset) {
-                        this.offset = maxOffset;
-                    }
-                    else {
-                        this.offset = this.initialOffset + diff;
-                    }
-
-                    slideBar.style.transform = `translate${ this.axis }(${ sign * this.offset }px)`;
+                /* make sure offset is a valid value */
+                if (this.initialOffset + diff < minOffset) {
+                    this.offset = minOffset;
                 }
-                               /* update dom */
+                else if (this.initialOffset + diff > maxOffset) {
+                    this.offset = maxOffset;
+                }
+                else {
+                    this.offset = this.initialOffset + diff;
+                }
+
+                /* update dom */
+                slideBar.style.transform = `translate${ this.axis }(${ sign * this.offset }px)`;
 
             },
             moveSliderEnd() {
