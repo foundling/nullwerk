@@ -50,6 +50,9 @@
     export default {
         components: {},
         props: {
+            level: {
+                type: Number,
+            },
             name: {
                 type: String,
             },
@@ -85,7 +88,7 @@
         data: function() {
             return {
                 styleData: null,
-                initialOffset: 0,
+                initialOffset: this.level,
                 offset: 0,
             };
         },

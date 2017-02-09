@@ -9,6 +9,12 @@ export default {
     },
     soundActive (state) {
         return state.soundEngine.active;
+    },
+    oscillatorSettings (state) {
+        return state.soundEngine.oscillatorSettings;
+    },
+    envelopeSettings (state) {
+        return state.soundEngine.envelopeSettings;
     }
 
 };

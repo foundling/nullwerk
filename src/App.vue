@@ -81,19 +81,20 @@
                 <div class="waveforms-container">
                     <knob 
                     v-for="waveform in waveforms" 
-                    v-bind:title="`toggle ${ waveform.name } level on / off.`"
                     v-on:toggle="toggleWaveformActive"
                     v-bind:active="waveform.slider.active"
                     v-bind:bg-image-active="waveform.img.active"
                     v-bind:bg-image-inactive="waveform.img.inactive"
                     v-bind:waveform="waveform.name"
                     v-bind:color="waveform.color"
+                    v-bind:title="`toggle ${ waveform.name } level on / off.`"
                     diameter="25%">
                     </knob>
                 </div>
 
                 <div class="waveform-level-container">
                     <slider 
+                    v-bind:level="0"
                     v-bind:name="waveform.name"
                     v-bind:title="`adjust ${ waveform.name } level.`"
                     v-on:slide="adjustWaveformVol"
@@ -114,13 +115,14 @@
                 <div 
                     v-for="parameter in envelopeParameters"
                     class="envelope-slider-container">
+
                     <h1 
-                        v-bind:title="parameter.name"
-                        class="envelope-slider-label">{{ parameter.name | abbreviate }}</h1>
+                    v-bind:title="parameter.name"
+                    class="envelope-slider-label">{{ parameter.name | abbreviate }}</h1>
 
                     <slider 
-                    v-bind:title="`adjust ${ parameter.name }.`"
                     v-on:slide="adjustEnvelopeParam"
+                    v-bind:level="envelopeSettings[parameter.name].level"
                     v-bind:opacity="0.4"
                     v-bind:name="parameter.name"
                     v-bind:content="parameter.name"
@@ -128,7 +130,8 @@
                     v-bind:direction="parameter.slider.direction"
                     v-bind:color="parameter.color"
                     bar-height="15%"
-                    bar-width="100%">
+                    bar-width="100%"
+                    v-bind:title="`adjust ${ parameter.name }.`">
                     </slider>
                 </div>
 
@@ -362,17 +365,24 @@
             adjustOctave(direction) { 
                 this.$store.commit('SET_OCTAVE', { direction: direction });
             },
-            adjustWaveformVol({ name, value }) {
-                console.log(name, value);
+            adjustWaveformVol(payload) {
+                this.$store.commit('SET_OSCILLATOR_LEVEL', payload);
             },
-            adjustEnvelopeParam({ name, value }) {
-                console.log(name, value);
+            adjustEnvelopeParam(payload) {
+                this.$store.commit('SET_ENVELOPE_LEVEL', payload );
             }
         },
         computed: {
             currentOctave() { 
                 return this.$store.getters.currentOctave;
             },
+            oscillatorSettings() {
+                return this.$store.getters.oscillatorSettings;
+            },
+            envelopeSettings() {
+                return this.$store.getters.envelopeSettings;
+            }
+
         },
         filters: {
             abbreviate: s => s.charAt(0).toUpperCase(),

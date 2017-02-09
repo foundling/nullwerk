@@ -13,16 +13,19 @@ const mutations = {
     },
 
     TOGGLE_MASTER_VOLUME (state) {
-
-        if (state.soundEngine.active) {
-            state.soundEngine.enable();
-        } else {
-            state.soundEngine.disable();
-        }
+        state.soundEngine.toggleMasterVolume();
     },
 
     SET_OCTAVE (state, { direction }) {
         state.soundEngine.setOctave(direction);
+    },
+
+    SET_OSCILLATOR_LEVEL (state, { name, level }) {
+        state.soundEngine.oscillatorSettings[name].volume = level;
+    },
+
+    SET_ENVELOPE_LEVEL (state, { name, level }) {
+        state.soundEngine.envelopeSettings[name].level = level;
     }
 
 };

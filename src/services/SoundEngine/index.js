@@ -2,10 +2,44 @@ import MIDI from './midi';
 
 const SoundEngine = function ({ initialVolume, initialOctave }) {
 
+    /* initializaion */
+    this.active = true;
     this.octave = initialOctave;
     this.volume = initialVolume;
-    this.active = true;
     this.savedVolumeSetting = null;
+    this.envelopeSettings = {
+        attack: {
+            level: 0,
+        }, 
+        decay: {
+            level: 0,
+        }, 
+        sustain: {
+            level: 0,
+        }, 
+        release: {
+            level: 0,
+        }, 
+
+    }
+    this.oscillatorSettings = {
+        sine: {
+            level: 10,
+            harmonicCount: 6 
+        },
+        square: {
+            level: 0,
+            harmonicCount: 6 
+        },
+        sawtooth: { 
+            level: 0,
+            harmonicCount: 6 
+        },
+        triangle: {
+            level: 0,
+            harmonicCount: 6 
+        }
+    };
 
     const DEFAULT_MASTER_VOLUME = initialVolume;
     const DEFAULT_OSCILLATOR_VOLUME = initialVolume; 
@@ -36,9 +70,10 @@ const SoundEngine = function ({ initialVolume, initialOctave }) {
         }
     ];   
 
+    /* MIDI Connections and event handlers */
+
     function onMIDIStateChange(event) {
         const newState = event.target.state;
-        console.log(newState === 'connected' ? 'connected!' : 'disconnected!');
     };
 
     function onMIDIMessage(msg){
@@ -130,32 +165,28 @@ const SoundEngine = function ({ initialVolume, initialOctave }) {
 
     }
 
-    function disable() {
-        this.savedVolumeSetting = this.getMasterVolume();
-        console.log(this);
-        this.setMasterVolume(0);
-        this.active = false;
+    function toggleMasterVolume() {
+
+        if (this.active) {
+            this.savedVolumeSetting = getMasterVolume();
+            setMasterVolume(0);
+        } else {
+            this.setMasterVolume(this.savedVolumeSetting);
+        }
+        this.active = !this.active;
     }
 
-    function enable () {
-        console.log(this.savedVolumeSetting);
-        this.setMasterVolume(this.savedVolumeSetting);
-        this.active = true;
-    }
     function getMasterVolume() {
         return masterGain.gain.value;
     }
 
-    function setOscillatorVolume(name, amt) {
+    function setEnvelopeLevel({ name, value }) {
+       this.envelopeSettings[name].level = value; 
+    }
 
-        oscillators
-            .filter(node => {
-                return node.name === name;
-            })
-            .forEach(node => {
-                node.gain.gain.value += amount;
-            });
-
+    function setOscillatorLevel({ name, value }) {
+        /* when oscillators get recreated, they use the values that this updates */ 
+        this.oscillatorSettings[name].level = value;
     }
 
     function muteNote() {
@@ -254,7 +285,7 @@ const SoundEngine = function ({ initialVolume, initialOctave }) {
                     }, 
                 ];
 
-                node.osc = overtones.map((overtone) => {
+                node.osc = overtones.map(overtone => {
                     const osc = context.createOscillator();
                     osc.type = node.name;
                     osc.frequency.value = fundamentalFrequency * overtone.harmonic; 
@@ -318,13 +349,15 @@ const SoundEngine = function ({ initialVolume, initialOctave }) {
         octave: this.octave,
         active: this.active,
         savedVolumeSetting: this.savedVolumeSetting,
+        oscillatorSettings: this.oscillatorSettings,
+        envelopeSettings: this.envelopeSettings,
         playNote,
         muteNote,
         setMasterVolume,
-        setOscillatorVolume,
+        setOscillatorLevel,
+        setEnvelopeLevel,
         setOctave,
-        enable,
-        disable,
+        toggleMasterVolume
 
     };
 
