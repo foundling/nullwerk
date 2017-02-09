@@ -22,7 +22,7 @@
     @media(max-width: 500px) {
         .keyboard {
             flex-direction: column; 
-            height: 600px;;
+            height: 100%;
         }
     }
 </style>

@@ -325,9 +325,9 @@
             flex-direction: column;
         }
         .keyboard-container {
+            transform: rotate(108deg);
             width: 100%;
-            height: 500px;
-            margin-bottom: 100px;
+            height: 150%;
         }
     }
 </style>

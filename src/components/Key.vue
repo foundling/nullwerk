@@ -36,7 +36,7 @@
         .black-key {
             height: calc(100% / 30);
             width: 65%;
-            align-self: flex-start;
+            align-self: flex-end;
         }
         .white-key {
             height: calc(100% / 15);
@@ -64,12 +64,16 @@
             'blackKeys'
         ],
         created: function() {
+
             const that = this;
-            window.addEventListener('resize', function() { 
+            function updateKeyboardDimensions() {
                 const newWidth = getScreenWidth();
                 that.screenWidth = newWidth;
                 that.keyboardDirection = newWidth >= 500 ? 'horizontal' : 'vertical';
-            }); 
+            };
+
+            updateKeyboardDimensions();
+            window.addEventListener('resize', updateKeyboardDimensions);
         }, 
         onDestroy: function() {
             window.removeEventListener('resize', this.handleResize);
