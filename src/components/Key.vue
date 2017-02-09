@@ -4,7 +4,7 @@
         v-on:widthchange="console.log('hi')"
         v-on:mousedown="startNote(index)"
         v-on:mouseup="stopNote(index)"
-        v-bind:class="{ 'black-key': isBlackKey, 'white-key': !isBlackKey }"
+        v-bind:class="classData"
         v-bind:style="styleData"
         class="key">
     </div> 
@@ -93,6 +93,13 @@
 
                 let offset = whiteKeysToTheLeft * this.keyWidthPercent.white - (this.keyWidthPercent.black / 2) ; 
                 return offset + '%';
+            },
+
+            classData: function() { 
+                return {
+                    'black-key': this.isBlackKey, 
+                    'white-key': !this.isBlackKey 
+                };
             },
             styleData: function() {
 

@@ -155,9 +155,11 @@
             </div>
 
             <!-- Sequencer Container -->
+            <!--
             <sequencer 
             v-bind:sequencer="sequencer">
             </sequencer>
+            -->
 
     </div>
 
@@ -325,7 +327,7 @@
             flex-direction: column;
         }
         .keyboard-container {
-            transform: rotate(108deg);
+            transform: rotate(180deg);
             width: 100%;
             height: 150%;
         }
