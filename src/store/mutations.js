@@ -21,7 +21,7 @@ const mutations = {
     },
 
     SET_OSCILLATOR_LEVEL (state, { name, level }) {
-        state.soundEngine.oscillatorSettings[name].volume = level;
+        state.soundEngine.oscillatorSettings[name].level = level;
     },
 
     SET_ENVELOPE_LEVEL (state, { name, level }) {
