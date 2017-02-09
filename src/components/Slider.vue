@@ -44,11 +44,11 @@
     import VueTouch from 'vue-touch';
     import store from '../store';
     import { toComputedProp, log } from '../utils';
+    import { screenWidthMixin } from './../mixins';
 
     Vue.use(VueTouch);
 
     export default {
-        components: {},
         props: {
             level: {
                 type: Number,
@@ -85,6 +85,7 @@
         created: function() {
             this.styleData = this.buildStyleData();
         },
+        mixins: [ screenWidthMixin ], 
         data: function() {
             return {
                 styleData: null,

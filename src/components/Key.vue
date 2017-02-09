@@ -1,12 +1,11 @@
 <template>
 
     <div 
-        v-on:widthchange="console.log('hi')"
-        v-on:mousedown="startNote(index)"
-        v-on:mouseup="stopNote(index)"
-        v-bind:class="classData"
-        v-bind:style="styleData"
-        class="key">
+    v-on:mousedown="startNote(index)"
+    v-on:mouseup="stopNote(index)"
+    v-bind:class="classData"
+    v-bind:style="styleData"
+    class="key">
     </div> 
 
 </template>
@@ -47,11 +46,13 @@
 <script>
     import store from '../store';
     import { getScreenWidth } from './../utils';
+    import { screenWidthMixin }  from './../mixins';
 
     export default {
+        mixins: [ screenWidthMixin ],
         data: function() {
             return {
-                screenWidth: null,
+                // screenWidth is a screenWidthMixin data attribute
                 keyboardDirection: null,
                 keyWidthPercent: {
                     white: 100/15,
@@ -64,25 +65,25 @@
             'blackKeys'
         ],
         created: function() {
-
-            const that = this;
-            function updateKeyboardDimensions() {
-                const newWidth = getScreenWidth();
-                that.screenWidth = newWidth;
-                that.keyboardDirection = newWidth >= 500 ? 'horizontal' : 'vertical';
-            };
-
-            updateKeyboardDimensions();
-            window.addEventListener('resize', updateKeyboardDimensions);
+            this.keyboardDirection = this.screenWidth >= 500 ? 'horizontal' : 'vertical';
+            window.addEventListener('resize', this.updateKeyboardDimensions.bind(this));
         }, 
-        onDestroy: function() {
-            window.removeEventListener('resize', this.handleResize);
-        },
+
+        methods: {
+            updateKeyboardDimensions() {
+                this.keyboardDirection = this.screenWidth >= 500 ? 'horizontal' : 'vertical';
+            },
+            startNote(index) {
+                this.$store.state.soundEngine.playNote(index)
+            },
+            stopNote() {
+                this.$store.state.soundEngine.muteNote()
+            },
+            handleResize() {
+                this.screenWidth = getScreenWidth();
+            }
+        }, 
         computed: {
-            computedKeyboardDirection() {
-            },
-            computedScreenSize() {
-            },
             isBlackKey: function() {
                 return this.blackKeys.includes(this.index);
             },
@@ -115,18 +116,6 @@
                     styleObj.left = null;
                 }
                 return styleObj;
-            }
-        }, 
-        methods: {
-            startNote(index) {
-                this.$store.state.soundEngine.playNote(index)
-            },
-            stopNote() {
-                this.$store.state.soundEngine.muteNote()
-            },
-            handleResize() {
-                this.screenWidth = getScreenWidth();
-                console.log(this.screenWidth);
             }
         }, 
     };
