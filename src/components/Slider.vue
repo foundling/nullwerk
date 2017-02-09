@@ -136,8 +136,7 @@
                 /* emit new value */
                 this.$emit('slide', {
                     name: this.name,
-                    value: this.offset / slideTrackDimension
-
+                    value: this.offset / maxOffset
                 });
 
             },

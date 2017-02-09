@@ -68,7 +68,7 @@
 
                 <!-- Master Volume Knob -->
                 <knob
-                v-on:toggle="toggleSound"
+                v-on:toggle="toggleMasterVol"
                 color="black" 
                 diameter="50%">
                 </knob>
@@ -82,7 +82,7 @@
                     <knob 
                     v-for="waveform in waveforms" 
                     v-bind:title="`toggle ${ waveform.name } level on / off.`"
-                    v-on:toggle="toggleWaveform"
+                    v-on:toggle="toggleWaveformActive"
                     v-bind:active="waveform.slider.active"
                     v-bind:bg-image-active="waveform.img.active"
                     v-bind:bg-image-inactive="waveform.img.inactive"
@@ -348,19 +348,19 @@
 
         data: () => synthConfig,
         methods: {
-            adjustOctave(direction) { 
-                this.$store.commit('SET_OCTAVE', { direction: direction });
-            },
-            toggleSound() {
+            toggleMasterVol() {
                 this.$store.commit('TOGGLE_MASTER_VOLUME');
             },
-            toggleWaveform({ waveform }) {
+            toggleWaveformActive({ waveform }) {
 
                 for (let i = 0, max = this.waveforms.length; i < max; ++i) {
                     if (this.waveforms[i].name === waveform) {
                         this.waveforms[i].slider.active = !this.waveforms[i].slider.active;
                     }
                 };
+            },
+            adjustOctave(direction) { 
+                this.$store.commit('SET_OCTAVE', { direction: direction });
             },
             adjustWaveformVol({ name, value }) {
                 console.log(name, value);
