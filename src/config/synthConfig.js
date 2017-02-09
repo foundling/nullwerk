@@ -1,4 +1,4 @@
-import palette from './services/colorPalette';
+import palette from './colorPalette';
 
 export default {
 

@@ -1,9 +1,10 @@
 <template>
     <div class="keyboard">
         <key 
-            v-for="index in 25" 
-            :index="index - 1" 
-            :blackKeys="blackKeys"></key>
+        v-for="index in 25" 
+        :index="index - 1" 
+        :blackKeys="blackKeys">
+        </key>
     </div>
 </template>
 
@@ -13,29 +14,15 @@
         width: 100%;
         background: whitesmoke;
         display: flex;
+        flex-direction: row;
         align-items: center;
-        justify-items: center;
+        justify-content: center;
         position: relative;
     }
     @media(max-width: 500px) {
         .keyboard {
-            /*
-           -webkit-transform: translateZ(0);
-           -moz-transform: translateZ(0);
-           -ms-transform: translateZ(0);
-           -o-transform: translateZ(0);
-           transform: translateZ(0);
-
-           -webkit-backface-visibility: hidden;
-           -moz-backface-visibility: hidden;
-           -ms-backface-visibility: hidden;
-           backface-visibility: hidden;
-
-           -webkit-perspective: 1000;
-           -moz-perspective: 1000;
-           -ms-perspective: 1000;
-           perspective: 1000;
-           */
+            flex-direction: column; 
+            height: 600px;;
         }
     }
 </style>

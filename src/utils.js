@@ -5,9 +5,22 @@ function toComputedProp(el, prop) {
 
 }
 
+function getScreenWidth() {
+
+    const w = window;
+    const d = document;
+    const e = d.documentElement;
+    const g = d.getElementsByTagName('body')[0];
+    const width = w.innerWidth||e.clientWidth||g.clientWidth;
+
+    return width;
+
+};
+
 const log = console.log;
 
 export { 
     log,
-    toComputedProp 
+    toComputedProp,
+    getScreenWidth
 };

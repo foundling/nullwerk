@@ -12,7 +12,7 @@
 
                     <led 
                     diameter="15%"
-                    v-for="led in leds" 
+                    v-for="led in synth.leds" 
                     v-bind:color="led.color" 
                     v-bind:currentOctave="currentOctave" 
                     v-bind:octave="led.octave">
@@ -31,7 +31,7 @@
                     v-on:press="adjustOctave(+1)">
 
                         <i 
-                        v-bind:style="{ color: palette.white }" 
+                        v-bind:style="{ color: synth.palette.white }" 
                         class="fa fa-caret-up" 
                         slot="label">
                         </i>
@@ -43,7 +43,7 @@
                     v-on:press="adjustOctave(-1)">
 
                         <i 
-                        v-bind:style="{color: palette.white}" 
+                        v-bind:style="{color: synth.palette.white}" 
                         class="fa fa-caret-down" 
                         slot="label">
                         </i>
@@ -80,7 +80,7 @@
 
                 <div class="waveforms-container">
                     <knob 
-                    v-for="waveform in waveforms" 
+                    v-for="waveform in synth.waveforms" 
                     v-on:toggle="toggleWaveformActive"
                     v-bind:active="waveform.slider.active"
                     v-bind:bg-image-active="waveform.img.active"
@@ -98,7 +98,7 @@
                     v-bind:name="waveform.name"
                     v-bind:title="`adjust ${ waveform.name } level.`"
                     v-on:slide="adjustWaveformVol"
-                    v-for="waveform in waveforms" 
+                    v-for="waveform in synth.waveforms" 
                     v-bind:control-source="waveform.slider"
                     v-bind:direction="waveform.slider.direction"
                     v-bind:color="waveform.color"
@@ -113,7 +113,7 @@
             <div class="envelope-container">
 
                 <div 
-                    v-for="parameter in envelopeParameters"
+                    v-for="parameter in synth.envelopeParameters"
                     class="envelope-slider-container">
 
                     <h1 
@@ -325,8 +325,8 @@
             flex-direction: column;
         }
         .keyboard-container {
-            transform: rotate(90deg);
             width: 100%;
+            height: 500px;
             margin-bottom: 100px;
         }
     }
@@ -335,7 +335,12 @@
 <script>
 
     import store from './store';
-    import synthConfig from './synthConfig';
+    import { 
+        getScreenWidth 
+    }  from './utils';
+
+    import synthConfig from './config/synthConfig';
+    import sequencerConfig from './config/sequencerConfig';
 
     import Keyboard from './components/Keyboard';
     import Sequencer from './components/Sequencer';
@@ -349,16 +354,21 @@
 
     export default {
 
-        data: () => synthConfig,
+        data: function() {
+            return {
+                synth: synthConfig,
+                sequencer: sequencerConfig,
+            };
+        },
         methods: {
             toggleMasterVol() {
                 this.$store.commit('TOGGLE_MASTER_VOLUME');
             },
             toggleWaveformActive({ waveform }) {
 
-                for (let i = 0, max = this.waveforms.length; i < max; ++i) {
-                    if (this.waveforms[i].name === waveform) {
-                        this.waveforms[i].slider.active = !this.waveforms[i].slider.active;
+                for (let i = 0, max = this.synth.waveforms.length; i < max; ++i) {
+                    if (this.synth.waveforms[i].name === waveform) {
+                        this.synth.waveforms[i].slider.active = !this.synth.waveforms[i].slider.active;
                     }
                 };
             },
@@ -382,7 +392,6 @@
             envelopeSettings() {
                 return this.$store.getters.envelopeSettings;
             }
-
         },
         filters: {
             abbreviate: s => s.charAt(0).toUpperCase(),
