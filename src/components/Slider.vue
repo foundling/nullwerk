@@ -7,7 +7,6 @@
     v-on:panend="moveSliderEnd"
     v-bind:style="barStyle"
     class="slider-bar">
-        <slot name="label"></slot>
     </v-touch>
 
 </template>
@@ -51,6 +50,9 @@
     export default {
         components: {},
         props: {
+            name: {
+                type: String,
+            },
             opacity: {
                 type: Number,
                 default: 1,
@@ -84,7 +86,7 @@
             return {
                 styleData: null,
                 initialOffset: 0,
-                offset: 0
+                offset: 0,
             };
         },
         computed: {
@@ -130,6 +132,13 @@
 
                 /* update dom */
                 slideBar.style.transform = `translate${ this.axis }(${ sign * this.offset }px)`;
+
+                /* emit new value */
+                this.$emit('slide', {
+                    name: this.name,
+                    value: this.offset / slideTrackDimension
+
+                });
 
             },
             moveSliderEnd() {

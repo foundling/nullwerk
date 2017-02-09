@@ -81,7 +81,8 @@
                 <div class="waveforms-container">
                     <knob 
                     v-for="waveform in waveforms" 
-                    v-on:toggle="toggleWaveformSlider"
+                    v-bind:title="`toggle ${ waveform.name } level on / off.`"
+                    v-on:toggle="toggleWaveform"
                     v-bind:active="waveform.slider.active"
                     v-bind:bg-image-active="waveform.img.active"
                     v-bind:bg-image-inactive="waveform.img.inactive"
@@ -93,6 +94,9 @@
 
                 <div class="waveform-level-container">
                     <slider 
+                    v-bind:name="waveform.name"
+                    v-bind:title="`adjust ${ waveform.name } level.`"
+                    v-on:slide="adjustWaveformVol"
                     v-for="waveform in waveforms" 
                     v-bind:control-source="waveform.slider"
                     v-bind:direction="waveform.slider.direction"
@@ -111,10 +115,14 @@
                     v-for="parameter in envelopeParameters"
                     class="envelope-slider-container">
                     <h1 
+                        v-bind:title="parameter.name"
                         class="envelope-slider-label">{{ parameter.name | abbreviate }}</h1>
 
                     <slider 
+                    v-bind:title="`adjust ${ parameter.name }.`"
+                    v-on:slide="adjustEnvelopeParam"
                     v-bind:opacity="0.4"
+                    v-bind:name="parameter.name"
                     v-bind:content="parameter.name"
                     v-bind:control-source="parameter.slider"
                     v-bind:direction="parameter.slider.direction"
@@ -206,6 +214,7 @@
         font-family: Helvetica Neue;
     }
     .envelope-slider-container { 
+        border-right: 1px solid rgb(239,239,239);
         position: relative;
         width: 25%;
         height: 100%;
@@ -345,7 +354,7 @@
             toggleSound() {
                 this.$store.commit('TOGGLE_MASTER_VOLUME');
             },
-            toggleWaveformSlider({ waveform }) {
+            toggleWaveform({ waveform }) {
 
                 for (let i = 0, max = this.waveforms.length; i < max; ++i) {
                     if (this.waveforms[i].name === waveform) {
@@ -353,11 +362,17 @@
                     }
                 };
             },
+            adjustWaveformVol({ name, value }) {
+                console.log(name, value);
+            },
+            adjustEnvelopeParam({ name, value }) {
+                console.log(name, value);
+            }
         },
         computed: {
             currentOctave() { 
                 return this.$store.getters.currentOctave;
-            }
+            },
         },
         filters: {
             abbreviate: s => s.charAt(0).toUpperCase(),
