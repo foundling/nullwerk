@@ -1,0 +1,164 @@
+<div class="synth-container">
+
+        <!--Master Pitch Container -->
+        <div class="master-pitch-container">
+
+            <!-- Octave LED Meter -->
+            <div 
+                title="octave meter"
+                class="led-container">
+
+                <led 
+                diameter="15%"
+                v-for="led in synth.leds" 
+                v-bind:color="led.color" 
+                v-bind:currentOctave="currentOctave" 
+                v-bind:octave="led.octave">
+                </led>
+
+            </div>
+
+            <!-- Octave -->
+            <div 
+            title="octave"
+            class="octave-buttons-container">
+
+                <btn 
+                title="octave +1"
+                class="octave-button-up" 
+                v-on:press="adjustOctave(+1)">
+
+                    <i 
+                    v-bind:style="{ color: synth.palette.white }" 
+                    class="fa fa-caret-up" 
+                    slot="label">
+                    </i>
+
+                </btn>
+                <btn 
+                title="octave -1"
+                class="octave-button-down" 
+                v-on:press="adjustOctave(-1)">
+
+                    <i 
+                    v-bind:style="{color: synth.palette.white}" 
+                    class="fa fa-caret-down" 
+                    slot="label">
+                    </i>
+
+                </btn>
+            </div>
+        </div>
+
+        <!-- Master Volume Knob Container -->
+        <div 
+            title="Master Volume. Swipe up to increase. Swipe down to decrease. Tap to mute."
+            class="master-volume-container">
+
+            <!-- Master LED Readings --> 
+            <div class="volume-container">
+                <led color="red"></led>
+                <led color="red"></led>
+                <led color="red"></led>
+                <led color="red"></led>
+                <led color="red"></led>
+            </div>
+
+            <!-- Master Volume Knob -->
+            <knob
+            v-on:toggle="toggleMasterVol"
+            color="black" 
+            diameter="50%">
+            </knob>
+
+        </div>
+
+        <!-- Waveforms -->
+        <div class="waveforms-and-options-container">
+
+            <div class="waveforms-container">
+                <knob 
+                v-for="waveform in synth.waveforms" 
+                v-on:toggle="toggleWaveformActive"
+                v-bind:active="waveform.slider.active"
+                v-bind:bg-image-active="waveform.img.active"
+                v-bind:bg-image-inactive="waveform.img.inactive"
+                v-bind:waveform="waveform.name"
+                v-bind:color="waveform.color"
+                v-bind:title="`toggle ${ waveform.name } level on / off.`"
+                diameter="25%">
+                </knob>
+            </div>
+
+            <div class="waveform-level-container">
+                <slider 
+                v-bind:level="0"
+                v-bind:name="waveform.name"
+                v-bind:title="`adjust ${ waveform.name } level.`"
+                v-on:slide="adjustWaveformVol"
+                v-for="waveform in synth.waveforms" 
+                v-bind:control-source="waveform.slider"
+                v-bind:direction="waveform.slider.direction"
+                v-bind:color="waveform.color"
+                bar-height="100%"
+                bar-width="10%">
+                </slider>
+            </div>
+
+        </div>
+
+        <!-- Envelope -->
+        <div class="envelope-container">
+
+            <div 
+                v-for="parameter in synth.envelopeParameters"
+                class="envelope-slider-container">
+
+                <h1 
+                v-bind:title="parameter.name"
+                class="envelope-slider-label">{{ parameter.name | abbreviate }}</h1>
+
+                <slider 
+                v-on:slide="adjustEnvelopeParam"
+                v-bind:level="envelopeSettings"
+                v-bind:opacity="0.4"
+                v-bind:name="parameter.name"
+                v-bind:content="parameter.name"
+                v-bind:control-source="parameter.slider"
+                v-bind:direction="parameter.slider.direction"
+                v-bind:color="parameter.color"
+                bar-height="15%"
+                bar-width="100%"
+                v-bind:title="`adjust ${ parameter.name }.`">
+                </slider>
+            </div>
+
+        </div>
+
+        <!-- Modulation Wheels Container -->
+        <div class="wheels-container">
+            <wheel></wheel>
+            <wheel></wheel>
+        </div>
+           
+        <!-- Signature Sign Container -->
+        <div class="title-container">
+            <h1 class="make">{{ currentVolume }}</h1>
+            <h1 class="model">1</h1>
+        </div>
+
+        <!-- Keyboard Container -->
+        <div class="keyboard-container">
+            <keyboard
+            v-on:noteone="noteOn">
+            </keyboard>
+        </div>
+
+        <!-- Sequencer Container -->
+        <!--
+        <sequencer 
+        v-bind:sequencer="sequencer">
+        </sequencer>
+        -->
+
+</div>
