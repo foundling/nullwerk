@@ -1,13 +1,24 @@
 import MIDI from './midi';
 
-const SoundEngine = function ({ initialVolume, initialOctave }) {
+function SoundEngine ({ volume = 0, octave = 0 }) {
 
-    /* initializaion */
+    /* init Web Audio and WebMidi  */
+
+    this.context = new (window.AudioContext || window.webkitAudioContext)(); 
+    MIDI.init().then(this.onMIDIConnect, this.onMIDIFail);
+
+    /* Instantiate Properties */
+
+    this.masterGain = this.context.createGain();
+    this.masterGain.connect(this.context.destination);
+    this.c4Hertz = 261.626;
     this.active = true;
-    this.octave = initialOctave;
-    this.volume = initialVolume;
-    this.savedVolumeSetting = null;
+    this.octave = octave;
+    this.masterGain.gain.value = volume;
+    this.savedVolumeSetting = this.masterGain.gain.value;
+    this.oscillators = null;
     this.envelopeSettings = {
+
         attack: {
             level: 0,
         }, 
@@ -23,6 +34,7 @@ const SoundEngine = function ({ initialVolume, initialOctave }) {
 
     }
     this.oscillatorSettings = {
+
         sine: {
             level: 10,
             harmonicCount: 6 
@@ -39,19 +51,9 @@ const SoundEngine = function ({ initialVolume, initialOctave }) {
             level: 0,
             harmonicCount: 6 
         }
+
     };
-
-    const DEFAULT_MASTER_VOLUME = initialVolume;
-    const DEFAULT_OSCILLATOR_VOLUME = initialVolume; 
-    const context = new (window.AudioContext || window.webkitAudioContext)(); 
-    const masterGain = context.createGain();
-    const c4Hertz = 261.626;
-
-    masterGain.connect(context.destination);
-    MIDI.init().then(onMIDIConnect, onMIDIFail);
-
-    let oscillators = null;
-    let waveforms = [
+    this.waveforms = [
         {
             name: 'sine',
             on: true
@@ -70,18 +72,18 @@ const SoundEngine = function ({ initialVolume, initialOctave }) {
         }
     ];   
 
-    /* MIDI Connections and event handlers */
 
-    function onMIDIStateChange(event) {
+    /* MIDI Connections and event handlers */
+    const onMIDIStateChange = function(event) {
         const newState = event.target.state;
+        console.log(`MIDI state changed to ${ state }!`); 
     };
 
-    function onMIDIMessage(msg){
+    const onMIDIMessage = function(msg){
 
-        // [ command and channel byte, note, velocity data ]
+        /* [ command and channel byte, note, velocity data ] */
  
         const data = msg.data;
-
         const command = data[0] >> 4;
         const channel = data[0] & 0xf;
         const type = data[0] & 0xf0;
@@ -99,7 +101,7 @@ const SoundEngine = function ({ initialVolume, initialOctave }) {
 
     };
 
-    function onMIDIConnect(midiAccess) {
+    const onMIDIConnect = function(midiAccess) {
 
         const inputs = midiAccess.inputs.values();
 
@@ -108,88 +110,79 @@ const SoundEngine = function ({ initialVolume, initialOctave }) {
             input.value.onmidistatechange = onMIDIStateChange;
         }
 
-    }
+    };
 
-    function onMIDIFail(error) {
+    const onMIDIFail = function(error) {
 
-        console.log(`Midi Fail: ${error.name} `);
+        console.log(`Midi Fail! Error Name:  ${error.name}`);
         console.log(error);
-
-    }
-
-    function fromMIDI(noteNumber) {
-
-        const freq = Math.pow(2, (noteNumber - 69)/12) * c4Hertz;
-        return freq;
-
-    }
-
-    function noteOn(noteNumber, velocity) {
-        console.log('note on: ', noteNumber);
-
-        const frequencyAtKey = fromMIDI(noteNumber);
-        playNote(null, frequencyAtKey);
 
     };
 
-    function noteOff() {
-        console.log('note off.');
+    const fromMIDI = function(noteNumber) {
+        const freq = Math.pow(2, (noteNumber - 69)/12) * this.c4Hertz;
+        return freq;
+    };
+    const noteOn = function(noteNumber, velocity) {
+        const frequencyAtKey = fromMIDI(noteNumber);
+        playNote(null, frequencyAtKey);
+    };
+
+    const noteOff = function() {
         muteNote();  
     };
 
-    function setOctave(direction) {
+    /* Web Audio Sound Engine Functions */
 
-        if (Math.abs(direction + this.octave) > 2) return;
-        this.octave += direction;
-
-    }
-    function setMasterVolume(amount) {
+    const setOctave = function(direction) {
+        const newValue = direction + this.octave;
+        if (Math.abs(newValue) > 2) return;
+        this.octave = newValue;
+    };
+    const setVolume = function(value) {
         
         /* keep in bounds of 0 and 1 */
 
-        let potentialVolume = masterGain.gain.value + amount;
+        if (value > 1) {
 
-        if (potentialVolume > 1) {
+            this.masterGain.gain.value = 1;
 
-            masterGain.gain.value = 1;
+        } else if (value < 0) {
 
-        } else if (potentialVolume < 0) {
-
-            masterGain.gain.value = 0; 
+            this.masterGain.gain.value = 0; 
 
         } else {
 
-            masterGain.gain.value += amount;
+            this.masterGain.gain.value = value;
 
         }
 
-    }
-
-    function toggleMasterVolume() {
+    };
+    const toggleMasterVolume = function() {
 
         if (this.active) {
-            this.savedVolumeSetting = getMasterVolume();
-            setMasterVolume(0);
-        } else {
-            this.setMasterVolume(this.savedVolumeSetting);
+            console.log('off');
+            console.log(this);
+            this.savedVolumeSetting = this.masterGain.gain.value;
+            this.masterGain.gain.value = 0;
+        } 
+        else {
+            console.log('on');
+            this.masterGain.gain.value = this.savedVolumeSetting;
         }
+
         this.active = !this.active;
-    }
+    };
 
-    function getMasterVolume() {
-        return masterGain.gain.value;
-    }
-
-    function setEnvelopeLevel({ name, value }) {
+    const setEnvelopeLevel = function({ name, value }) {
        this.envelopeSettings[name].level = value; 
-    }
+    };
 
-    function setOscillatorLevel({ name, value }) {
+    const setOscillatorLevel = function({ name, value }) {
         /* when oscillators get recreated, they use the values that this updates */ 
         this.oscillatorSettings[name].level = value;
-    }
-
-    function muteNote() {
+    };
+    const muteNote = function() {
         
         /* 
             
@@ -198,15 +191,10 @@ const SoundEngine = function ({ initialVolume, initialOctave }) {
         
         */
         
-        oscillators.forEach(node => {
-            node.osc.forEach(osc => {
-                osc.stop(0);
-            });
-        });
+        this.oscillators.forEach(node => node.osc.forEach(osc => osc.stop(0)));
 
-    }
-
-    function playNote(keyIndex, freq) {
+    };
+    const playNote = function(keyIndex, freq) {
 
         /* 
             In web audio, it's a best practice to create new oscillators on each noteOn.
@@ -223,12 +211,10 @@ const SoundEngine = function ({ initialVolume, initialOctave }) {
         */
 
         let frequencyAtKey = freq ? freq : _indexToFrequency(keyIndex);
-        oscillators = _createNote(frequencyAtKey); 
+        this.oscillators = _createNote(frequencyAtKey); 
 
-    }
-
-
-    function _createNote(fundamentalFrequency) {
+    };
+    const _createNote = function(fundamentalFrequency) {
 
         /*
          
@@ -242,18 +228,14 @@ const SoundEngine = function ({ initialVolume, initialOctave }) {
             
         */
       
-        const oscillators = waveforms
-            .filter(wf => {
-                return wf.on;
-            })
-            .map(wf => { 
-    
+        const that = this;
+        this.oscillators = this.waveforms
+            .filter(wf => wf.on)
+            .map(function(wf) { 
                 /* create a node with a name property corresponding to the waveform's name */
-                
                 return { name: wf.name };
-
             }) 
-            .map(node => {
+            .map(function(node) {
 
                 /* build array of oscillators per waveform type that correspond to specified overtones */
                 /* how to best specify volume? well, these overtones each will be some proportion of the overall volume */
@@ -285,8 +267,10 @@ const SoundEngine = function ({ initialVolume, initialOctave }) {
                     }, 
                 ];
 
-                node.osc = overtones.map(overtone => {
-                    const osc = context.createOscillator();
+                node.osc = overtones.map(function(overtone) {
+                    console.log(fundamentalFrequency)
+                    console.log(overtone)
+                    const osc = that.context.createOscillator();
                     osc.type = node.name;
                     osc.frequency.value = fundamentalFrequency * overtone.harmonic; 
                     return osc;
@@ -295,70 +279,63 @@ const SoundEngine = function ({ initialVolume, initialOctave }) {
                 return node;
 
             })
-            .map(node => {
+            .map(function(node) {
 
                 /* give the node a gain property and initialize it */
 
-                node.gain = context.createGain();
-                node.gain.gain.value = DEFAULT_OSCILLATOR_VOLUME; 
+                node.gain = that.context.createGain();
+                node.gain.gain.value = that.DEFAULT_OSCILLATOR_VOLUME; 
 
                 return node;
 
             })
-            .map(node => {
+            .map(function(node) {
 
                 /* connect array of oscillators to gain, gain to master. */
 
-                node.osc.forEach(osc => {
+                node.osc.forEach(function(osc) {
                     osc.connect(node.gain);
                 });
-                node.gain.connect(masterGain);
-                masterGain.connect(context.destination);
+                node.gain.connect(that.masterGain);
+                that.masterGain.connect(that.context.destination);
                 
                 return node;
                 
             })
-            .map(node => {
+            .map(function(node) {
 
                 /* start each oscillators */
                 
-                node.osc.forEach(osc => {
-                    osc.start(0);
-                });
-        
+                node.osc.forEach(osc => osc.start(0));
                 return node;
                 
             });
 
             return oscillators;
 
-    }
-
-    function _indexToFrequency(keyIndex) {
+    };
+    const _indexToFrequency = function(keyIndex) {
 
         /* use current octave value to generate proper fundamental frequency */
 
-        const fundamentalFrequencyAtOctave = c4Hertz * Math.pow(2, this.octave);
+        const fundamentalFrequencyAtOctave = this.c4Hertz * Math.pow(2, this.octave);
         return fundamentalFrequencyAtOctave * Math.pow(Math.pow(2, 1/12), keyIndex); 
 
-    }
+    };
 
     return {
-        
-        volume: this.volume,
-        octave: this.octave,
+        octave: this.octave, 
+        volume: this.octave,
         active: this.active,
-        savedVolumeSetting: this.savedVolumeSetting,
+        volume: this.masterGain.gain.value,
         oscillatorSettings: this.oscillatorSettings,
-        envelopeSettings: this.envelopeSettings,
-        playNote,
         muteNote,
-        setMasterVolume,
-        setOscillatorLevel,
-        setEnvelopeLevel,
+        playNote,
         setOctave,
-        toggleMasterVolume
-
+        setVolume,
+        toggleMasterVolume,
+        setEnvelopeLevel,
+        setOscillatorLevel,
     };
 
 };

@@ -48,6 +48,7 @@
     Vue.use(VueTouch);
 
     export default {
+        name: 'Slider',
         props: {
             level: {
                 type: Number,

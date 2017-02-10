@@ -49,6 +49,7 @@
     import Led from './Led';
 
     export default {
+        name: 'Sequencer',
         data: function() {
             return {
             };

@@ -31,6 +31,7 @@
     import Key from './Key';
 
     export default {
+        name: 'Keyboard',
         data: function() {
             return {
                 blackKeys: [

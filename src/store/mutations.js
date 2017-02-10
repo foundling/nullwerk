@@ -1,9 +1,10 @@
-import SoundEngine from '../services/SoundEngine';
+import SoundEngine from './../services/SoundEngine';
+
+const soundEngine = new SoundEngine({});
+console.log(soundEngine);
 
 const state = {
-    // not reactive
-    soundEngine: new SoundEngine({ initialVolume: 0.0, initialOctave: 0 }),
-
+    soundEngine
 };
 
 const mutations = {
@@ -13,7 +14,7 @@ const mutations = {
     },
 
     TOGGLE_MASTER_VOLUME (state) {
-        state.soundEngine.toggleMasterVolume();
+        soundEngine.toggleMasterVolume();
     },
 
     SET_OCTAVE (state, { direction }) {

@@ -29,6 +29,7 @@
     import store from '../store';
 
     export default {
+        name: 'Btn',
         props: [
             'label', 
             'color',

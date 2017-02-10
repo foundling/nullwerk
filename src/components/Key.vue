@@ -49,6 +49,7 @@
     import { screenWidthMixin }  from './../mixins';
 
     export default {
+        name: 'Key',
         mixins: [ screenWidthMixin ],
         data: function() {
             return {
@@ -74,10 +75,9 @@
                 this.keyboardDirection = this.screenWidth >= 500 ? 'horizontal' : 'vertical';
             },
             startNote(index) {
-                this.$store.state.soundEngine.playNote(index)
+                this.$emit('noteon', { index: index });
             },
             stopNote() {
-                this.$store.state.soundEngine.muteNote()
             },
             handleResize() {
                 this.screenWidth = getScreenWidth();

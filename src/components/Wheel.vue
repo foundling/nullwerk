@@ -13,6 +13,7 @@
     import store from '../store';
 
     export default {
+        name: 'Wheel',
         props: [],
         computed: {}, 
         methods: {}, 

@@ -37,6 +37,7 @@
     import store from '../store';
 
     export default {
+        name: 'Led',
         props: [ 'color', 'octave', 'currentOctave', 'diameter' ],
         computed: {
             isActive: function() { 

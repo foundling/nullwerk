@@ -122,7 +122,7 @@
 
                     <slider 
                     v-on:slide="adjustEnvelopeParam"
-                    v-bind:level="envelopeSettings[parameter.name].level"
+                    v-bind:level="envelopeSettings"
                     v-bind:opacity="0.4"
                     v-bind:name="parameter.name"
                     v-bind:content="parameter.name"
@@ -145,13 +145,15 @@
                
             <!-- Signature Sign Container -->
             <div class="title-container">
-                <h1 class="make">ARS</h1>
+                <h1 class="make">{{ currentVolume }}</h1>
                 <h1 class="model">1</h1>
             </div>
 
             <!-- Keyboard Container -->
             <div class="keyboard-container">
-                <keyboard></keyboard>
+                <keyboard
+                v-on:noteone="noteOn">
+                </keyboard>
             </div>
 
             <!-- Sequencer Container -->
@@ -337,22 +339,19 @@
 <script>
 
     import store from './store';
-    import { 
-        getScreenWidth 
-    }  from './utils';
-
-    import synthConfig from './config/synthConfig';
-    import sequencerConfig from './config/sequencerConfig';
 
     import Keyboard from './components/Keyboard';
     import Sequencer from './components/Sequencer';
-    import Volume from './components/Volume';
-    import Octave from './components/Octave';
     import Slider from './components/Slider';
     import Knob from './components/Knob';
     import Wheel from './components/Wheel';
     import Btn from './components/Btn';
     import Led from './components/Led';
+
+    import synthConfig from './config/synthConfig';
+    import sequencerConfig from './config/sequencerConfig';
+
+    import { getScreenWidth }  from './utils';
 
     export default {
 
@@ -382,17 +381,27 @@
             },
             adjustEnvelopeParam(payload) {
                 this.$store.commit('SET_ENVELOPE_LEVEL', payload );
+            },
+            noteOn({index}) {
+                console.log('note on: ', index);
+            },
+            noteOff() {
+                console.log('note off');
             }
+
         },
         computed: {
             currentOctave() { 
-                return this.$store.getters.currentOctave;
+                //return this.$store.getters.currentOctave;
+            },
+            currentVolume() {
+                //return this.$store.getters.currentVolume;
             },
             oscillatorSettings() {
                 return this.$store.getters.oscillatorSettings;
             },
             envelopeSettings() {
-                return this.$store.getters.envelopeSettings;
+                return 10;
             }
         },
         filters: {
@@ -402,8 +411,6 @@
 
             Keyboard, 
             Sequencer, 
-            Volume, 
-            Octave, 
             Slider, 
             Knob,
             Wheel, 
