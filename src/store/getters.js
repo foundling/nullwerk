@@ -2,7 +2,7 @@ import { state } from './mutations';
 
 export default {
     currentOctave(state) {
-        return state.soundEngine.octave;
+        return state.soundEngine._octave;
     },
     currentVolume (state) {
         return state.soundEngine.volume;

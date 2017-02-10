@@ -1,88 +1,85 @@
 import MIDI from './midi';
-const C4_HERTZ = 261.626;
 
-export default class SoundEngine {
+function SoundEngine ({ volume = 0, octave = 0 }) {
 
-    constructor({ volume = 0, octave = 0 }) {
+    /* init Web Audio and WebMidi  */
 
-        /* init Web Audio and WebMidi  */
+    this.context = new (window.AudioContext || window.webkitAudioContext)(); 
+    MIDI.init().then(this.onMIDIConnect, this.onMIDIFail);
 
-        MIDI.init().then(this.onMIDIConnect, this.onMIDIFail);
+    /* Instantiate Properties */
 
-        /* Instantiate Properties */
+    this.masterGain = this.context.createGain();
+    this.masterGain.connect(this.context.destination);
+    this.c4Hertz = 261.626;
+    this.active = true;
+    this.octave = octave;
+    this.masterGain.gain.value = volume;
+    this.savedVolumeSetting = this.masterGain.gain.value;
+    this.oscillators = null;
+    this.envelopeSettings = {
 
-        this.context = new (window.AudioContext || window.webkitAudioContext)(); 
-        this.masterGain = this.context.createGain();
-        this.masterGain.connect(this.context.destination);
-        this.active = true;
-        this.octave = octave;
-        this.masterGain.gain.value = volume;
-        this.savedVolumeSetting = this.masterGain.gain.value;
-        this.oscillators = null;
-        this.envelopeSettings = {
-
-            attack: {
-                level: 0,
-            }, 
-            decay: {
-                level: 0,
-            }, 
-            sustain: {
-                level: 0,
-            }, 
-            release: {
-                level: 0,
-            }, 
-
-        }
-        this.oscillatorSettings = {
-
-            sine: {
-                level: 10,
-                harmonicCount: 6 
-            },
-            square: {
-                level: 0,
-                harmonicCount: 6 
-            },
-            sawtooth: { 
-                level: 0,
-                harmonicCount: 6 
-            },
-            triangle: {
-                level: 0,
-                harmonicCount: 6 
-            }
-
-        };
-        this.waveforms = [
-            {
-                name: 'sine',
-                on: true
-            }, 
-            {
-                name: 'square',
-                on: true
-            }, 
-            {
-                name: 'sawtooth',
-                on: true
-            }, 
-            {
-                name: 'triangle',
-                on: true
-            }
-        ];   
+        attack: {
+            level: 0,
+        }, 
+        decay: {
+            level: 0,
+        }, 
+        sustain: {
+            level: 0,
+        }, 
+        release: {
+            level: 0,
+        }, 
 
     }
+    this.oscillatorSettings = {
+
+        sine: {
+            level: 10,
+            harmonicCount: 6 
+        },
+        square: {
+            level: 0,
+            harmonicCount: 6 
+        },
+        sawtooth: { 
+            level: 0,
+            harmonicCount: 6 
+        },
+        triangle: {
+            level: 0,
+            harmonicCount: 6 
+        }
+
+    };
+    this.waveforms = [
+        {
+            name: 'sine',
+            on: true
+        }, 
+        {
+            name: 'square',
+            on: true
+        }, 
+        {
+            name: 'sawtooth',
+            on: true
+        }, 
+        {
+            name: 'triangle',
+            on: true
+        }
+    ];   
+
 
     /* MIDI Connections and event handlers */
-    onMIDIStateChange(event) {
+    const onMIDIStateChange = function(event) {
         const newState = event.target.state;
         console.log(`MIDI state changed to ${ state }!`); 
-    }
+    };
 
-    onMIDIMessage(msg){
+    const onMIDIMessage = function(msg){
 
         /* [ command and channel byte, note, velocity data ] */
  
@@ -102,9 +99,9 @@ export default class SoundEngine {
                 break;
         }
 
-    }
+    };
 
-    onMIDIConnect (midiAccess) {
+    const onMIDIConnect = function(midiAccess) {
 
         const inputs = midiAccess.inputs.values();
 
@@ -113,52 +110,55 @@ export default class SoundEngine {
             input.value.onmidistatechange = onMIDIStateChange;
         }
 
-    }
+    };
 
-    onMIDIFail (error) {
+    const onMIDIFail = function(error) {
 
         console.log(`Midi Fail! Error Name:  ${error.name}`);
         console.log(error);
 
-    }
+    };
 
-    fromMIDI (noteNumber) {
-        const freq = Math.pow(2, (noteNumber - 69)/12) * C4_HERTZ;
+    const fromMIDI = function(noteNumber) {
+        const freq = Math.pow(2, (noteNumber - 69)/12) * this.c4Hertz;
         return freq;
-    }
-
-    noteOn(noteNumber, velocity) {
+    };
+    const noteOn = function(noteNumber, velocity) {
         const frequencyAtKey = fromMIDI(noteNumber);
         playNote(null, frequencyAtKey);
-    }
+    };
 
-    noteOff () {
+    const noteOff = function() {
         muteNote();  
-    }
+    };
 
     /* Web Audio Sound Engine Functions */
 
-    setOctave(direction) {
+    const setOctave = function(direction) {
         const newValue = direction + this.octave;
         if (Math.abs(newValue) > 2) return;
         this.octave = newValue;
-    }
-
-    setVolume(value) {
+    };
+    const setVolume = function(value) {
         
         /* keep in bounds of 0 and 1 */
 
         if (value > 1) {
+
             this.masterGain.gain.value = 1;
+
         } else if (value < 0) {
+
             this.masterGain.gain.value = 0; 
+
         } else {
+
             this.masterGain.gain.value = value;
+
         }
 
-    }
-
-    toggleMasterVolume() {
+    };
+    const toggleMasterVolume = function() {
 
         if (this.active) {
             console.log('off');
@@ -172,18 +172,29 @@ export default class SoundEngine {
         }
 
         this.active = !this.active;
-    }
+    };
 
-    setEnvelopeLevel({ name, value }) {
+    const setEnvelopeLevel = function({ name, value }) {
        this.envelopeSettings[name].level = value; 
-    }
+    };
 
-    setOscillatorLevel({ name, value }) {
+    const setOscillatorLevel = function({ name, value }) {
         /* when oscillators get recreated, they use the values that this updates */ 
         this.oscillatorSettings[name].level = value;
-    }
+    };
+    const muteNote = function() {
+        
+        /* 
+            
+            With web audio, notes are discardable things, 
+            so start & stop are create & destroy for a node. 
+        
+        */
+        
+        this.oscillators.forEach(node => node.osc.forEach(osc => osc.stop(0)));
 
-    playNote(keyIndex, freq) {
+    };
+    const playNote = function(keyIndex, freq) {
 
         /* 
             In web audio, it's a best practice to create new oscillators on each noteOn.
@@ -202,18 +213,8 @@ export default class SoundEngine {
         let frequencyAtKey = freq ? freq : _indexToFrequency(keyIndex);
         this.oscillators = _createNote(frequencyAtKey); 
 
-    }
-
-    muteNote() {
-        /* 
-            With web audio, notes are discardable things, 
-            so start & stop are create & destroy for a node. 
-        */
-        
-        this.oscillators.forEach(node => node.osc.forEach(osc => osc.stop(0)));
-    }
-
-    _createNote(fundamentalFrequency) {
+    };
+    const _createNote = function(fundamentalFrequency) {
 
         /*
          
@@ -312,15 +313,31 @@ export default class SoundEngine {
 
             return oscillators;
 
-    }
-
-    _indexToFrequency(keyIndex) {
+    };
+    const _indexToFrequency = function(keyIndex) {
 
         /* use current octave value to generate proper fundamental frequency */
 
-        const fundamentalFrequencyAtOctave = C4_HERTZ * Math.pow(2, this.octave);
+        const fundamentalFrequencyAtOctave = this.c4Hertz * Math.pow(2, this.octave);
         return fundamentalFrequencyAtOctave * Math.pow(Math.pow(2, 1/12), keyIndex); 
 
-    }
+    };
 
-}
+    return {
+        octave: this.octave, 
+        volume: this.octave,
+        active: this.active,
+        volume: this.masterGain.gain.value,
+        oscillatorSettings: this.oscillatorSettings,
+        muteNote,
+        playNote,
+        setOctave,
+        setVolume,
+        toggleMasterVolume,
+        setEnvelopeLevel,
+        setOscillatorLevel,
+    };
+
+};
+
+export default SoundEngine; 

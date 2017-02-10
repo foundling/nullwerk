@@ -61,6 +61,7 @@
     import store from '../store';
 
     export default {
+        name: 'Knob',
         props: { 
 
             active: {
