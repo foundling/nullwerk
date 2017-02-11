@@ -150,10 +150,22 @@ h1.make {
     height: 40%;
 }
 
+.keyboard {
+    height: 100%;
+    width: 100%;
+    background: whitesmoke;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
 .knob,
 .btn {
     box-shadow: 0 2px 0px 0px #afafaf;
 }
+
 @media(max-width: 500px) {
     .led-container {
         flex-direction: column;
@@ -162,5 +174,9 @@ h1.make {
         transform: rotate(180deg);
         width: 100%;
         height: 150%;
+    }
+    .keyboard {
+        flex-direction: column;
+        height: 100%;
     }
 }

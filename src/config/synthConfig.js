@@ -7,6 +7,14 @@ export default {
         level: 0,
         previousLevel: null
     },
+    keyboard: {
+        blackKeys: [
+            1, 3, 
+            6, 8, 10,
+            13,15,
+            18, 20, 22,
+        ] 
+    },
     palette,
     leds: [
         { color: palette.red, octave: 2 },

@@ -3,7 +3,7 @@ const C4_HERTZ = 261.626;
 
 export default class SoundEngine {
 
-    constructor({ volume = 0, octave = 0 }) {
+    constructor({ initVolume = 0.2, initOctave = 0 }) {
 
         /* init Web Audio and WebMidi  */
 
@@ -15,8 +15,8 @@ export default class SoundEngine {
         this.masterGain = this.context.createGain();
         this.masterGain.connect(this.context.destination);
         this.active = true;
-        this.octave = octave;
-        this.masterGain.gain.value = volume;
+        this.currentOctave = initOctave;
+        this.masterGain.gain.value = initVolume;
         this.savedVolumeSetting = this.masterGain.gain.value;
         this.oscillators = null;
         this.envelopeSettings = {
@@ -137,41 +137,45 @@ export default class SoundEngine {
 
     /* Web Audio Sound Engine Functions */
 
-    setOctave(direction) {
-        const newValue = direction + this.octave;
-        if (Math.abs(newValue) > 2) return;
-        this.octave = newValue;
+    get octave() {
+        return this.currentOctave;
     }
-    setVolume(value) {
-        
-        /* keep in bounds of 0 and 1 */
+
+    set octave(direction) {
+
+        const newValue = direction + this.currentOctave;
+
+        if (Math.abs(newValue) <= 2) {
+            this.currentOctave = newValue;
+        }
+    }
+
+    get volume() {
+        return this.masterGain.gain.value;
+    }
+
+    set volume(value) {
 
         if (value > 1) {
-
             this.masterGain.gain.value = 1;
-
         } else if (value < 0) {
-
             this.masterGain.gain.value = 0; 
-
         } else {
-
             this.masterGain.gain.value = value;
-
         }
 
     }
+
     toggleMasterVolume() {
 
         if (this.active) {
-            console.log('off');
-            console.log(this);
             this.savedVolumeSetting = this.masterGain.gain.value;
             this.masterGain.gain.value = 0;
+            console.log(this.masterGain.gain.value);
         } 
         else {
-            console.log('on');
             this.masterGain.gain.value = this.savedVolumeSetting;
+            console.log(this.masterGain.gain.value);
         }
 
         this.active = !this.active;

@@ -2,7 +2,7 @@
 <style src="./AppStyle.scss" lang="scss"></style>
 <script>
 
-    import Keyboard from './Keyboard';
+    import Key from './Key';
     import Sequencer from './Sequencer';
     import Slider from './Slider';
     import Knob from './Knob';
@@ -10,10 +10,13 @@
     import Btn from './Btn';
     import Led from './Led';
 
+    import SoundEngine from './../services/SoundEngine';
     import synthConfig from './../config/synthConfig';
     import sequencerConfig from './../config/sequencerConfig';
 
     import { getScreenWidth }  from './../utils';
+
+    const soundEngine = new SoundEngine({});
 
     export default {
 
@@ -25,6 +28,7 @@
         },
         methods: {
             toggleMasterVol() {
+                soundEngine.toggleMasterVolume();
             },
             toggleWaveformActive({ waveform }) {
 
@@ -64,7 +68,7 @@
         },
         components: { 
 
-            Keyboard, 
+            Key, 
             Sequencer, 
             Slider, 
             Knob,
