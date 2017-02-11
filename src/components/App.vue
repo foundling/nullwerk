@@ -17,6 +17,7 @@
     import { getScreenWidth }  from './../utils';
 
     const soundEngine = new SoundEngine({});
+    console.log(soundEngine);
 
     export default {
 
@@ -44,11 +45,13 @@
             },
             adjustEnvelopeParam(payload) {
             },
-            noteOn({index}) {
-                console.log('note on: ', index);
+            noteOn({ index }) {
+                soundEngine.playNote(index);
+                console.log('note on:', index);
             },
-            noteOff() {
-                console.log('note off');
+            noteOff({ index }) {
+                soundEngine.muteNote(index);
+                console.log('note off:', index);
             }
 
         },

@@ -75,9 +75,10 @@
                 this.keyboardDirection = this.screenWidth >= 500 ? 'horizontal' : 'vertical';
             },
             startNote(index) {
-                this.$emit('noteon', { index: index });
+                this.$emit('noteon', { index });
             },
-            stopNote() {
+            stopNote(index) {
+                this.$emit('noteoff', { index }); 
             },
             handleResize() {
                 this.screenWidth = getScreenWidth();

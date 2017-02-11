@@ -151,6 +151,8 @@
     <div class="keyboard-container">
         <div class="keyboard">
             <key 
+            v-on:noteon="noteOn"
+            v-on:noteoff="noteOff"
             v-for="index in 25" 
             :index="index - 1" 
             :blackKeys="synth.keyboard.blackKeys">

@@ -1,7 +1,6 @@
 import SoundEngine from './../services/SoundEngine';
 
 const soundEngine = new SoundEngine({});
-console.log(soundEngine);
 
 const state = {
     soundEngine

@@ -95,10 +95,10 @@ export default class SoundEngine {
 
         switch(type) {
             case 144: // noteOn message
-                noteOn(noteNumber, velocity);
+                this.noteOn(noteNumber, velocity);
                 break;
             case 128: // noteOn message
-                noteOff();
+                this.noteOff();
                 break;
         }
 
@@ -123,16 +123,16 @@ export default class SoundEngine {
     }
 
     fromMIDI(noteNumber) {
-        const freq = Math.pow(2, (noteNumber - 69)/12) * this.c4Hertz;
+        const freq = Math.pow(2, (noteNumber - 69)/12) * C4_HERTZ;
         return freq;
     }
     noteOn(noteNumber, velocity) {
         const frequencyAtKey = fromMIDI(noteNumber);
-        playNote(null, frequencyAtKey);
+        this.playNote(null, frequencyAtKey);
     }
 
     noteOff() {
-        muteNote();  
+        this.muteNote();  
     }
 
     /* Web Audio Sound Engine Functions */
@@ -205,8 +205,8 @@ export default class SoundEngine {
 
         */
 
-        let frequencyAtKey = freq ? freq : _indexToFrequency(keyIndex);
-        this.oscillators = _createNote(frequencyAtKey); 
+        let frequencyAtKey = freq ? freq : this._indexToFrequency(keyIndex);
+        this.oscillators = this._createNote(frequencyAtKey); 
 
     }
 
@@ -293,7 +293,7 @@ export default class SoundEngine {
                 /* give the node a gain property and initialize it */
 
                 node.gain = that.context.createGain();
-                node.gain.gain.value = that.DEFAULT_OSCILLATOR_VOLUME; 
+                node.gain.gain.value = that.volume; 
 
                 return node;
 
@@ -320,14 +320,14 @@ export default class SoundEngine {
                 
             });
 
-            return oscillators;
+            return this.oscillators;
 
     }
     _indexToFrequency(keyIndex) {
 
         /* use current octave value to generate proper fundamental frequency */
 
-        const fundamentalFrequencyAtOctave = this.c4Hertz * Math.pow(2, this.octave);
+        const fundamentalFrequencyAtOctave = C4_HERTZ * Math.pow(2, this.octave);
         return fundamentalFrequencyAtOctave * Math.pow(Math.pow(2, 1/12), keyIndex); 
 
     }
