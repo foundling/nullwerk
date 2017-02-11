@@ -19,6 +19,21 @@ export default class SoundEngine {
         this.masterGain.gain.value = initVolume;
         this.savedVolumeSetting = this.masterGain.gain.value;
         this.oscillators = null;
+        this.currentOscillatorSettings = {
+            sine: {
+                level: 0.0
+            },
+            square: {
+                level: 0.0
+            },
+            sawtooth: {
+                level: 0.0
+            },
+            triangle: {
+                level: 0.0
+            }
+
+        };
         this.envelopeSettings = {
 
             attack: {
@@ -35,26 +50,6 @@ export default class SoundEngine {
             }, 
 
         }
-        this.oscillatorSettings = {
-
-            sine: {
-                level: 10,
-                harmonicCount: 6 
-            },
-            square: {
-                level: 0,
-                harmonicCount: 6 
-            },
-            sawtooth: { 
-                level: 0,
-                harmonicCount: 6 
-            },
-            triangle: {
-                level: 0,
-                harmonicCount: 6 
-            }
-
-        };
         this.waveforms = [
             {
                 name: 'sine',
@@ -165,6 +160,35 @@ export default class SoundEngine {
 
     }
 
+    /* Waveform Getters and Setters */
+    get sineLevel() {
+        return this.currentOscillatorSettings.sine.level;
+    }
+    set sineLevel(level) {
+        this.currentOscillatorSettings.sine.level = level;
+    }
+
+    get squareLevel() {
+        return this.currentOscillatorSettings.square.level;
+    }
+    set squareLevel(level) {
+        this.currentOscillatorSettings.square.level = level;
+    }
+
+    get sawtoothLevel() {
+        return this.currentOscillatorSettings.sawtooth.level;
+    }
+    set sawtoothLevel(level) {
+        this.currentOscillatorSettings.sawtooth.level = level;
+    }
+
+    get triangleLevel() {
+        return this.currentOscillatorSettings.triangle.level;
+    }
+    set triangleLevel(level) {
+        this.currentOscillatorSettings.triangle.level = level;
+    }
+
     toggleMasterVolume() {
 
         if (this.active) {
@@ -186,8 +210,9 @@ export default class SoundEngine {
 
     setOscillatorLevel = function({ name, value }) {
         /* when oscillators get recreated, they use the values that this updates */ 
-        this.oscillatorSettings[name].level = value;
+        this.currentOscillatorSettings[name].level = value;
     }
+
     playNote(keyIndex, freq) {
 
         /* 
@@ -292,7 +317,7 @@ export default class SoundEngine {
                 /* give the node a gain property and initialize it */
 
                 node.gain = that.context.createGain();
-                node.gain.gain.value = that.volume; 
+                node.gain.gain.value = that.currentOscillatorSettings[node.name].level; 
 
                 return node;
 

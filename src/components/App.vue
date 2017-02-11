@@ -40,7 +40,9 @@
             adjustOctave(direction) { 
                 this.soundEngine.adjustOctave(direction);
             },
-            adjustWaveformVol(payload) {
+            adjustOscillatorVolume({ name, value }) {
+                const propName = name + 'Level';
+                this.soundEngine[ propName ] = value;
             },
             adjustEnvelopeParam(payload) {
             },

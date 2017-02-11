@@ -95,7 +95,7 @@
             v-bind:level="0"
             v-bind:name="waveform.name"
             v-bind:title="`adjust ${ waveform.name } level.`"
-            v-on:slide="adjustWaveformVol"
+            v-on:slide="adjustOscillatorVolume"
             v-for="waveform in synth.waveforms" 
             v-bind:control-source="waveform.slider"
             v-bind:direction="waveform.slider.direction"
