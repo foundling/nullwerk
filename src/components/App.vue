@@ -11,25 +11,23 @@
     import Led from './Led';
 
     import SoundEngine from './../services/SoundEngine';
-    import synthConfig from './../config/synthConfig';
-    import sequencerConfig from './../config/sequencerConfig';
+    import * as configs from './../config';
 
     import { getScreenWidth }  from './../utils';
 
-    const soundEngine = new SoundEngine({});
-    console.log(soundEngine);
-
+    console.log(configs);
     export default {
 
         data: function() {
             return {
-                synth: synthConfig,
-                sequencer: sequencerConfig,
+                synth: configs.synth,
+                sequencer: configs.sequencer,
+                soundEngine: new SoundEngine({})
             };
         },
         methods: {
             toggleMasterVol() {
-                soundEngine.toggleMasterVolume();
+                this.soundEngine.toggleMasterVolume();
             },
             toggleWaveformActive({ waveform }) {
 
@@ -46,11 +44,11 @@
             adjustEnvelopeParam(payload) {
             },
             noteOn({ index }) {
-                soundEngine.playNote(index);
+                this.soundEngine.playNote(index);
                 console.log('note on:', index);
             },
             noteOff({ index }) {
-                soundEngine.muteNote(index);
+                this.soundEngine.muteNote(index);
                 console.log('note off:', index);
             }
 
