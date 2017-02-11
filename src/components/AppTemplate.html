@@ -12,7 +12,7 @@
             diameter="15%"
             v-for="led in synth.leds" 
             v-bind:color="led.color" 
-            v-bind:currentOctave="currentOctave" 
+            v-bind:currentOctave="soundEngine.currentOctave" 
             v-bind:octave="led.octave">
             </led>
 

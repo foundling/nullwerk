@@ -141,13 +141,12 @@ export default class SoundEngine {
         return this.currentOctave;
     }
 
-    set octave(direction) {
+    adjustOctave(direction) {
 
-        const newValue = direction + this.currentOctave;
+        const newVal = this.currentOctave + direction;
+        if (Math.abs(newVal)  > 2) return;
+        this.currentOctave += direction;
 
-        if (Math.abs(newValue) <= 2) {
-            this.currentOctave = newValue;
-        }
     }
 
     get volume() {

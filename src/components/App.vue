@@ -38,6 +38,7 @@
                 };
             },
             adjustOctave(direction) { 
+                this.soundEngine.adjustOctave(direction);
             },
             adjustWaveformVol(payload) {
             },
