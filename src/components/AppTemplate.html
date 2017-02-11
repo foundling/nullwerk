@@ -79,7 +79,7 @@
         <div class="waveforms-container">
             <knob 
             v-for="waveform in synth.waveforms" 
-            v-on:toggle="toggleWaveformActive"
+            v-on:toggle="toggleOscillatorVol"
             v-bind:active="waveform.slider.active"
             v-bind:bg-image-active="waveform.img.active"
             v-bind:bg-image-inactive="waveform.img.inactive"

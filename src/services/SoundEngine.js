@@ -21,18 +21,25 @@ export default class SoundEngine {
         this.oscillators = null;
         this.currentOscillatorSettings = {
             sine: {
+                active: true,
+                savedLevel: null,
                 level: 0.0
             },
             square: {
+                active: true,
+                savedLevel: null,
                 level: 0.0
             },
             sawtooth: {
+                active: true,
+                savedLevel: null,
                 level: 0.0
             },
             triangle: {
+                active: true,
+                savedLevel: null,
                 level: 0.0
             }
-
         };
         this.envelopeSettings = {
 
@@ -187,6 +194,17 @@ export default class SoundEngine {
     }
     set triangleLevel(level) {
         this.currentOscillatorSettings.triangle.level = level;
+    }
+
+    toggleOscillatorVolume(name) {
+        const osc = this.currentOscillatorSettings[name];
+        if (osc.active) {
+            osc.savedLevel = osc.level;
+            osc.level = 0.0;
+        } else {
+            osc.level = osc.savedLevel;
+        }
+        osc.active = !osc.active;
     }
 
     toggleMasterVolume() {

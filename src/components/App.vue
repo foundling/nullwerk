@@ -29,13 +29,11 @@
             toggleMasterVol() {
                 this.soundEngine.toggleMasterVolume();
             },
-            toggleWaveformActive({ waveform }) {
-
-                for (let i = 0, max = this.synth.waveforms.length; i < max; ++i) {
-                    if (this.synth.waveforms[i].name === waveform) {
-                        this.synth.waveforms[i].slider.active = !this.synth.waveforms[i].slider.active;
-                    }
-                };
+            toggleOscillatorVol({ waveform }) {
+                this.soundEngine.toggleOscillatorVolume(waveform);
+                const targetWaveform = this.synth.waveforms.filter(wf => wf.name === waveform)[0];
+                console.log(targetWaveform);
+                targetWaveform.slider.active = !targetWaveform.slider.active;
             },
             adjustOctave(direction) { 
                 this.soundEngine.adjustOctave(direction);
