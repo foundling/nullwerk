@@ -1,9 +1,11 @@
 import MIDI from './midi';
 const C4_HERTZ = 261.626; 
+const MAX_VOLUME = 0.4;
+const MIN_VOLUME = 0.0;
 
 export default class SoundEngine {
 
-    constructor({ initVolume = 0.2, initOctave = 0 }) {
+    constructor(config) {
 
         /* init Web Audio and WebMidi  */
 
@@ -14,7 +16,7 @@ export default class SoundEngine {
 
         this.masterGain = this.context.createGain();
         this.masterGain.connect(this.context.destination);
-        this.active = true;
+        this.active = config.masterVolume.active;
         this.currentOctave = initOctave;
         this.masterGain.gain.value = initVolume;
         this.savedVolumeSetting = this.masterGain.gain.value;
@@ -23,40 +25,40 @@ export default class SoundEngine {
             sine: {
                 active: true,
                 savedLevel: null,
-                level: 0.0
+                level: 0.2
             },
             square: {
                 active: true,
                 savedLevel: null,
-                level: 0.0
+                level: 0.1
             },
             sawtooth: {
                 active: true,
                 savedLevel: null,
-                level: 0.0
+                level: 0.3
             },
             triangle: {
                 active: true,
                 savedLevel: null,
-                level: 0.0
+                level: 0.4
             }
         };
         this.envelopeSettings = {
 
             attack: {
-                level: 0,
+                time: 0,
             }, 
             decay: {
-                level: 0,
+                time: 0,
             }, 
             sustain: {
-                level: 0,
+                time: 0,
             }, 
             release: {
-                level: 0,
+                time: 0
             }, 
 
-        }
+        };
         this.waveforms = [
             {
                 name: 'sine',
@@ -157,10 +159,10 @@ export default class SoundEngine {
 
     set volume(value) {
 
-        if (value > 1) {
-            this.masterGain.gain.value = 1;
-        } else if (value < 0) {
-            this.masterGain.gain.value = 0; 
+        if (value > MAX_VOLUME) {
+            this.masterGain.gain.value = MAX_VOLUME;
+        } else if (value < MIN_VOLUME) {
+            this.masterGain.gain.value = MIN_VOLUME; 
         } else {
             this.masterGain.gain.value = value;
         }
@@ -222,8 +224,16 @@ export default class SoundEngine {
         this.active = !this.active;
     }
 
-    setEnvelopeLevel({ name, value }) {
-       this.envelopeSettings[name].level = value; 
+    levelToTime(level){ 
+        const milliseconds = 1000;
+        return level * 0.1 * milliseconds;
+    }
+
+    setEnvelopeValue({ name, value }) {
+
+        //value is between 0 and 1;
+        const milliseconds = this.levelToTime(value);
+        this.envelopeSettings[ name ].time = milliseconds; 
     }
 
     setOscillatorLevel = function({ name, value }) {
@@ -280,6 +290,7 @@ export default class SoundEngine {
         */
       
         const that = this;
+
         this.oscillators = this.waveforms
             .filter(wf => wf.on)
             .map(function(wf) { 
@@ -319,8 +330,6 @@ export default class SoundEngine {
                 ];
 
                 node.osc = overtones.map(function(overtone) {
-                    console.log(fundamentalFrequency)
-                    console.log(overtone)
                     const osc = that.context.createOscillator();
                     osc.type = node.name;
                     osc.frequency.value = fundamentalFrequency * overtone.harmonic; 
@@ -334,8 +343,13 @@ export default class SoundEngine {
 
                 /* give the node a gain property and initialize it */
 
+                const oscLevel = that.currentOscillatorSettings[node.name].level;
+
+                const attackTime = that.context.currentTime + that.envelopeSettings.attack.time;
+
                 node.gain = that.context.createGain();
-                node.gain.gain.value = that.currentOscillatorSettings[node.name].level; 
+                node.gain.gain.setValueAtTime(0, that.context.currentTime);
+                node.gain.gain.linearRampToValueAtTime(oscLevel, attackTime);
 
                 return node;
 

@@ -2,27 +2,156 @@ import palette from './../services/colorPalette';
 
 export default {
 
-    masterVolume: {
-        active: true,
-        level: 0,
-        previousLevel: null
+    synth: {
+        masterVolume: {
+            max: 0.5,
+            min: 0.0,
+            level: 0,
+            previousLevel: null,
+            active: true,
+        },
+        oscillators: [
+            {
+                name: 'square',
+                level: 0.1,
+            },
+            {
+                name: 'triangle',
+                level: 0.2
+            },
+            {
+                name: 'sawtooth',
+                level: 0.15
+            },
+            {
+                name: 'sine',
+                level: 0.25
+            }
+        ],
+        envelope: [
+            {
+                name: 'attack',
+                time: 0,
+            },
+            {
+                name: 'decay',
+                time: 0,
+            },
+            {
+                name: 'sustain',
+                time: 0, 
+            },
+            {
+                name: 'release',
+                time: 0,
+            },
+        ],
     },
-    keyboard: {
-        blackKeys: [
-            1, 3, 
-            6, 8, 10,
-            13,15,
-            18, 20, 22,
-        ] 
+    ui: {
+        waveformsSliders: [
+            {
+                name: 'square',
+                knob: {
+                    color: 'crimson',
+                    img: {
+                        inactive: '/static/img/square_wave.png',
+                        active: '/static/img/square_wave_inverse.png'
+                    },
+                },
+                slider: {
+                    color: 'crimson',
+                    direction: 'horizontal',
+                }
+            },
+            {
+                name: 'triangle',
+                knob: {
+                    color: 'darkcyan',
+                    img: {
+                        inactive: '/static/img/triangle_wave.png',
+                        active: '/static/img/triangle_wave_inverse.png'
+                    },
+                },
+                slider: {
+                    color: 'darkcyan',
+                    direction: 'horizontal',
+                }
+            },
+            {
+                name: 'sawtooth',
+                knob: {
+                    color: 'goldenrod',
+                    img: {
+                        inactive: '/static/img/sawtooth_wave.png',
+                        active: '/static/img/sawtooth_wave_inverse.png'
+                    },
+                }, 
+                slider: {
+                    color: 'goldenrod',
+                    direction: 'horizontal',
+                }
+            },
+            {
+                name: 'sine',
+                knob: {
+                    color: 'deepskyblue',
+                    img: {
+                        inactive: '/static/img/sine_wave.png',
+                        active: '/static/img/sine_wave_inverse.png'
+                    }
+                },
+                slider: {
+                    direction: 'horizontal',
+                    color: 'deepskyblue',
+                }
+        ],
+        envelopeSliders: [
+            {
+                name: 'attack',
+                slider: {
+                    color: palette.black, 
+                    direction: 'vertical'
+                }
+            },
+            {
+                name: 'decay',
+                slider: {
+                    color: palette.black, 
+                    direction: 'vertical',
+                }
+            },
+            {
+                name: 'sustain',
+                slider: {
+                    color: palette.black, 
+                    direction: 'vertical'
+                }
+            },
+            {
+                name: 'release',
+                slider: {
+                    color: palette.black, 
+                    direction: 'vertical'
+                }
+            }
+        ],
+        keyboard: {
+            blackKeys: [
+                1, 3, 
+                6, 8, 10,
+                13,15,
+                18, 20, 22,
+            ] 
+        },
+        palette,
+        leds: [
+            { color: palette.red, octave: 2 },
+            { color: palette.yellow, octave: 1 },
+            { color: palette.lime, octave: 0 },
+            { color: palette.yellow, octave: -1 },
+            { color: palette.red, octave: -2 },
+        ],
     },
-    palette,
-    leds: [
-        { color: palette.red, octave: 2 },
-        { color: palette.yellow, octave: 1 },
-        { color: palette.lime, octave: 0 },
-        { color: palette.yellow, octave: -1 },
-        { color: palette.red, octave: -2 },
-    ],
     sequencer: {
         currentMode: 'stop',
         modes: [
@@ -46,108 +175,5 @@ export default {
                 }
             };
         })
-    },
-    waveforms: [
-        {
-            name: 'square',
-            color: 'crimson',
-            img: {
-                inactive: '/static/img/square_wave.png',
-                active: '/static/img/square_wave_inverse.png'
-            },
-            slider: {
-                active: true,
-                direction: 'horizontal',
-                level: 0
-
-            }
-        },
-        {
-            name: 'triangle',
-            color: 'darkcyan',
-            img: {
-                inactive: '/static/img/triangle_wave.png',
-                active: '/static/img/triangle_wave_inverse.png'
-            },
-            slider: {
-                active: true,
-                direction: 'horizontal',
-                level: 0
-            }
-        },
-        {
-            name: 'sawtooth',
-            color: 'goldenrod',
-            img: {
-                inactive: '/static/img/sawtooth_wave.png',
-                active: '/static/img/sawtooth_wave_inverse.png'
-            },
-            slider: {
-                active: true,
-                direction: 'horizontal',
-                level: 0,
-            }
-        },
-        {
-            name: 'sine',
-            color: 'deepskyblue',
-            img: {
-                inactive: '/static/img/sine_wave.png',
-                active: '/static/img/sine_wave_inverse.png'
-            },
-            slider: {
-                active: true,
-                direction: 'horizontal',
-                level: 0
-            }
-        }
-    ],
-    envelopeParameters: [
-
-        {
-            name: 'attack',
-            direction: 'vertical',
-            level: 0,
-            color: palette.black, 
-            slider: {
-                active: true,
-                level: 0,
-                direction: 'vertical'
-            }
-        },
-        {
-            name: 'decay',
-            direction: 'vertical',
-            level: 0,
-            color: palette.black, 
-            slider: {
-                active: true,
-                level: 0,
-                direction: 'vertical'
-            }
-        },
-        {
-            name: 'sustain',
-            direction: 'vertical',
-            level: 0,
-            color: palette.black, 
-            slider: {
-                active: true,
-                level: 0,
-                direction: 'vertical'
-            }
-        },
-        {
-            name: 'release',
-            direction: 'vertical',
-            level: 0,
-            color: palette.black, 
-            slider: {
-                active: true,
-                level: 0,
-                direction: 'vertical'
-            }
-        },
-    ]
+    }
 };
-

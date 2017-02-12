@@ -92,11 +92,11 @@
 
         <div class="waveform-level-container">
             <slider 
-            v-bind:level="0"
+            v-for="waveform in synth.waveforms" 
+            v-bind:level="waveform.slider.level"
             v-bind:name="waveform.name"
             v-bind:title="`adjust ${ waveform.name } level.`"
             v-on:slide="adjustOscillatorVolume"
-            v-for="waveform in synth.waveforms" 
             v-bind:control-source="waveform.slider"
             v-bind:direction="waveform.slider.direction"
             v-bind:color="waveform.color"
@@ -119,7 +119,7 @@
             class="envelope-slider-label">{{ parameter.name | abbreviate }}</h1>
 
             <slider 
-            v-on:slide="adjustEnvelopeParam"
+            v-on:slide="setEnvelopeValue"
             v-bind:level="envelopeSettings"
             v-bind:opacity="0.4"
             v-bind:name="parameter.name"

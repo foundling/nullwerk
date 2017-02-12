@@ -15,14 +15,13 @@
 
     import { getScreenWidth }  from './../utils';
 
-    console.log(configs);
     export default {
 
         data: function() {
             return {
                 synth: configs.synth,
                 sequencer: configs.sequencer,
-                soundEngine: new SoundEngine({})
+                soundEngine: new SoundEngine(configs.synth)
             };
         },
         methods: {
@@ -32,7 +31,6 @@
             toggleOscillatorVol({ waveform }) {
                 this.soundEngine.toggleOscillatorVolume(waveform);
                 const targetWaveform = this.synth.waveforms.filter(wf => wf.name === waveform)[0];
-                console.log(targetWaveform);
                 targetWaveform.slider.active = !targetWaveform.slider.active;
             },
             adjustOctave(direction) { 
@@ -42,17 +40,15 @@
                 const propName = name + 'Level';
                 this.soundEngine[ propName ] = value;
             },
-            adjustEnvelopeParam(payload) {
+            setEnvelopeValue({ name, value }) {
+                this.soundEngine.setEnvelopeValue({ name, value }); 
             },
             noteOn({ index }) {
                 this.soundEngine.playNote(index);
-                console.log('note on:', index);
             },
             noteOff({ index }) {
                 this.soundEngine.muteNote(index);
-                console.log('note off:', index);
             }
-
         },
         computed: {
             currentOctave() { 
@@ -62,7 +58,6 @@
             oscillatorSettings() {
             },
             envelopeSettings() {
-                return 10;
             }
         },
         filters: {
