@@ -78,14 +78,15 @@
 
         <div class="waveforms-container">
             <knob 
-            v-for="waveform in synth.waveforms" 
+            v-bind:active="slider.active"
+
+            v-for="waveformSlider in waveformSliders" 
             v-on:toggle="toggleOscillatorVol"
-            v-bind:active="waveform.slider.active"
-            v-bind:bg-image-active="waveform.img.active"
-            v-bind:bg-image-inactive="waveform.img.inactive"
-            v-bind:waveform="waveform.name"
-            v-bind:color="waveform.color"
-            v-bind:title="`toggle ${ waveform.name } level on / off.`"
+            v-bind:bg-image-active="waveformSlider.knob.img.active"
+            v-bind:bg-image-inactive="waveformSlider.knob.img.inactive"
+            v-bind:waveform="waveformSlider.name"
+            v-bind:color="waveformSlider.knob.color"
+            v-bind:title="`toggle ${ waveformSlider.name } level on / off.`"
             diameter="25%">
             </knob>
         </div>

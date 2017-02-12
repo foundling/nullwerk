@@ -44,7 +44,6 @@
 </style>
 
 <script>
-    import store from '../store';
     import { getScreenWidth } from './../utils';
     import { screenWidthMixin }  from './../mixins';
 

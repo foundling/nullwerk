@@ -42,7 +42,6 @@
 <script>
     import Vue from 'vue';
     import VueTouch from 'vue-touch';
-    import store from '../store';
     import { toComputedProp, log } from '../utils';
 
     Vue.use(VueTouch);

@@ -1,54 +1,58 @@
 import palette from './../services/colorPalette';
 
-export default {
+export const synthConfig = {
 
-    synth: {
-        masterVolume: {
-            max: 0.5,
-            min: 0.0,
-            level: 0,
-            previousLevel: null,
+    sound: {
+
+        synth: {
             active: true,
-        },
-        oscillators: [
-            {
-                name: 'square',
-                level: 0.1,
+            masterVolume: {
+                max: 0.5,
+                min: 0.0,
+                level: 0,
+                previousLevel: null,
             },
-            {
-                name: 'triangle',
-                level: 0.2
-            },
-            {
-                name: 'sawtooth',
-                level: 0.15
-            },
-            {
-                name: 'sine',
-                level: 0.25
-            }
-        ],
-        envelope: [
-            {
-                name: 'attack',
-                time: 0,
-            },
-            {
-                name: 'decay',
-                time: 0,
-            },
-            {
-                name: 'sustain',
-                time: 0, 
-            },
-            {
-                name: 'release',
-                time: 0,
-            },
-        ],
+            octave: -1,
+            oscillators: [
+                {
+                    name: 'square',
+                    level: 0.1,
+                },
+                {
+                    name: 'triangle',
+                    level: 0.2
+                },
+                {
+                    name: 'sawtooth',
+                    level: 0.15
+                },
+                {
+                    name: 'sine',
+                    level: 0.25
+                }
+            ],
+            envelope: [
+                {
+                    name: 'attack',
+                    time: 0,
+                },
+                {
+                    name: 'decay',
+                    time: 0,
+                },
+                {
+                    name: 'sustain',
+                    time: 0, 
+                },
+                {
+                    name: 'release',
+                    time: 0,
+                },
+            ],
+        }
     },
     ui: {
-        waveformsSliders: [
+        waveformSliders: [
             {
                 name: 'square',
                 knob: {
@@ -104,6 +108,7 @@ export default {
                     direction: 'horizontal',
                     color: 'deepskyblue',
                 }
+            }
         ],
         envelopeSliders: [
             {

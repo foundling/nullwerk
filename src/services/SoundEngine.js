@@ -1,11 +1,12 @@
 import MIDI from './midi';
+
 const C4_HERTZ = 261.626; 
 const MAX_VOLUME = 0.4;
 const MIN_VOLUME = 0.0;
 
 export default class SoundEngine {
 
-    constructor(config) {
+    constructor({ config }) {
 
         /* init Web Audio and WebMidi  */
 
@@ -16,10 +17,10 @@ export default class SoundEngine {
 
         this.masterGain = this.context.createGain();
         this.masterGain.connect(this.context.destination);
-        this.active = config.masterVolume.active;
-        this.currentOctave = initOctave;
-        this.masterGain.gain.value = initVolume;
-        this.savedVolumeSetting = this.masterGain.gain.value;
+        this.active = config.active;
+        this.currentOctave = config.octave;
+        this.masterGain.gain.value = config.masterVolume.level;
+        this.savedVolumeSetting = config.masterVolume.previousLevel;
         this.oscillators = null;
         this.currentOscillatorSettings = {
             sine: {

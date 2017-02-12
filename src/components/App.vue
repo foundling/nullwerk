@@ -11,17 +11,17 @@
     import Led from './Led';
 
     import SoundEngine from './../services/SoundEngine';
-    import * as configs from './../config';
-
+    import { synthConfig } from './../config/synth'; 
     import { getScreenWidth }  from './../utils';
+    const { ui, sound } = synthConfig;
 
     export default {
 
         data: function() {
             return {
-                synth: configs.synth,
-                sequencer: configs.sequencer,
-                soundEngine: new SoundEngine(configs.synth)
+                waveformSliders: ui.waveformSliders,
+                envelopeSliders: ui.envelopeSliders,
+                soundEngine: new SoundEngine({ config: sound.synth })
             };
         },
         methods: {
@@ -51,14 +51,6 @@
             }
         },
         computed: {
-            currentOctave() { 
-            },
-            currentVolume() {
-            },
-            oscillatorSettings() {
-            },
-            envelopeSettings() {
-            }
         },
         filters: {
             abbreviate: s => s.charAt(0).toUpperCase(),
