@@ -12,7 +12,6 @@
 </template>
 
 <style>
-
     .slider-track {
         width: 100%;
         height: 100%;
@@ -36,7 +35,6 @@
         width: 100%;
         font-weight: 100;
     }
-
 </style>
 
 <script>
@@ -49,9 +47,6 @@
     export default {
         name: 'Slider',
         props: {
-            level: {
-                type: Number,
-            },
             name: {
                 type: String,
             },
@@ -64,6 +59,11 @@
             },
             controlSource: {
                 type: Object,
+                validator: function(o) {
+                    return o.hasOwnProperty('value') &
+                           o.hasOwnProperty('name') & 
+                           o.hasOwnProperty('active');
+                }
             },
             direction: {
                 type: String,
@@ -71,15 +71,7 @@
             },
             color: { 
                 type: String,
-            },
-            barHeight: {
-                type: String,
-                validator: (s) => s.endsWith('%')
-            },
-            barWidth: {
-                type: String,
-                validator: (s) => s.endsWith('%')
-            },
+            }
         },
         created: function() {
             this.styleData = this.buildStyleData();
@@ -87,8 +79,8 @@
         data: function() {
             return {
                 styleData: null,
-                initialOffset: this.level,
-                offset: this.level,
+                initialOffset: this.controlSource.value,
+                offset: this.controlSource.value,
             };
         },
         computed: {
@@ -150,8 +142,8 @@
                 let styleData = {
                     bar: { 
                         display: this.controlSource.active ? 'flex' : 'none',
-                        height: this.barHeight,
-                        width: this.barWidth,
+                        height: this.direction === 'horizontal' ? '100%' : '10%',
+                        width: this.direction === 'horizontal' ? '10%' : '100%',
                         bottom: '0px',
                         left: '0px',
                         background: this.color,

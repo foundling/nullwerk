@@ -42,7 +42,7 @@
                 this.soundEngine.adjustOctave(direction);
             },
             adjustOscillatorVolume({ name, value }) {
-                const propName = name + 'Level';
+                const propName = name + 'Value';
                 this.soundEngine[ propName ] = value;
             },
             setEnvelopeValue({ name, value }) {

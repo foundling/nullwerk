@@ -9,8 +9,8 @@ export const synthConfig = {
             masterVolume: {
                 max: 0.5,
                 min: 0.0,
-                level: 0.0,
-                previousLevel: null,
+                value: 0.3,
+                savedValue: 0.3,
             },
             octave: -1,
             oscillators: {
@@ -18,32 +18,32 @@ export const synthConfig = {
                     osc: null,
                     name: 'square',
                     active: true,
-                    level: 0.1,
-                    savedLevel: 0.0,
+                    value: 0.4,
+                    savedValue: 0.0,
                     overtones: [
                         {
                             harmonic: 1, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 2, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 3, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 4, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 5, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 6, 
-                            level: 1
+                            value: 1
                         }
                     ]
                 },
@@ -51,32 +51,32 @@ export const synthConfig = {
                     osc: null,
                     name: 'triangle',
                     active: true,
-                    level: 0.2,
-                    savedLevel: 0.0,
+                    value: 0.4,
+                    savedValue: 0.0,
                     overtones: [
                         {
                             harmonic: 1, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 2, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 3, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 4, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 5, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 6, 
-                            level: 1
+                            value: 1
                         }
                     ]
                 },
@@ -84,32 +84,32 @@ export const synthConfig = {
                     osc: null,
                     name: 'sawtooth',
                     active: true,
-                    level: 0.15,
-                    savedLevel: 0.0,
+                    value: 0.35,
+                    savedValue: 0.0,
                     overtones: [
                         {
                             harmonic: 1, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 2, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 3, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 4, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 5, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 6, 
-                            level: 1
+                            value: 1
                         }
                     ]
                 },
@@ -117,32 +117,32 @@ export const synthConfig = {
                     osc: null,
                     name: 'sine',
                     active: true,
-                    level: 0.25,
-                    savedLevel: 0.0,
+                    value: 0.45,
+                    savedValue: 0.0,
                     overtones: [
                         {
                             harmonic: 1, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 2, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 3, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 4, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 5, 
-                            level: 1
+                            value: 1
                         },
                         {
                             harmonic: 6, 
-                            level: 1
+                            value: 1
                         }
                     ]
                 }
@@ -151,22 +151,22 @@ export const synthConfig = {
                 attack: {
                     active: true,
                     name: 'attack',
-                    time: 0,
+                    value: 0,
                 },
                 decay: {
                     active: true,
                     name: 'decay',
-                    time: 0,
+                    value: 0,
                 },
                 sustain: {
                     active: true,
                     name: 'sustain',
-                    time: 0, 
+                    value: 0, 
                 },
                 release: {
                     active: true,
                     name: 'release',
-                    time: 0,
+                    value: 0,
                 },
             },
         }

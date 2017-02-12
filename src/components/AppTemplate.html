@@ -94,14 +94,12 @@
             <slider 
             v-for="waveform in waveforms" 
             v-on:slide="adjustOscillatorVolume"
-            v-bind:level="sound.oscillators[ waveform.name ].level"
             v-bind:control-source="sound.oscillators[ waveform.name ]"
             v-bind:direction="waveform.slider.direction"
             v-bind:name="waveform.name"
+            v-bind:content="waveform.name"
             v-bind:title="`adjust ${ waveform.name } level.`"
-            v-bind:color="waveform.slider.color"
-            bar-height="100%"
-            bar-width="10%">
+            v-bind:color="waveform.slider.color">
             </slider>
         </div>
 
@@ -120,16 +118,13 @@
 
             <slider 
             v-on:slide="setEnvelopeValue"
-            v-bind:level="0"
-            v-bind:opacity="0.4"
             v-bind:control-source="sound.envelope[ param.name ]"
             v-bind:direction="param.slider.direction"
+            v-bind:opacity="0.4"
             v-bind:name="param.name"
             v-bind:content="param.name"
             v-bind:color="param.slider.color"
-            v-bind:title="`adjust ${ param.name }.`"
-            bar-height="15%"
-            bar-width="100%">
+            v-bind:title="`adjust ${ param.name }.`">
             </slider>
         </div>
 

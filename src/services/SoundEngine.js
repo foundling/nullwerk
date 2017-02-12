@@ -19,11 +19,11 @@ export default class SoundEngine {
         this.masterGain.connect(this.context.destination);
         this.active = config.active;
         this.currentOctave = config.octave;
-        this.masterGain.gain.value = config.masterVolume.level;
-        this.savedVolumeSetting = config.masterVolume.previousLevel;
-        this.oscillators = null;
+        this.masterGain.gain.value = config.masterVolume.value;
+        this.savedVolumeSetting = config.masterVolume.savedValue;
         this.envelopeSettings = config.envelope;
         this.oscillatorSettings = config.oscillators;
+        this.oscillators = null;
     }
 
 
@@ -118,45 +118,45 @@ export default class SoundEngine {
     }
 
     /* Waveform Getters and Setters */
-    get sineLevel() {
-        return this.oscillatorSettings.sine.level;
+    get sineValue() {
+        return this.oscillatorSettings.sine.value;
     }
 
-    set sineLevel(level) {
-        this.oscillatorSettings.sine.level = level;
+    set sineValue(value) {
+        this.oscillatorSettings.sine.value = value;
     }
 
-    get squareLevel() {
-        return this.oscillatorSettings.square.level;
+    get squareValue() {
+        return this.oscillatorSettings.square.value;
     }
 
-    set squareLevel(level) {
-        this.oscillatorSettings.square.level = level;
+    set squareValue(value) {
+        this.oscillatorSettings.square.value = value;
     }
 
-    get sawtoothLevel() {
-        return this.oscillatorSettings.sawtooth.level;
+    get sawtoothValue() {
+        return this.oscillatorSettings.sawtooth.value;
     }
 
-    set sawtoothLevel(level) {
-        this.oscillatorSettings.sawtooth.level = level;
+    set sawtoothValue(value) {
+        this.oscillatorSettings.sawtooth.value = value;
     }
 
-    get triangleLevel() {
-        return this.oscillatorSettings.triangle.level;
+    get triangleValue() {
+        return this.oscillatorSettings.triangle.value;
     }
 
-    set triangleLevel(level) {
-        this.oscillatorSettings.triangle.level = level;
+    set triangleValue(value) {
+        this.oscillatorSettings.triangle.value = value;
     }
 
     toggleOscillatorVolume(name) {
         const osc = this.oscillatorSettings[name];
         if (osc.active) {
-            osc.savedLevel = osc.level;
-            osc.level = 0.0;
+            osc.savedValue = osc.value;
+            osc.value = 0.0;
         } else {
-            osc.level = osc.savedLevel;
+            osc.value = osc.savedValue;
         }
         osc.active = !osc.active;
     }
@@ -176,25 +176,25 @@ export default class SoundEngine {
         this.active = !this.active;
     }
 
-    levelToTime(level){ 
+    valueToTime(value){ 
 
         const milliseconds = 1000;
-        return level * 0.1 * milliseconds;
+        return value * 0.1 * milliseconds;
 
     }
 
     setEnvelopeValue({ name, value }) {
 
         //value is between 0 and 1;
-        const milliseconds = this.levelToTime(value);
+        const milliseconds = this.valueToTime(value);
         this.envelopeSettings[ name ].time = milliseconds; 
 
     }
 
-    setOscillatorLevel = function({ name, value }) {
+    setOscillatorValue = function({ name, value }) {
 
         /* when oscillators get recreated, they use the values that this updates */ 
-        this.oscillatorSettings[name].level = value;
+        this.oscillatorSettings[name].value = value;
 
     }
 
@@ -222,93 +222,54 @@ export default class SoundEngine {
     muteNote() {
         
         /* 
-            
-            With web audio, notes are discardable things, 
-            so start & stop are create & destroy for a node. 
-        
+            With web audio, notes are discardable by design. 
+            so start & stop = create & destroy for a node. 
         */
         
-        this.oscillators.forEach(node => node.osc.forEach(osc => osc.stop(0)));
+        console.log(this.oscillators);
+
+        this.oscillators.forEach(function(node) {
+            console.log('type: ', node.osc.type, 'volume: ', node.gain.gain.value);
+        });
+        this.oscillators.forEach(node => node.osc.stop(0));
 
     }
 
     _createNote(fundamentalFrequency) {
 
-        /*
-         
-          Build a list of 4 objects (nodes) containing oscillator and gain properties.
+        const masterGain = this.masterGain;
+        const context = this.context;
+        const settings = this.oscillatorSettings;
 
-          Waveforms:
-            sawtooth
-            sine
-            square
-            triangle
-            
-        */
-      
-        const that = this;
+        return Object.keys(settings)
+            .map(key => settings[ key ])
+            .map(function(setting) {
 
-        this.oscillators = Object.keys(this.oscillatorSettings)
-            .map(key => this.oscillatorSettings[key])
-            .map(function(node) {
+                const node = {
+                    osc: null,
+                    gain: null
+                };
 
-                /* build array of oscillators per waveform type that correspond to specified overtones */
+                // init osc
+                node.osc = context.createOscillator(); 
+                node.osc.type = setting.name;
+                node.osc.frequency.value = fundamentalFrequency;
 
-                node.osc = node.overtones.map(function(overtone) {
+                // init gain
+                node.gain = context.createGain();
+                node.gain.gain.value = setting.value;
 
-                    const osc = that.context.createOscillator();
-                    osc.type = node.name;
-                    osc.frequency.value = fundamentalFrequency * overtone.harmonic; 
-                    osc.gain = that.context.createGain();
-                    osc.gain.gain.setValueAtTime(overtone.level, that.context.currentTime);
+                // connect osc to gain, gain to master gain
+                node.osc.connect(node.gain);
+                node.gain.connect(masterGain);
 
-                    return osc;
+                // start osc
+                node.osc.start();
 
-                });
-
+                // push to oscillators array
                 return node;
 
-            })
-            .map(function(node) {
-
-                /* give the node a gain property and initialize it */
-
-                const oscLevel = that.oscillatorSettings[ node.name ].level;
-
-                const attackTime = that.context.currentTime + that.envelopeSettings.attack.time;
-
-                node.gain = that.context.createGain();
-                node.gain.gain.setValueAtTime(0, that.context.currentTime);
-                node.gain.gain.linearRampToValueAtTime(oscLevel, attackTime);
-
-                return node;
-
-            })
-            .map(function(node) {
-
-                /* connect array of oscillators to gain, gain to master. */
-
-                node.osc.forEach(function(osc) {
-                    osc.connect(osc.gain);
-                    osc.gain.connect(node.gain);
-                });
-                node.gain.connect(that.masterGain);
-                that.masterGain.connect(that.context.destination);
-                
-                return node;
-                
-            })
-            .map(function(node) {
-
-                /* start each oscillators */
-                
-                node.osc.forEach(osc => osc.start(0));
-                return node;
-                
             });
-
-            console.log(this.oscillators);
-            return this.oscillators;
 
     }
     _indexToFrequency(keyIndex) {
