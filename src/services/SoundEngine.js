@@ -77,6 +77,7 @@ export default class SoundEngine {
         const freq = Math.pow(2, (noteNumber - 69)/12) * C4_HERTZ;
         return freq;
     }
+
     noteOn(noteNumber, velocity) {
         const frequencyAtKey = fromMIDI(noteNumber);
         this.playNote(null, frequencyAtKey);
@@ -120,6 +121,7 @@ export default class SoundEngine {
     get sineLevel() {
         return this.oscillatorSettings.sine.level;
     }
+
     set sineLevel(level) {
         this.oscillatorSettings.sine.level = level;
     }
@@ -127,6 +129,7 @@ export default class SoundEngine {
     get squareLevel() {
         return this.oscillatorSettings.square.level;
     }
+
     set squareLevel(level) {
         this.oscillatorSettings.square.level = level;
     }
@@ -134,6 +137,7 @@ export default class SoundEngine {
     get sawtoothLevel() {
         return this.oscillatorSettings.sawtooth.level;
     }
+
     set sawtoothLevel(level) {
         this.oscillatorSettings.sawtooth.level = level;
     }
@@ -141,6 +145,7 @@ export default class SoundEngine {
     get triangleLevel() {
         return this.oscillatorSettings.triangle.level;
     }
+
     set triangleLevel(level) {
         this.oscillatorSettings.triangle.level = level;
     }
@@ -172,8 +177,10 @@ export default class SoundEngine {
     }
 
     levelToTime(level){ 
+
         const milliseconds = 1000;
         return level * 0.1 * milliseconds;
+
     }
 
     setEnvelopeValue({ name, value }) {
@@ -181,11 +188,14 @@ export default class SoundEngine {
         //value is between 0 and 1;
         const milliseconds = this.levelToTime(value);
         this.envelopeSettings[ name ].time = milliseconds; 
+
     }
 
     setOscillatorLevel = function({ name, value }) {
+
         /* when oscillators get recreated, they use the values that this updates */ 
         this.oscillatorSettings[name].level = value;
+
     }
 
     playNote(keyIndex, freq) {
@@ -243,13 +253,17 @@ export default class SoundEngine {
             .map(function(node) {
 
                 /* build array of oscillators per waveform type that correspond to specified overtones */
-                /* how to best specify volume? well, these overtones each will be some proportion of the overall volume */
 
                 node.osc = node.overtones.map(function(overtone) {
+
                     const osc = that.context.createOscillator();
                     osc.type = node.name;
                     osc.frequency.value = fundamentalFrequency * overtone.harmonic; 
+                    osc.gain = that.context.createGain();
+                    osc.gain.gain.setValueAtTime(overtone.level, that.context.currentTime);
+
                     return osc;
+
                 });
 
                 return node;
@@ -259,7 +273,7 @@ export default class SoundEngine {
 
                 /* give the node a gain property and initialize it */
 
-                const oscLevel = that.oscillatorSettings[node.name].level;
+                const oscLevel = that.oscillatorSettings[ node.name ].level;
 
                 const attackTime = that.context.currentTime + that.envelopeSettings.attack.time;
 
@@ -275,7 +289,8 @@ export default class SoundEngine {
                 /* connect array of oscillators to gain, gain to master. */
 
                 node.osc.forEach(function(osc) {
-                    osc.connect(node.gain);
+                    osc.connect(osc.gain);
+                    osc.gain.connect(node.gain);
                 });
                 node.gain.connect(that.masterGain);
                 that.masterGain.connect(that.context.destination);
@@ -292,6 +307,7 @@ export default class SoundEngine {
                 
             });
 
+            console.log(this.oscillators);
             return this.oscillators;
 
     }
