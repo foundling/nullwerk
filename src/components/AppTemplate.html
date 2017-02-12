@@ -10,7 +10,7 @@
 
             <led 
             diameter="15%"
-            v-for="led in synth.leds" 
+            v-for="led in leds" 
             v-bind:color="led.color" 
             v-bind:currentOctave="soundEngine.currentOctave" 
             v-bind:octave="led.octave">
@@ -29,7 +29,7 @@
             v-on:press="adjustOctave(+1)">
 
                 <i 
-                v-bind:style="{ color: synth.palette.white }" 
+                v-bind:style="{ color: palette.white }" 
                 class="fa fa-caret-up" 
                 slot="label">
                 </i>
@@ -41,7 +41,7 @@
             v-on:press="adjustOctave(-1)">
 
                 <i 
-                v-bind:style="{color: synth.palette.white}" 
+                v-bind:style="{color: palette.white}" 
                 class="fa fa-caret-down" 
                 slot="label">
                 </i>
@@ -78,29 +78,31 @@
 
         <div class="waveforms-container">
             <knob 
-            v-bind:active="slider.active"
 
-            v-for="waveformSlider in waveformSliders" 
+            v-for="waveform in waveforms" 
             v-on:toggle="toggleOscillatorVol"
-            v-bind:bg-image-active="waveformSlider.knob.img.active"
-            v-bind:bg-image-inactive="waveformSlider.knob.img.inactive"
-            v-bind:waveform="waveformSlider.name"
-            v-bind:color="waveformSlider.knob.color"
-            v-bind:title="`toggle ${ waveformSlider.name } level on / off.`"
+
+            v-bind:active="sound.oscillators[ waveform.name ].active"
+            v-bind:bg-image-active="waveform.knob.img.active"
+            v-bind:bg-image-inactive="waveform.knob.img.inactive"
+            v-bind:waveform="waveform.name"
+            v-bind:color="waveform.knob.color"
+            v-bind:title="`toggle ${ waveform.name } level on / off.`"
+
             diameter="25%">
             </knob>
         </div>
 
         <div class="waveform-level-container">
             <slider 
-            v-for="waveform in synth.waveforms" 
-            v-bind:level="waveform.slider.level"
-            v-bind:name="waveform.name"
-            v-bind:title="`adjust ${ waveform.name } level.`"
+            v-for="waveform in waveforms" 
             v-on:slide="adjustOscillatorVolume"
+            v-bind:level="waveform.slider.level"
             v-bind:control-source="waveform.slider"
             v-bind:direction="waveform.slider.direction"
-            v-bind:color="waveform.color"
+            v-bind:name="waveform.name"
+            v-bind:title="`adjust ${ waveform.name } level.`"
+            v-bind:color="waveform.slider.color"
             bar-height="100%"
             bar-width="10%">
             </slider>
@@ -112,25 +114,25 @@
     <div class="envelope-container">
 
         <div 
-            v-for="parameter in synth.envelopeParameters"
+            v-for="param in envelope"
             class="envelope-slider-container">
 
             <h1 
-            v-bind:title="parameter.name"
-            class="envelope-slider-label">{{ parameter.name | abbreviate }}</h1>
+            v-bind:title="param.name"
+            class="envelope-slider-label">{{ param.name | abbreviate }}</h1>
 
             <slider 
             v-on:slide="setEnvelopeValue"
-            v-bind:level="envelopeSettings"
+            v-bind:level="0"
             v-bind:opacity="0.4"
-            v-bind:name="parameter.name"
-            v-bind:content="parameter.name"
-            v-bind:control-source="parameter.slider"
-            v-bind:direction="parameter.slider.direction"
-            v-bind:color="parameter.color"
+            v-bind:control-source="param.slider"
+            v-bind:direction="param.slider.direction"
+            v-bind:name="param.name"
+            v-bind:content="param.name"
+            v-bind:color="param.slider.color"
+            v-bind:title="`adjust ${ param.name }.`"
             bar-height="15%"
-            bar-width="100%"
-            v-bind:title="`adjust ${ parameter.name }.`">
+            bar-width="100%">
             </slider>
         </div>
 
@@ -144,7 +146,7 @@
        
     <!-- Signature Sign Container -->
     <div class="title-container">
-        <h1 class="make">{{ currentVolume }}</h1>
+        <h1 class="make">ARS</h1>
         <h1 class="model">1</h1>
     </div>
 
@@ -152,11 +154,11 @@
     <div class="keyboard-container">
         <div class="keyboard">
             <key 
-            v-on:noteon="noteOn"
-            v-on:noteoff="noteOff"
             v-for="index in 25" 
-            :index="index - 1" 
-            :blackKeys="synth.keyboard.blackKeys">
+            v-bind:index="index - 1" 
+            v-bind:blackKeys="keyboard.blackKeys"
+            v-on:noteon="noteOn"
+            v-on:noteoff="noteOff">
             </key>
         </div>
     </div>

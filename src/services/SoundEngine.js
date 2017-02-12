@@ -22,62 +22,8 @@ export default class SoundEngine {
         this.masterGain.gain.value = config.masterVolume.level;
         this.savedVolumeSetting = config.masterVolume.previousLevel;
         this.oscillators = null;
-        this.currentOscillatorSettings = {
-            sine: {
-                active: true,
-                savedLevel: null,
-                level: 0.2
-            },
-            square: {
-                active: true,
-                savedLevel: null,
-                level: 0.1
-            },
-            sawtooth: {
-                active: true,
-                savedLevel: null,
-                level: 0.3
-            },
-            triangle: {
-                active: true,
-                savedLevel: null,
-                level: 0.4
-            }
-        };
-        this.envelopeSettings = {
-
-            attack: {
-                time: 0,
-            }, 
-            decay: {
-                time: 0,
-            }, 
-            sustain: {
-                time: 0,
-            }, 
-            release: {
-                time: 0
-            }, 
-
-        };
-        this.waveforms = [
-            {
-                name: 'sine',
-                on: true
-            }, 
-            {
-                name: 'square',
-                on: true
-            }, 
-            {
-                name: 'sawtooth',
-                on: true
-            }, 
-            {
-                name: 'triangle',
-                on: true
-            }
-        ];   
+        this.envelopeSettings = config.envelope;
+        this.oscillatorSettings = config.oscillators;
     }
 
 
@@ -172,35 +118,35 @@ export default class SoundEngine {
 
     /* Waveform Getters and Setters */
     get sineLevel() {
-        return this.currentOscillatorSettings.sine.level;
+        return this.oscillatorSettings.sine.level;
     }
     set sineLevel(level) {
-        this.currentOscillatorSettings.sine.level = level;
+        this.oscillatorSettings.sine.level = level;
     }
 
     get squareLevel() {
-        return this.currentOscillatorSettings.square.level;
+        return this.oscillatorSettings.square.level;
     }
     set squareLevel(level) {
-        this.currentOscillatorSettings.square.level = level;
+        this.oscillatorSettings.square.level = level;
     }
 
     get sawtoothLevel() {
-        return this.currentOscillatorSettings.sawtooth.level;
+        return this.oscillatorSettings.sawtooth.level;
     }
     set sawtoothLevel(level) {
-        this.currentOscillatorSettings.sawtooth.level = level;
+        this.oscillatorSettings.sawtooth.level = level;
     }
 
     get triangleLevel() {
-        return this.currentOscillatorSettings.triangle.level;
+        return this.oscillatorSettings.triangle.level;
     }
     set triangleLevel(level) {
-        this.currentOscillatorSettings.triangle.level = level;
+        this.oscillatorSettings.triangle.level = level;
     }
 
     toggleOscillatorVolume(name) {
-        const osc = this.currentOscillatorSettings[name];
+        const osc = this.oscillatorSettings[name];
         if (osc.active) {
             osc.savedLevel = osc.level;
             osc.level = 0.0;
@@ -239,7 +185,7 @@ export default class SoundEngine {
 
     setOscillatorLevel = function({ name, value }) {
         /* when oscillators get recreated, they use the values that this updates */ 
-        this.currentOscillatorSettings[name].level = value;
+        this.oscillatorSettings[name].level = value;
     }
 
     playNote(keyIndex, freq) {
@@ -292,45 +238,14 @@ export default class SoundEngine {
       
         const that = this;
 
-        this.oscillators = this.waveforms
-            .filter(wf => wf.on)
-            .map(function(wf) { 
-                /* create a node with a name property corresponding to the waveform's name */
-                return { name: wf.name };
-            }) 
+        this.oscillators = Object.keys(this.oscillatorSettings)
+            .map(key => this.oscillatorSettings[key])
             .map(function(node) {
 
                 /* build array of oscillators per waveform type that correspond to specified overtones */
                 /* how to best specify volume? well, these overtones each will be some proportion of the overall volume */
 
-                const overtones = [ 
-                    {
-                        harmonic: 1, 
-                        relativevolume: 1 
-                    }, 
-                    {
-                        harmonic: 2, 
-                        relativevolume: 1 
-                    }, 
-                    {
-                        harmonic: 3, 
-                        relativevolume: 1 
-                    }, 
-                    {
-                        harmonic: 4, 
-                        relativevolume: 1 
-                    }, 
-                    {
-                        harmonic: 5, 
-                        relativevolume: 1 
-                    }, 
-                    {
-                        harmonic: 6, 
-                        relativevolume: 1 
-                    }, 
-                ];
-
-                node.osc = overtones.map(function(overtone) {
+                node.osc = node.overtones.map(function(overtone) {
                     const osc = that.context.createOscillator();
                     osc.type = node.name;
                     osc.frequency.value = fundamentalFrequency * overtone.harmonic; 
@@ -344,7 +259,7 @@ export default class SoundEngine {
 
                 /* give the node a gain property and initialize it */
 
-                const oscLevel = that.currentOscillatorSettings[node.name].level;
+                const oscLevel = that.oscillatorSettings[node.name].level;
 
                 const attackTime = that.context.currentTime + that.envelopeSettings.attack.time;
 

@@ -9,50 +9,166 @@ export const synthConfig = {
             masterVolume: {
                 max: 0.5,
                 min: 0.0,
-                level: 0,
+                level: 0.0,
                 previousLevel: null,
             },
             octave: -1,
-            oscillators: [
-                {
+            oscillators: {
+                square: {
+                    osc: null,
                     name: 'square',
+                    active: true,
                     level: 0.1,
+                    savedLevel: 0.0,
+                    overtones: [
+                        {
+                            harmonic: 1, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 2, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 3, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 4, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 5, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 6, 
+                            level: 1
+                        }
+                    ]
                 },
-                {
+                triangle: {
+                    osc: null,
                     name: 'triangle',
-                    level: 0.2
+                    active: true,
+                    level: 0.2,
+                    savedLevel: 0.0,
+                    overtones: [
+                        {
+                            harmonic: 1, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 2, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 3, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 4, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 5, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 6, 
+                            level: 1
+                        }
+                    ]
                 },
-                {
+                sawtooth: {
+                    osc: null,
                     name: 'sawtooth',
-                    level: 0.15
+                    active: true,
+                    level: 0.15,
+                    savedLevel: 0.0,
+                    overtones: [
+                        {
+                            harmonic: 1, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 2, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 3, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 4, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 5, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 6, 
+                            level: 1
+                        }
+                    ]
                 },
-                {
+                sine: {
+                    osc: null,
                     name: 'sine',
-                    level: 0.25
+                    active: true,
+                    level: 0.25,
+                    savedLevel: 0.0,
+                    overtones: [
+                        {
+                            harmonic: 1, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 2, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 3, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 4, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 5, 
+                            level: 1
+                        },
+                        {
+                            harmonic: 6, 
+                            level: 1
+                        }
+                    ]
                 }
-            ],
-            envelope: [
-                {
+            },
+            envelope: {
+                attack: {
                     name: 'attack',
                     time: 0,
                 },
-                {
+                decay: {
                     name: 'decay',
                     time: 0,
                 },
-                {
+                sustain: {
                     name: 'sustain',
                     time: 0, 
                 },
-                {
+                release: {
                     name: 'release',
                     time: 0,
                 },
-            ],
+            },
         }
     },
     ui: {
-        waveformSliders: [
+        waveforms: [
             {
                 name: 'square',
                 knob: {
@@ -110,7 +226,7 @@ export const synthConfig = {
                 }
             }
         ],
-        envelopeSliders: [
+        envelope: [
             {
                 name: 'attack',
                 slider: {
