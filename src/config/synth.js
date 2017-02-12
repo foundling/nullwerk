@@ -149,18 +149,22 @@ export const synthConfig = {
             },
             envelope: {
                 attack: {
+                    active: true,
                     name: 'attack',
                     time: 0,
                 },
                 decay: {
+                    active: true,
                     name: 'decay',
                     time: 0,
                 },
                 sustain: {
+                    active: true,
                     name: 'sustain',
                     time: 0, 
                 },
                 release: {
+                    active: true,
                     name: 'release',
                     time: 0,
                 },
@@ -221,8 +225,8 @@ export const synthConfig = {
                     }
                 },
                 slider: {
-                    direction: 'horizontal',
                     color: 'deepskyblue',
+                    direction: 'horizontal',
                 }
             }
         ],

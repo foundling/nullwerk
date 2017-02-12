@@ -78,17 +78,14 @@
 
         <div class="waveforms-container">
             <knob 
-
             v-for="waveform in waveforms" 
             v-on:toggle="toggleOscillatorVol"
-
             v-bind:active="sound.oscillators[ waveform.name ].active"
             v-bind:bg-image-active="waveform.knob.img.active"
             v-bind:bg-image-inactive="waveform.knob.img.inactive"
             v-bind:waveform="waveform.name"
             v-bind:color="waveform.knob.color"
             v-bind:title="`toggle ${ waveform.name } level on / off.`"
-
             diameter="25%">
             </knob>
         </div>
@@ -97,8 +94,8 @@
             <slider 
             v-for="waveform in waveforms" 
             v-on:slide="adjustOscillatorVolume"
-            v-bind:level="waveform.slider.level"
-            v-bind:control-source="waveform.slider"
+            v-bind:level="sound.oscillators[ waveform.name ].level"
+            v-bind:control-source="sound.oscillators[ waveform.name ]"
             v-bind:direction="waveform.slider.direction"
             v-bind:name="waveform.name"
             v-bind:title="`adjust ${ waveform.name } level.`"
@@ -125,7 +122,7 @@
             v-on:slide="setEnvelopeValue"
             v-bind:level="0"
             v-bind:opacity="0.4"
-            v-bind:control-source="param.slider"
+            v-bind:control-source="sound.envelope[ param.name ]"
             v-bind:direction="param.slider.direction"
             v-bind:name="param.name"
             v-bind:content="param.name"

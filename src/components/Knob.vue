@@ -61,7 +61,6 @@
     export default {
         name: 'Knob',
         props: { 
-
             active: {
                 type: Boolean,
                 default: false

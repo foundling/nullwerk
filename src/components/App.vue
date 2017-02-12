@@ -35,7 +35,7 @@
             },
             toggleOscillatorVol({ waveform }) {
                 this.soundEngine.toggleOscillatorVolume(waveform);
-                const targetWaveform = this.synth.waveforms.filter(wf => wf.name === waveform)[0];
+                const targetWaveform = this.waveforms.filter(wf => wf.name === waveform)[0];
                 targetWaveform.slider.active = !targetWaveform.slider.active;
             },
             adjustOctave(direction) { 

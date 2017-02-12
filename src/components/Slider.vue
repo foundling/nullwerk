@@ -88,7 +88,7 @@
             return {
                 styleData: null,
                 initialOffset: this.level,
-                offset: 0,
+                offset: this.level,
             };
         },
         computed: {
