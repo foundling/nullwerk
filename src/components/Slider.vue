@@ -51,8 +51,8 @@
             return {
                 styleData: null,
                 slideData: {
-                    translate: 0,
-                    totalOffset: null
+                    initialOffset: null,
+                    relativeOffset: null,
                 },
             };
         },
@@ -93,7 +93,6 @@
             // INITIALIZE SLIDER POSITION BASED ON CONTROL-SOURCE VALUE (percentage)
 
             let widthOrHeight = this.direction === 'horizontal' ? 'width' : 'height'; 
-            let leftOrBottom = this.direction === 'horizontal' ? 'left' : 'bottom';
             let bar = this.$el;
             let container = bar.parentNode;
             let barDimension = toComputed(bar, widthOrHeight);
@@ -102,40 +101,60 @@
             let percentOffset = this.controlSource.value;
             let sliderOffset = percentOffset * slideableDistancePx;
 
-            this.styleData.bar[leftOrBottom] = sliderOffset + 'px';
+            this.slideData.initialOffset = sliderOffset;
+            this.slideData.relativeOffset = sliderOffset;
+
+            if (this.direction === 'horizontal') {
+                this.styleData.bar.left = sliderOffset + 'px';
+                this.styleData.bar.bottom = '0px';
+            } else {
+                this.styleData.bar.left = '0px';
+                this.styleData.bar.bottom = sliderOffset;
+            }
 
         },
         methods: {
 
             moveSlider(e) {
-
-                // determine whether to calculte height or width
                 const dimensionType = this.direction === 'horizontal' ? 'width' : 'height'; 
-                const delta = e['delta' + this.axis];
                 const sign = this.direction === 'horizontal' ? 1 : -1; 
 
-                // get refs to dom elements
                 const slideBar = e.target;
-                const slideTrack = slideBar.parentNode;
                 const slideBarDimension = toComputed(slideBar, dimensionType);
+
+                const slideTrack = e.target.parentNode;
                 const slideTrackDimension = toComputed(slideTrack, dimensionType);
 
-                // calculate min and max boundaries
+                const delta = sign * e['delta' + this.axis];
+                const diff = (this.slideData.initialOffset + delta) - this.slideData.initialOffset;
+
                 const minOffset = 0;
                 const maxOffset = slideTrackDimension - slideBarDimension;
 
-                // update last delta reading
-                this.translate = delta;
+                /* set relative offset but make sure its in range */
+                if (this.slideData.initialOffset + diff < minOffset) {
+                    this.slideData.relativeOffset = minOffset;
+                }
+                else if (this.slideData.initialOffset + diff > maxOffset) {
+                    this.slideData.relativeOffset = maxOffset;
+                }
+                else {
+                    //this.slideData.relativeOffset = this.slideData.initialOffset + diff;
+                    this.slideData.relativeOffset = diff;
+                }
 
-                // update slider via css translate by relative offset
-                this.styleData.bar.transform = `translate${ this.axis }(${ this.lastDelta }px)`;
+                /* update dom */
+                slideBar.style.transform = `translate${ this.axis }(${ sign * this.slideData.relativeOffset }px)`;
 
-                console.log(this.lastDelta);
-
-                // when move again, translate goes back to what it was before 
+                /* emit new value */
+                this.$emit('slide', {
+                    name: this.name,
+                    value: this.slideData.relativeOffset / maxOffset
+                });
 
             },
             moveSliderEnd(e) {
+                this.initialOffset = this.relativeOffset;
             },
             buildStyleData() {
 
