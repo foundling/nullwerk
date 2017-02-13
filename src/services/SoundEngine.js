@@ -226,11 +226,6 @@ export default class SoundEngine {
             so start & stop = create & destroy for a node. 
         */
         
-        console.log(this.oscillators);
-
-        this.oscillators.forEach(function(node) {
-            console.log('type: ', node.osc.type, 'volume: ', node.gain.gain.value);
-        });
         this.oscillators.forEach(node => node.osc.stop(0));
 
     }

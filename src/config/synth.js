@@ -50,7 +50,7 @@ export const synthConfig = {
                 triangle: {
                     osc: null,
                     name: 'triangle',
-                    active: true,
+                    active: false,
                     value: 0.4,
                     savedValue: 0.0,
                     overtones: [
@@ -83,7 +83,7 @@ export const synthConfig = {
                 sawtooth: {
                     osc: null,
                     name: 'sawtooth',
-                    active: true,
+                    active: false,
                     value: 0.35,
                     savedValue: 0.0,
                     overtones: [
@@ -116,7 +116,7 @@ export const synthConfig = {
                 sine: {
                     osc: null,
                     name: 'sine',
-                    active: true,
+                    active: false,
                     value: 0.45,
                     savedValue: 0.0,
                     overtones: [
