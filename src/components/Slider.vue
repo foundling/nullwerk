@@ -150,7 +150,7 @@
 
                 // 2. move div in sync with calculation
 
-                //this.styleData.bar.transform = `translate${ X }(${ Y }px)`;
+                this.styleData.bar.transform = `translate${ this.axis }(${ this.slideData.position }px)`;
 
 
             },
