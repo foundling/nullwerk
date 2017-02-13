@@ -51,8 +51,9 @@
             return {
                 styleData: null,
                 slideData: {
-                    initialOffset: null,
+                    position: null,
                     relativeOffset: null,
+                    lastDelta: 0
                 },
             };
         },
@@ -89,7 +90,8 @@
         },
         mounted: function() {
 
-            // fires after 'created'
+            // after 'created'
+
             // INITIALIZE SLIDER POSITION BASED ON CONTROL-SOURCE VALUE (percentage)
 
             let widthOrHeight = this.direction === 'horizontal' ? 'width' : 'height'; 
@@ -101,8 +103,7 @@
             let percentOffset = this.controlSource.value;
             let sliderOffset = percentOffset * slideableDistancePx;
 
-            this.slideData.initialOffset = sliderOffset;
-            this.slideData.relativeOffset = sliderOffset;
+            this.slideData.position = sliderOffset;
 
             if (this.direction === 'horizontal') {
                 this.styleData.bar.left = sliderOffset + 'px';
@@ -116,6 +117,10 @@
         methods: {
 
             moveSlider(e) {
+
+                // two concerns. moving div via css, calculating position.
+
+                // 1. calc position
                 const dimensionType = this.direction === 'horizontal' ? 'width' : 'height'; 
                 const sign = this.direction === 'horizontal' ? 1 : -1; 
 
@@ -125,36 +130,31 @@
                 const slideTrack = e.target.parentNode;
                 const slideTrackDimension = toComputed(slideTrack, dimensionType);
 
-                const delta = sign * e['delta' + this.axis];
-                const diff = (this.slideData.initialOffset + delta) - this.slideData.initialOffset;
-
                 const minOffset = 0;
                 const maxOffset = slideTrackDimension - slideBarDimension;
 
-                /* set relative offset but make sure its in range */
-                if (this.slideData.initialOffset + diff < minOffset) {
-                    this.slideData.relativeOffset = minOffset;
-                }
-                else if (this.slideData.initialOffset + diff > maxOffset) {
-                    this.slideData.relativeOffset = maxOffset;
-                }
-                else {
-                    //this.slideData.relativeOffset = this.slideData.initialOffset + diff;
-                    this.slideData.relativeOffset = diff;
-                }
+                // delta is cumulative across a gesture, get incremental
+                let delta = e['delta' + this.axis];
 
-                /* update dom */
-                this.styleData.bar.transform = `translate${ this.axis }(${ sign * this.slideData.relativeOffset }px)`;
+                // calculate incremental delta since last one
+                let incrementalDelta = delta - this.slideData.lastDelta;
 
-                /* emit new value */
-                this.$emit('slide', {
-                    name: this.name,
-                    value: this.slideData.relativeOffset / maxOffset
-                });
+                // use incremental delta to get abs position
+                this.slideData.position += incrementalDelta;
+
+                this.slideData.lastDelta = delta;
+
+
+                console.log('position: ', this.slideData.position);
+                console.log('incremental delta: ', incrementalDelta);
+
+                // 2. move div in sync with calculation
+
+                //this.styleData.bar.transform = `translate${ X }(${ Y }px)`;
+
 
             },
             moveSliderEnd(e) {
-                this.styleData.initialOffset = this.styleData.relativeOffset;
             },
             buildStyleData() {
 
