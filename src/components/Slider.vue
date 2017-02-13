@@ -144,7 +144,7 @@
                 }
 
                 /* update dom */
-                slideBar.style.transform = `translate${ this.axis }(${ sign * this.slideData.relativeOffset }px)`;
+                this.styleData.bar.transform = `translate${ this.axis }(${ sign * this.slideData.relativeOffset }px)`;
 
                 /* emit new value */
                 this.$emit('slide', {
@@ -154,7 +154,7 @@
 
             },
             moveSliderEnd(e) {
-                this.initialOffset = this.relativeOffset;
+                this.styleData.initialOffset = this.styleData.relativeOffset;
             },
             buildStyleData() {
 
@@ -168,7 +168,6 @@
                         left: '0px',
                         bottom: '0px',
                         transform: 'none'
-
                     }
                 };
                 
