@@ -4,6 +4,7 @@
     v-show="controlSource.active"
     v-bind:pan-options="{ direction: direction, threshold: 0 }"
     v-on:pan="moveSlider"
+    v-on:panend="moveSliderEnd"
     v-bind:style="barStyle"
     class="slider-bar">
     </v-touch>
@@ -40,12 +41,21 @@
 
     import Vue from 'vue';
     import VueTouch from 'vue-touch';
-    import { toComputedProp, log } from '../utils';
+    import { toComputed, log } from '../utils';
 
     Vue.use(VueTouch);
 
     export default {
         name: 'Slider',
+        data: function() {
+            return {
+                styleData: null,
+                slideData: {
+                    translate: 0,
+                    totalOffset: null
+                },
+            };
+        },
         props: {
             name: {
                 type: String,
@@ -73,80 +83,59 @@
                 type: String,
             }
         },
-        mounted: function() {
-
-            if (this.direction === 'horizontal') {
-                let containerDimension = toComputedProp(this.$el.parentNode, 'width');
-                let barDimension = toComputedProp(this.$el, 'width');
-                this.offset = Math.floor(this.controlSource.value * (containerDimension - barDimension));
-                this.lastDelta = this.offset;
-
-                console.log(this.offset)
-                Vue.nextTick(() => {
-                    this.styleData.bar.left = this.offset + 'px';
-                });
-
-            } else {
-
-                let containerDimension = toComputedProp(this.$el.parentNode, 'height');
-                let barDimension = toComputedProp(this.$el, 'height');
-                this.offset = Math.floor(this.controlSource.value * (containerDimension - barDimension));
-                this.lastDelta = this.offset;
-
-                Vue.nextTick(() => {
-                    this.styleData.bar.bottom = this.offset + 'px';
-                });
-            }
-
-        },
         created: function() {
+            // fired before 'mounted'
             this.styleData = this.buildStyleData();
         },
-        data: function() {
-            return {
-                styleData: null,
-                offset: null,
-                lastDelta: null,
-            };
-        },
-        computed: {
-            abbreviatedLabel() {
-                return this.content.charAt(0).toUpperCase();
-            },
-            barStyle() {
-                return this.styleData.bar;
-            },
-            axis() {
-                return this.direction === 'horizontal' ? 'X' : 'Y';
-            }
+        mounted: function() {
+
+            // fires after 'created'
+            // INITIALIZE SLIDER POSITION BASED ON CONTROL-SOURCE VALUE (percentage)
+
+            let widthOrHeight = this.direction === 'horizontal' ? 'width' : 'height'; 
+            let leftOrBottom = this.direction === 'horizontal' ? 'left' : 'bottom';
+            let bar = this.$el;
+            let container = bar.parentNode;
+            let barDimension = toComputed(bar, widthOrHeight);
+            let containerDimension = toComputed(container, widthOrHeight);
+            let slideableDistancePx = containerDimension - barDimension;
+            let percentOffset = this.controlSource.value;
+            let sliderOffset = percentOffset * slideableDistancePx;
+
+            this.styleData.bar[leftOrBottom] = sliderOffset + 'px';
+
         },
         methods: {
 
             moveSlider(e) {
 
-                // set up variables for calculation
+                // determine whether to calculte height or width
                 const dimensionType = this.direction === 'horizontal' ? 'width' : 'height'; 
                 const delta = e['delta' + this.axis];
                 const sign = this.direction === 'horizontal' ? 1 : -1; 
 
+                // get refs to dom elements
                 const slideBar = e.target;
-                const slideBarDimension = toComputedProp(slideBar, dimensionType);
-
                 const slideTrack = slideBar.parentNode;
-                const slideTrackDimension = toComputedProp(slideTrack, dimensionType);
+                const slideBarDimension = toComputed(slideBar, dimensionType);
+                const slideTrackDimension = toComputed(slideTrack, dimensionType);
 
-
-                const incrementalDelta = (this.lastDelta + e['delta' + this.axis]) - this.lastDelta; 
-
+                // calculate min and max boundaries
                 const minOffset = 0;
                 const maxOffset = slideTrackDimension - slideBarDimension;
 
-                this.styleData.bar.transform = `translate${ this.axis }(${ incrementalDelta }px)`;
+                // update last delta reading
+                this.translate = delta;
 
-                this.lastDelta = incrementalDelta;
+                // update slider via css translate by relative offset
+                this.styleData.bar.transform = `translate${ this.axis }(${ this.lastDelta }px)`;
+
+                console.log(this.lastDelta);
+
+                // when move again, translate goes back to what it was before 
+
             },
             moveSliderEnd(e) {
-            
             },
             buildStyleData() {
 
@@ -165,6 +154,17 @@
                 };
                 
                 return styleData; 
+            }
+        },
+        computed: {
+            abbreviatedLabel() {
+                return this.content.charAt(0).toUpperCase();
+            },
+            barStyle() {
+                return this.styleData.bar;
+            },
+            axis() {
+                return this.direction === 'horizontal' ? 'X' : 'Y';
             }
         },
         

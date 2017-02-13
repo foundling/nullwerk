@@ -19,7 +19,7 @@ export const synthConfig = {
                     name: 'square',
                     active: true,
                     value: 0.4,
-                    savedValue: 0.0,
+                    savedValue: 0.4,
                     overtones: [
                         {
                             harmonic: 1, 
@@ -52,7 +52,7 @@ export const synthConfig = {
                     name: 'triangle',
                     active: false,
                     value: 0.4,
-                    savedValue: 0.0,
+                    savedValue: 0.4,
                     overtones: [
                         {
                             harmonic: 1, 
@@ -85,7 +85,7 @@ export const synthConfig = {
                     name: 'sawtooth',
                     active: false,
                     value: 0.35,
-                    savedValue: 0.0,
+                    savedValue: 0.35,
                     overtones: [
                         {
                             harmonic: 1, 
@@ -117,8 +117,8 @@ export const synthConfig = {
                     osc: null,
                     name: 'sine',
                     active: false,
-                    value: 0.45,
-                    savedValue: 0.0,
+                    value: 0.80,
+                    savedValue: .80,
                     overtones: [
                         {
                             harmonic: 1, 
