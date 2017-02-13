@@ -39,6 +39,7 @@
 </style>
 
 <script>
+
     import Vue from 'vue';
     import VueTouch from 'vue-touch';
     import { toComputedProp, log } from '../utils';
@@ -61,14 +62,14 @@
             controlSource: {
                 type: Object,
                 validator: function(o) {
-                    return o.hasOwnProperty('value') &
-                           o.hasOwnProperty('name') & 
+                    return o.hasOwnProperty('value') &&
+                           o.hasOwnProperty('name') && 
                            o.hasOwnProperty('active');
                 }
             },
             direction: {
                 type: String,
-                validator: (s) => ['horizontal','vertical'].includes(s) 
+                validator: (s) => ['horizontal', 'vertical'].includes(s) 
             },
             color: { 
                 type: String,
@@ -76,37 +77,39 @@
         },
         mounted: function() {
 
+            console.log('mounted');
             const container = this.$el.parentNode;
+            let offset;
+
             if (this.direction === 'horizontal') {
 
                 let containerWidth = toComputedProp(container, 'width');
-                let offset = this.controlSource.value * containerWidth;
-                this.styleData.bar.left = offset + 'px';
+                offset = this.controlSource.value * containerWidth;
+                this.styleData.bar.left = Math.floor(offset) + 'px';
                 this.styleData.bar.bottom = '0px';
-
                 this.offset = offset;
 
             } else {
 
                 let containerHeight = toComputedProp(container, 'height');
-                let offset = this.controlSource.value * containerHeight;
-
-                this.styleData.bar.bottom = offset + 'px';
+                offset = this.controlSource.value * containerHeight;
                 this.styleData.bar.left = '0px';
+                this.styleData.bar.bottom = offset + 'px';
 
-                this.offset = offset;
             }
+            console.log(this.barStyle);
 
         },
         created: function() {
+            console.log('created');
             this.styleData = this.buildStyleData();
-
+            console.log(this.styleData);
         },
         data: function() {
             return {
                 styleData: null,
-                lastDelta: 0,
-                offset: null // set on 'mounted'
+                lastDelta: null,
+                offset: null 
             };
         },
         computed: {
@@ -123,15 +126,9 @@
         methods: {
 
             moveSliderStart(e) {
-
-                const dimensionType = this.direction === 'horizontal' ? 'width' : 'height'; 
                 const slideBar = e.target;
-                const slideBarDimension = toComputedProp(slideBar, dimensionType);
-
-                const slideTrack = e.target.parentNode;
-                const slideTrackDimension = toComputedProp(slideTrack, dimensionType);
-
                 this.offset = toComputedProp(slideBar, 'left');
+                this.lastDelta = 0;
             },
             moveSlider(e) {
 
@@ -141,40 +138,39 @@
                 //      set last bar offset to bar left px value
                 //
                 //  on each 'pan' event, calculate relative delta given total offset as e.delta 
-                //      new delta = e.delta - lastoffset 
-                //      update offset by incremental delta, adjusting value so its in bounds of min and max 
+                //      incrementalDelta = delta - last offset 
+                //      update offset by incremental delta but make sure value is between min and max offsets;
+                //      
                 //     
                 //  on pan end, update the bar's left value to offset 
 
                 const dimensionType = this.direction === 'horizontal' ? 'width' : 'height'; 
-                const axis = this.axis;
-                const delta = e['delta' + axis];
+                const delta = e['delta' + this.axis];
                 const sign = this.direction === 'horizontal' ? 1 : -1; 
 
                 const slideBar = e.target;
                 const slideBarDimension = toComputedProp(slideBar, dimensionType);
 
-                const slideTrack = e.target.parentNode;
+                const slideTrack = slideBar.parentNode;
                 const slideTrackDimension = toComputedProp(slideTrack, dimensionType);
 
                 const minOffset = 0;
-                const maxOffset = slideTrackDimension - slideBarDimension);
+                const maxOffset = slideTrackDimension - slideBarDimension;
 
                 // calculate delta
                 const incrementalDelta = delta - this.lastDelta;
-                this.lastDelta = incrementalDelta;
 
-
-                // calculate offset for later volume percentage calc
-                this.offset += this.lastDelta;
-
-
-                console.log(this.lastDelta);
 
                 // update dom
-                slideBar.style.transform = `translate${ axis }(${ incrementalDelta }px)`;
+                slideBar.style.transform = `translate${ this.axis }(${ incrementalDelta }px)`;
 
-                // tell parent about new value
+                // emit new value
+
+                // calculate offset for later volume percentage calc
+                this.offset = this.offset + incrementalDelta;
+
+                //update lastDelta
+                this.lastDelta = incrementalDelta;
 
             },
             start() {
