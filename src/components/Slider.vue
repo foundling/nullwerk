@@ -75,13 +75,13 @@
         },
         mounted: function() {
 
-
-            if (this.dimension === 'horizontal') {
+            if (this.direction === 'horizontal') {
                 let containerDimension = toComputedProp(this.$el.parentNode, 'width');
                 let barDimension = toComputedProp(this.$el, 'width');
                 this.offset = Math.floor(this.controlSource.value * (containerDimension - barDimension));
                 this.lastDelta = this.offset;
 
+                console.log(this.offset)
                 Vue.nextTick(() => {
                     this.styleData.bar.left = this.offset + 'px';
                 });
