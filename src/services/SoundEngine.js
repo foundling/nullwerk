@@ -3,6 +3,8 @@ import MIDI from './midi';
 const C4_HERTZ = 261.626; 
 const MAX_VOLUME = 0.4;
 const MIN_VOLUME = 0.0;
+const MIN_OCTAVE = -2;
+const MAX_OCTAVE = 2;
 
 export default class SoundEngine {
 
@@ -91,6 +93,13 @@ export default class SoundEngine {
 
     get octave() {
         return this.currentOctave;
+    }
+
+    set octave(octave) {
+
+        if (octave > MAX_OCTAVE || octave < MIN_OCTAVE) return;
+        this.currentOctave = octave;
+
     }
 
     adjustOctave(direction) {

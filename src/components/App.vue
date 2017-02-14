@@ -39,7 +39,8 @@
                 targetWaveform.slider.active = !targetWaveform.slider.active;
             },
             adjustOctave(direction) { 
-                this.soundEngine.adjustOctave(direction);
+                const newOctave = direction  + this.sound.octave;
+                this.soundEngine.octave = newOctave;
             },
             adjustOscillatorVolume({ name, value }) {
                 const propName = name + 'Value';
