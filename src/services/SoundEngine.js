@@ -237,11 +237,12 @@ export default class SoundEngine {
 
         const masterGain = this.masterGain;
         const context = this.context;
-        const settings = this.oscillatorSettings;
+        const oscSettings = this.oscillatorSettings;
+        const envelope = this.envelopeSettings;
 
-        return Object.keys(settings)
-            .map(key => settings[ key ])
-            .map(function(setting) {
+        return Object.keys(oscSettings)
+            .map(key => oscSettings[ key ])
+            .map(function(oscSetting, index) {
 
                 const node = {
                     osc: null,
@@ -250,12 +251,16 @@ export default class SoundEngine {
 
                 // init osc
                 node.osc = context.createOscillator(); 
-                node.osc.type = setting.name;
+                node.osc.type = oscSetting.name;
                 node.osc.frequency.value = fundamentalFrequency;
 
                 // init gain
                 node.gain = context.createGain();
-                node.gain.gain.value = setting.value;
+                node.gain.gain.value = 0;
+
+                // set envelope values
+                node.gain.gain.linearRampToValueAtTime(oscSetting.value, context.currentTime + 2);
+
 
                 // connect osc to gain, gain to master gain
                 node.osc.connect(node.gain);
