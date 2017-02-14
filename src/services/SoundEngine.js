@@ -179,18 +179,10 @@ export default class SoundEngine {
         this.active = !this.active;
     }
 
-    valueToTime(value){ 
-
-        const milliseconds = 1000;
-        return value * 0.1 * milliseconds;
-
-    }
-
     setEnvelopeValue({ name, value }) {
 
         //value is between 0 and 1;
-        const milliseconds = this.valueToTime(value);
-        this.envelopeSettings[ name ].time = milliseconds; 
+        this.envelopeSettings[ name ].value = value; 
 
     }
 
@@ -233,6 +225,10 @@ export default class SoundEngine {
 
     }
 
+    valueToTime(value){ 
+        return value;
+    }
+
     _createNote(fundamentalFrequency) {
 
         const masterGain = this.masterGain;
@@ -259,8 +255,11 @@ export default class SoundEngine {
                 node.gain.gain.value = 0;
 
                 // set envelope values
-                node.gain.gain.linearRampToValueAtTime(oscSetting.value, context.currentTime + 2);
+                const attackTime = envelope.attack.value;
+                const decayTime = attackTime + envelope.decay.value;
 
+                node.gain.gain.linearRampToValueAtTime(oscSetting.value, context.currentTime + attackTime);
+                node.gain.gain.linearRampToValueAtTime(0, context.currentTime + decayTime);
 
                 // connect osc to gain, gain to master gain
                 node.osc.connect(node.gain);
