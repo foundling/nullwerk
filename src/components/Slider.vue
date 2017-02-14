@@ -52,7 +52,6 @@
                 styleData: null,
                 slideData: {
                     position: null,
-                    relativeOffset: null,
                     lastDelta: 0
                 },
             };
@@ -94,27 +93,46 @@
 
             // fires after 'created'
 
-            let dimensionType = this.direction === 'horizontal' ? 'width' : 'height'; 
-            let slideBar = this.$el;
-            let track = slideBar.parentNode;
-            let slideBarDimension = toComputed(slideBar, dimensionType);
-            let trackDimension = toComputed(track, dimensionType);
-            let slideableDistancePx = trackDimension - slideBarDimension;
-            let percentOffset = this.controlSource.value;
-            let slideBarOffset = percentOffset * slideableDistancePx;
-
-            //this.slideData.position = slideBarOffset;
-            this.slideData.position = slideBarOffset;
-            this.styleData.bar.transform = `translate${ this.axis }(${ slideBarOffset }px)`;
+            this.initSliderPosition();
 
         },
         methods: {
 
+            initSliderPosition() {
+
+                let dimensionType = this.direction === 'horizontal' ? 'width' : 'height'; 
+                let slideBar = this.$el;
+                let track = slideBar.parentNode;
+                let slideBarDimension = toComputed(slideBar, dimensionType);
+                let trackDimension = toComputed(track, dimensionType);
+                let slideableDistancePx = trackDimension - slideBarDimension;
+                let percentOffset = this.controlSource.value;
+                let slideBarOffset = percentOffset * slideableDistancePx;
+
+                //this.slideData.position = slideBarOffset;
+                this.slideData.position = slideBarOffset;
+                this.styleData.bar.transform = `translate${ this.axis }(${ slideBarOffset }px)`;
+
+            },
+            updateControlSourceValue() {
+
+                const dimensionType = this.direction === 'horizontal' ? 'width' : 'height'; 
+                const slideBar = this.$el;
+                const track = slideBar.parentNode;
+                const slideBarDimension = toComputed(slideBar, dimensionType);
+                const trackDimension = toComputed(track, dimensionType);
+                const slideableDistancePx = trackDimension - slideBarDimension;
+                const newControlSourceValue = this.slideData.position / slideableDistancePx; 
+
+                this.$emit('slide', {
+                    name: this.controlSource.name,
+                    value: newControlSourceValue
+                });
+
+            },
             moveSlider(e) {
 
-                // two concerns. moving div via css, calculating position.
-                // 1. calc position
-
+                // calculate new position of slider based on incremental delta
                 const dimensionType = this.direction === 'horizontal' ? 'width' : 'height'; 
                 const sign = this.direction === 'horizontal' ? 1 : -1; 
 
@@ -146,11 +164,12 @@
 
                 }
 
+                // set translateX pixel value to new slider position
                 this.styleData.bar.transform = `translate${ this.axis }(${ sign * this.slideData.position }px)`;
 
-                // 2. move div in sync with calculation
-
+                // update lastDelta
                 this.slideData.lastDelta = delta;
+                this.updateControlSourceValue();
 
             },
             moveSliderEnd(e) {

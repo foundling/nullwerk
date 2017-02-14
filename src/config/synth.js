@@ -10,7 +10,7 @@ export const synthConfig = {
                 max: 0.5,
                 min: 0.0,
                 value: 0.3,
-                savedValue: 0.3,
+                savedValue: null,
             },
             octave: -1,
             oscillators: {
@@ -19,7 +19,7 @@ export const synthConfig = {
                     name: 'square',
                     active: true,
                     value: 0.4,
-                    savedValue: 0.4,
+                    savedValue: null,
                     overtones: [
                         {
                             harmonic: 1, 
@@ -52,7 +52,7 @@ export const synthConfig = {
                     name: 'triangle',
                     active: false,
                     value: 0.4,
-                    savedValue: 0.4,
+                    savedValue: null,
                     overtones: [
                         {
                             harmonic: 1, 
@@ -85,7 +85,7 @@ export const synthConfig = {
                     name: 'sawtooth',
                     active: false,
                     value: 0.35,
-                    savedValue: 0.35,
+                    savedValue: null,
                     overtones: [
                         {
                             harmonic: 1, 
@@ -118,7 +118,7 @@ export const synthConfig = {
                     name: 'sine',
                     active: false,
                     value: 0.80,
-                    savedValue: .80,
+                    savedValue: null, 
                     overtones: [
                         {
                             harmonic: 1, 
