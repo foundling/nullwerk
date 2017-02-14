@@ -53,7 +53,6 @@
                 slideData: {
                     position: null,
                     relativeOffset: null,
-                    lastIncrementalDelta: 0,
                     lastDelta: 0
                 },
             };
@@ -128,19 +127,30 @@
                 const minOffset = 0;
                 const maxOffset = slideTrackDimension - slideBarDimension;
 
-                let delta = e['delta' + this.axis];
+                let delta = sign * e['delta' + this.axis];
                 let incrementalDelta = delta - this.slideData.lastDelta; 
+                let newPosition = this.slideData.position + incrementalDelta; 
 
-                console.log('diff', delta - this.slideData.lastDelta)
+                // update slide position data, keeping it in range.
+                if (newPosition > maxOffset) {
 
-                // update slide position data
-                this.slideData.position += incrementalDelta;
-                this.styleData.bar.transform = `translate${ this.axis }(${ this.slideData.position }px)`;
+                    this.slideData.position = maxOffset;
+
+                } else if (newPosition < minOffset) {
+
+                    this.slideData.position = minOffset;
+
+                } else {
+
+                    this.slideData.position = newPosition;
+
+                }
+
+                this.styleData.bar.transform = `translate${ this.axis }(${ sign * this.slideData.position }px)`;
 
                 // 2. move div in sync with calculation
 
                 this.slideData.lastDelta = delta;
-                this.slideData.lastIncrementalDelta = incrementalDelta;
 
             },
             moveSliderEnd(e) {
