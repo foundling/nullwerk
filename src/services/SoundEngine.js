@@ -221,7 +221,21 @@ export default class SoundEngine {
             so start & stop = create & destroy for a node. 
         */
         
-        this.oscillators.forEach(node => node.osc.stop(0));
+        const oscillators = this.oscillators;
+        const oscSettings = this.oscillatorSettings;
+        const envelope = this.envelopeSettings;
+        const context = this.context;
+
+        const releaseTime = envelope.release.value; 
+
+        oscillators.forEach(osc => {
+            osc.gain.gain.linearRampToValueAtTime(0, context.currentTime + releaseTime);  
+        });
+
+        // release happens here. ramp value down to 0.
+        // then stop note.
+        //const releaseTime = envelope.release.value;
+        //this.oscillators.forEach(node => node.osc.stop(0));
 
     }
 
@@ -257,9 +271,13 @@ export default class SoundEngine {
                 // set envelope values
                 const attackTime = envelope.attack.value;
                 const decayTime = attackTime + envelope.decay.value;
+                const sustainTime = decayTime + envelope.sustain.value;
 
+                // attack: go from 0 to peak at time
                 node.gain.gain.linearRampToValueAtTime(oscSetting.value, context.currentTime + attackTime);
-                node.gain.gain.linearRampToValueAtTime(0, context.currentTime + decayTime);
+                // decay: go from peak to sustain value
+                node.gain.gain.linearRampToValueAtTime(oscSetting.value/2, context.currentTime + decayTime);
+                //node.gain.gain.linearRampToValueAtTime(0, context.currentTime + sustainTime);
 
                 // connect osc to gain, gain to master gain
                 node.osc.connect(node.gain);

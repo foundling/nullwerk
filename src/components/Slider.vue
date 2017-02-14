@@ -101,6 +101,7 @@
             initSliderPosition() {
 
                 let dimensionType = this.direction === 'horizontal' ? 'width' : 'height'; 
+                let sign = dimensionType === 'horizontal' ? 1 : -1;
                 let slideBar = this.$el;
                 let track = slideBar.parentNode;
                 let slideBarDimension = toComputed(slideBar, dimensionType);
