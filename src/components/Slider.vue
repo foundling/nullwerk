@@ -25,7 +25,7 @@
         position: absolute;
         display: flex;
         align-content: center;
-        justify-items: center;
+        justify-content: center;
     }
     .slider-label {
         display: flex;
@@ -53,6 +53,7 @@
                 slideData: {
                     position: null,
                     relativeOffset: null,
+                    lastIncrementalDelta: 0,
                     lastDelta: 0
                 },
             };
@@ -85,33 +86,27 @@
             }
         },
         created: function() {
-            // fired before 'mounted'
+
+            // fires before 'mounted'
+
             this.styleData = this.buildStyleData();
         },
         mounted: function() {
 
-            // after 'created'
+            // fires after 'created'
 
-            // INITIALIZE SLIDER POSITION BASED ON CONTROL-SOURCE VALUE (percentage)
-
-            let widthOrHeight = this.direction === 'horizontal' ? 'width' : 'height'; 
-            let bar = this.$el;
-            let container = bar.parentNode;
-            let barDimension = toComputed(bar, widthOrHeight);
-            let containerDimension = toComputed(container, widthOrHeight);
-            let slideableDistancePx = containerDimension - barDimension;
+            let dimensionType = this.direction === 'horizontal' ? 'width' : 'height'; 
+            let slideBar = this.$el;
+            let track = slideBar.parentNode;
+            let slideBarDimension = toComputed(slideBar, dimensionType);
+            let trackDimension = toComputed(track, dimensionType);
+            let slideableDistancePx = trackDimension - slideBarDimension;
             let percentOffset = this.controlSource.value;
-            let sliderOffset = percentOffset * slideableDistancePx;
+            let slideBarOffset = percentOffset * slideableDistancePx;
 
-            this.slideData.position = sliderOffset;
-
-            if (this.direction === 'horizontal') {
-                this.styleData.bar.left = sliderOffset + 'px';
-                this.styleData.bar.bottom = '0px';
-            } else {
-                this.styleData.bar.left = '0px';
-                this.styleData.bar.bottom = sliderOffset;
-            }
+            //this.slideData.position = slideBarOffset;
+            this.slideData.position = slideBarOffset;
+            this.styleData.bar.transform = `translate${ this.axis }(${ slideBarOffset }px)`;
 
         },
         methods: {
@@ -119,8 +114,8 @@
             moveSlider(e) {
 
                 // two concerns. moving div via css, calculating position.
-
                 // 1. calc position
+
                 const dimensionType = this.direction === 'horizontal' ? 'width' : 'height'; 
                 const sign = this.direction === 'horizontal' ? 1 : -1; 
 
@@ -133,28 +128,24 @@
                 const minOffset = 0;
                 const maxOffset = slideTrackDimension - slideBarDimension;
 
-                // delta is cumulative across a gesture, get incremental
                 let delta = e['delta' + this.axis];
+                let incrementalDelta = delta - this.slideData.lastDelta; 
 
-                // calculate incremental delta since last one
-                let incrementalDelta = delta - this.slideData.lastDelta;
+                console.log('diff', delta - this.slideData.lastDelta)
 
-                // use incremental delta to get abs position
+                // update slide position data
                 this.slideData.position += incrementalDelta;
-
-                this.slideData.lastDelta = delta;
-
-
-                console.log('position: ', this.slideData.position);
-                console.log('incremental delta: ', incrementalDelta);
+                this.styleData.bar.transform = `translate${ this.axis }(${ this.slideData.position }px)`;
 
                 // 2. move div in sync with calculation
 
-                this.styleData.bar.transform = `translate${ this.axis }(${ this.slideData.position }px)`;
-
+                this.slideData.lastDelta = delta;
+                this.slideData.lastIncrementalDelta = incrementalDelta;
 
             },
             moveSliderEnd(e) {
+                // reset lastDelta to 0 at end of gesture.
+                this.slideData.lastDelta = 0;
             },
             buildStyleData() {
 
@@ -175,6 +166,9 @@
             }
         },
         computed: {
+            sliderPosition() {
+                return `translate${ this.axis }(${ this.slideData.position }px)`;
+            },
             abbreviatedLabel() {
                 return this.content.charAt(0).toUpperCase();
             },
