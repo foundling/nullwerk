@@ -231,11 +231,11 @@ export default class SoundEngine {
         oscillators.forEach(osc => {
             osc.gain.gain.linearRampToValueAtTime(0, context.currentTime + releaseTime);  
         });
+        this.oscillators.forEach(node => node.osc.stop(context.currentTime + releaseTime));
 
         // release happens here. ramp value down to 0.
         // then stop note.
         //const releaseTime = envelope.release.value;
-        //this.oscillators.forEach(node => node.osc.stop(0));
 
     }
 
