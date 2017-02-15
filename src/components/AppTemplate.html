@@ -1,7 +1,7 @@
 <div class="synth-container">
 
     <!--Master Pitch Container -->
-    <div class="master-pitch-container">
+    <div class="module master-pitch-container">
 
         <!-- Octave LED Meter -->
         <div 
@@ -53,7 +53,7 @@
     <!-- Master Volume Knob Container -->
     <div 
         title="Master Volume. Swipe up to increase. Swipe down to decrease. Tap to mute."
-        class="master-volume-container">
+        class="module master-volume-container">
 
         <!-- Master LED Readings --> 
         <div class="volume-container">
@@ -74,7 +74,7 @@
     </div>
 
     <!-- Waveforms -->
-    <div class="waveforms-and-options-container">
+    <div class="module waveforms-and-options-container">
 
         <div class="waveforms-container">
             <knob 
@@ -106,7 +106,7 @@
     </div>
 
     <!-- Envelope -->
-    <div class="envelope-container">
+    <div class="module envelope-container">
 
         <div 
             v-for="param in envelope"
@@ -131,23 +131,38 @@
     </div>
 
     <!-- Modulation Wheels Container -->
-    <div class="wheels-container">
+    <div class="module wheels-container">
         <wheel></wheel>
         <wheel></wheel>
     </div>
 
-    <!-- Modulation Wheels Container -->
-    <div class="wheels-container">
+    <!-- Settings Panel -->
+    <div class="module settings-container">
+
+        <btn 
+        title="save synth parameters to local storage."
+        class="" 
+        v-on:press="saveToLocalStorage">
+
+            <i 
+            v-bind:style="{ color: palette.black }" 
+            class="fa fa-save" 
+            slot="label">
+            save current config.
+            </i>
+
+        </btn>
+
     </div>
        
     <!-- Signature Sign Container -->
-    <div class="title-container">
+    <div class="module title-container">
         <h1 class="make">ARS</h1>
         <h1 class="model">1</h1>
     </div>
 
     <!-- Keyboard Container -->
-    <div class="keyboard-container">
+    <div class="module keyboard-container">
         <div class="keyboard">
             <key 
             v-for="index in 25" 

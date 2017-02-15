@@ -15,10 +15,10 @@ export const synthConfig = {
             octave: -1,
             oscillators: {
                 square: {
-                    osc: null,
                     name: 'square',
                     active: true,
                     value: 0.4,
+                    osc: null,
                     savedValue: null,
                     overtones: [
                         {
@@ -48,10 +48,10 @@ export const synthConfig = {
                     ]
                 },
                 triangle: {
-                    osc: null,
                     name: 'triangle',
                     active: true,
                     value: 0.4,
+                    osc: null,
                     savedValue: null,
                     overtones: [
                         {
@@ -81,9 +81,9 @@ export const synthConfig = {
                     ]
                 },
                 sawtooth: {
-                    osc: null,
                     name: 'sawtooth',
                     active: true,
+                    osc: null,
                     value: 0.35,
                     savedValue: null,
                     overtones: [
@@ -114,10 +114,10 @@ export const synthConfig = {
                     ]
                 },
                 sine: {
-                    osc: null,
                     name: 'sine',
                     active: true,
                     value: 0.80,
+                    osc: null,
                     savedValue: null, 
                     overtones: [
                         {
@@ -149,24 +149,24 @@ export const synthConfig = {
             },
             envelope: {
                 attack: {
-                    active: true,
                     name: 'attack',
                     value: 0.2,
+                    active: true,
                 },
                 decay: {
-                    active: true,
                     name: 'decay',
                     value: 0.4,
+                    active: true,
                 },
                 sustain: {
-                    active: true,
                     name: 'sustain',
                     value: 0.8, 
+                    active: true,
                 },
                 release: {
-                    active: true,
                     name: 'release',
                     value: 0.7,
+                    active: true,
                 },
             },
         }
