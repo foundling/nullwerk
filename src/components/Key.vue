@@ -17,7 +17,7 @@
         border: 1px solid rgb(40,40,40); 
     }
     div.active-key {
-        background: #ffeb3b;
+        background: #ff8c8c;
     }
     .black-key {
         position: absolute;
