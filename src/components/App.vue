@@ -52,7 +52,7 @@
                 this.soundEngine.playNote(index);
             },
             noteOff({ index }) {
-                this.soundEngine.muteNote(index);
+                this.soundEngine.noteOff();
             }
         },
         computed: {

@@ -234,6 +234,7 @@ export const synthConfig = {
             {
                 name: 'attack',
                 slider: {
+                    description: 'adjust time to attack.',
                     color: palette.black, 
                     direction: 'vertical'
                 }
@@ -241,6 +242,7 @@ export const synthConfig = {
             {
                 name: 'decay',
                 slider: {
+                    description: 'Adjust time taken to decay to sustain level.',
                     color: palette.black, 
                     direction: 'vertical',
                 }
@@ -248,6 +250,7 @@ export const synthConfig = {
             {
                 name: 'sustain',
                 slider: {
+                    description: 'adjust sustain level.',
                     color: palette.black, 
                     direction: 'vertical'
                 }
@@ -255,6 +258,7 @@ export const synthConfig = {
             {
                 name: 'release',
                 slider: {
+                    description: 'adjust time for sound to dissipate after releasing a key.',
                     color: palette.black, 
                     direction: 'vertical'
                 }

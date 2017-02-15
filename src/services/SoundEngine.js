@@ -169,11 +169,9 @@ export default class SoundEngine {
         if (this.active) {
             this.savedVolumeSetting = this.masterGain.gain.value;
             this.masterGain.gain.value = 0;
-            console.log(this.masterGain.gain.value);
         } 
         else {
             this.masterGain.gain.value = this.savedVolumeSetting;
-            console.log(this.masterGain.gain.value);
         }
 
         this.active = !this.active;
@@ -214,24 +212,35 @@ export default class SoundEngine {
 
     }
 
+
+    envelopeValueToDuration(name, val) {
+
+        const normalizers = {
+            attack: val => val * 3,
+            decay: val => val * 6,
+            release: val => val * 6,
+        };
+
+        return normalizers[name](val);
+    }
+
     muteNote() {
         
         /* 
             With web audio, notes are discardable by design. 
             so start & stop = create & destroy for a node. 
         */
-        
-        const oscillators = this.oscillators;
-        const oscSettings = this.oscillatorSettings;
-        const envelope = this.envelopeSettings;
-        const context = this.context;
-        const releaseTime = envelope.release.value * 2; 
+        const normalizedReleaseDur = this.envelopeValueToDuration('release', this.envelopeSettings.release.value);
+        const releaseTime = this.context.currentTime + normalizedReleaseDur; 
 
-        oscillators.forEach(osc => {
-            osc.gain.gain.linearRampToValueAtTime(0, context.currentTime + releaseTime);  
+        this.oscillators.forEach(osc => {
+            // release time: ramp from sustain level down to 0 in <release time> seconds 
+            // and stop the note
+            osc.gain.gain.linearRampToValueAtTime(0, releaseTime);  
+            //this.oscillators.forEach(node => node.osc.stop(releaseTime + 0.01));
+
         });
 
-        this.oscillators.forEach(node => node.osc.stop(context.currentTime + releaseTime));
 
         // release happens here. ramp value down to 0.
         // then stop note.
@@ -239,20 +248,17 @@ export default class SoundEngine {
 
     }
 
-    valueToTime(value){ 
-        return value;
-    }
-
     _createNote(fundamentalFrequency) {
 
         const masterGain = this.masterGain;
         const context = this.context;
-        const oscSettings = this.oscillatorSettings;
+        const oscillators = this.oscillatorSettings;
         const envelope = this.envelopeSettings;
+        const that = this;
 
-        return Object.keys(oscSettings)
-            .map(key => oscSettings[ key ])
-            .map(function(oscSetting, index) {
+        return Object.keys(oscillators)
+            .map(key => oscillators[ key ])
+            .map(function(oscillator, index) {
 
                 const node = {
                     osc: null,
@@ -261,23 +267,23 @@ export default class SoundEngine {
 
                 // init osc
                 node.osc = context.createOscillator(); 
-                node.osc.type = oscSetting.name;
+                node.osc.type = oscillator.name;
                 node.osc.frequency.value = fundamentalFrequency;
 
                 // init gain
                 node.gain = context.createGain();
                 node.gain.gain.value = 0;
 
-                // set envelope values
-                const attackTime = envelope.attack.value;
-                const decayTime = attackTime + envelope.decay.value;
-                const sustainTime = decayTime + envelope.sustain.value;
+                // set attack, decay times and sustain level
+                const attackTime = context.currentTime + that.envelopeValueToDuration('attack', envelope.attack.value);
+                const decayTime = attackTime + that.envelopeValueToDuration('decay', envelope.decay.value);
+                const sustainLevel = envelope.sustain.value * oscillator.value; 
 
-                // attack: go from 0 to peak at time
-                node.gain.gain.linearRampToValueAtTime(oscSetting.value, context.currentTime + attackTime);
-                // decay: go from peak to sustain value
-                node.gain.gain.linearRampToValueAtTime(oscSetting.value/2, context.currentTime + decayTime);
-                //node.gain.gain.linearRampToValueAtTime(0, context.currentTime + sustainTime);
+                // ramp from 0 to peak in <attack time> seconds 
+                node.gain.gain.linearRampToValueAtTime(oscillator.value, attackTime);
+
+                // ramp from peak to sustain level in <decay time> seconds 
+                node.gain.gain.linearRampToValueAtTime(sustainLevel, decayTime);
 
                 // connect osc to gain, gain to master gain
                 node.osc.connect(node.gain);

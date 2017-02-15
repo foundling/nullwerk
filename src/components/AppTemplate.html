@@ -124,7 +124,7 @@
             v-bind:name="param.name"
             v-bind:content="param.name"
             v-bind:color="param.slider.color"
-            v-bind:title="`adjust ${ param.name }.`">
+            v-bind:title="param.slider.description">
             </slider>
         </div>
 
@@ -134,6 +134,10 @@
     <div class="wheels-container">
         <wheel></wheel>
         <wheel></wheel>
+    </div>
+
+    <!-- Modulation Wheels Container -->
+    <div class="wheels-container">
     </div>
        
     <!-- Signature Sign Container -->
