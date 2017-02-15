@@ -101,7 +101,7 @@
             initSliderPosition() {
 
                 let dimensionType = this.direction === 'horizontal' ? 'width' : 'height'; 
-                let sign = dimensionType === 'horizontal' ? 1 : -1;
+                let sign = this.direction === 'horizontal' ? 1 : -1;
                 let slideBar = this.$el;
                 let track = slideBar.parentNode;
                 let slideBarDimension = toComputed(slideBar, dimensionType);
@@ -112,7 +112,7 @@
 
                 //this.slideData.position = slideBarOffset;
                 this.slideData.position = slideBarOffset;
-                this.styleData.bar.transform = `translate${ this.axis }(${ slideBarOffset }px)`;
+                this.styleData.bar.transform = `translate${ this.axis }(${ sign * slideBarOffset }px)`;
 
             },
             updateControlSourceValue() {

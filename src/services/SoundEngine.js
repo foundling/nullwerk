@@ -225,12 +225,12 @@ export default class SoundEngine {
         const oscSettings = this.oscillatorSettings;
         const envelope = this.envelopeSettings;
         const context = this.context;
-
         const releaseTime = envelope.release.value * 2; 
 
         oscillators.forEach(osc => {
             osc.gain.gain.linearRampToValueAtTime(0, context.currentTime + releaseTime);  
         });
+
         this.oscillators.forEach(node => node.osc.stop(context.currentTime + releaseTime));
 
         // release happens here. ramp value down to 0.

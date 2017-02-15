@@ -151,22 +151,22 @@ export const synthConfig = {
                 attack: {
                     active: true,
                     name: 'attack',
-                    value: 0,
+                    value: 0.2,
                 },
                 decay: {
                     active: true,
                     name: 'decay',
-                    value: 0,
+                    value: 0.4,
                 },
                 sustain: {
                     active: true,
                     name: 'sustain',
-                    value: 0, 
+                    value: 0.8, 
                 },
                 release: {
                     active: true,
                     name: 'release',
-                    value: 0,
+                    value: 0.7,
                 },
             },
         }
