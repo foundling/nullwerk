@@ -17,7 +17,7 @@
     import Store from './../services/localStorage';
 
     const { ui, sound } = synthConfig;
-    const settings = new Store();
+    const store = new Store({ defaults: sound.synth });
 
     export default {
 
@@ -32,56 +32,11 @@
                 soundEngine: new SoundEngine({ config: sound.synth })
             };
         },
+        created: function() {
+        },
         methods: {
             saveToLocalStorage() {
-                const vueObj = this.sound;
-                settings.config = {
-                    oscillators: {
-                        sine: {
-                            name: this.sound.oscillators.sine.name,
-                            value: this.sound.oscillators.sine.value,
-                            active: this.sound.oscillators.sine.active, 
-                        },
-                        square: {
-                            name: this.sound.oscillators.square.name,
-                            value: this.sound.oscillators.square.value,
-                            active: this.sound.oscillators.square.active, 
-                        },
-                        sawtooth: {
-                            name: this.sound.oscillators.sawtooth.name,
-                            value: this.sound.oscillators.sawtooth.value,
-                            active: this.sound.oscillators.sawtooth.active, 
-                        },
-                        triangle: {
-                            name: this.sound.oscillators.triangle.name,
-                            value: this.sound.oscillators.triangle.value,
-                            active: this.sound.oscillators.triangle.active, 
-                        }
-                    },
-                    envelope: {
-                        attack: {
-                            active: this.sound.envelope.attack.active,
-                            name: this.sound.envelope.attack.name,
-                            value: this.sound.envelope.attack.value
-                        },
-                        decay: {
-                            active: this.sound.envelope.decay.active,
-                            name: this.sound.envelope.decay.name,
-                            value: this.sound.envelope.decay.value
-                        },
-                        sustain: {
-                            active: this.sound.envelope.sustain.active,
-                            name: this.sound.envelope.sustain.name,
-                            value: this.sound.envelope.sustain.value
-                        },
-                        release: {
-                            active: this.sound.envelope.release.active,
-                            name: this.sound.envelope.release.name,
-                            value: this.sound.envelope.release.value
-                        },
-                    }
-                };
-
+                store.config = this.sound;
             },
             toggleMasterVol() {
                 this.soundEngine.toggleMasterVolume();

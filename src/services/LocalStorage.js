@@ -9,9 +9,13 @@ const schema = {
 };
 
 class Store {
-    constructor() {
+    constructor({ defaults }) {
 
+
+        this.defaults = defaults;
+        console.log(this.defaults);
         this.localStorage = localStorage || window.localStorage;
+
         if (!this.localStorage) {
             console.log("warning: localStorage is not supported in your browser. Your settings won't be saved.");
             return;

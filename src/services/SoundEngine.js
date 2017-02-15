@@ -4,7 +4,6 @@ const C4_HERTZ = 261.626;
 
 const MAX_VOLUME = 0.4;
 const MIN_VOLUME = 0.0;
-
 const MAX_OCTAVE = 2;
 const MIN_OCTAVE = -2;
 
