@@ -226,7 +226,7 @@ export default class SoundEngine {
         const envelope = this.envelopeSettings;
         const context = this.context;
 
-        const releaseTime = envelope.release.value; 
+        const releaseTime = envelope.release.value * 2; 
 
         oscillators.forEach(osc => {
             osc.gain.gain.linearRampToValueAtTime(0, context.currentTime + releaseTime);  

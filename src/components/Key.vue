@@ -16,6 +16,9 @@
         height: 100%;
         border: 1px solid rgb(40,40,40); 
     }
+    div.active-key {
+        background: #ffeb3b;
+    }
     .black-key {
         position: absolute;
         top: 0px;
@@ -54,6 +57,7 @@
             return {
                 // screenWidth is a screenWidthMixin data attribute
                 keyboardDirection: null,
+                active: false,
                 keyWidthPercent: {
                     white: 100/15,
                     black: (100/15) / 2
@@ -74,9 +78,11 @@
                 this.keyboardDirection = this.screenWidth >= 500 ? 'horizontal' : 'vertical';
             },
             startNote(index) {
+                this.active = true;
                 this.$emit('noteon', { index });
             },
             stopNote(index) {
+                this.active = false;
                 this.$emit('noteoff', { index }); 
             },
             handleResize() {
@@ -84,6 +90,9 @@
             }
         }, 
         computed: {
+            isActive: function() {
+                return this.active;
+            },
             isBlackKey: function() {
                 return this.blackKeys.includes(this.index);
             },
@@ -99,7 +108,8 @@
             classData: function() { 
                 return {
                     'black-key': this.isBlackKey, 
-                    'white-key': !this.isBlackKey 
+                    'white-key': !this.isBlackKey, 
+                    'active-key': this.active,
                 };
             },
             styleData: function() {
