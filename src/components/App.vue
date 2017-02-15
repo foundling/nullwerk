@@ -17,9 +17,7 @@
     import Store from './../services/localStorage';
 
     const { ui, sound } = synthConfig;
-    const store = new Store();
-
-    console.log(store.getConfig());
+    const settings = new Store();
 
     export default {
 
@@ -37,31 +35,27 @@
         methods: {
             saveToLocalStorage() {
                 const vueObj = this.sound;
-                store.config = {
+                settings.config = {
                     oscillators: {
                         sine: {
                             name: this.sound.oscillators.sine.name,
                             value: this.sound.oscillators.sine.value,
                             active: this.sound.oscillators.sine.active, 
-                            overtones: this.sound.oscillators.sine.overtones
                         },
                         square: {
                             name: this.sound.oscillators.square.name,
                             value: this.sound.oscillators.square.value,
                             active: this.sound.oscillators.square.active, 
-                            overtones: this.sound.oscillators.square.overtones
                         },
                         sawtooth: {
                             name: this.sound.oscillators.sawtooth.name,
                             value: this.sound.oscillators.sawtooth.value,
                             active: this.sound.oscillators.sawtooth.active, 
-                            overtones: this.sound.oscillators.sawtooth.overtones
                         },
                         triangle: {
                             name: this.sound.oscillators.triangle.name,
                             value: this.sound.oscillators.triangle.value,
                             active: this.sound.oscillators.triangle.active, 
-                            overtones: this.sound.oscillators.triangle.overtones
                         }
                     },
                     envelope: {
@@ -87,7 +81,7 @@
                         },
                     }
                 };
-                store.setConfig(storeObj);
+
             },
             toggleMasterVol() {
                 this.soundEngine.toggleMasterVolume();

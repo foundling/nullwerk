@@ -10,7 +10,6 @@ export const synthConfig = {
                 max: 0.5,
                 min: 0.0,
                 value: 0.3,
-                savedValue: null,
             },
             octave: -1,
             oscillators: {
@@ -18,133 +17,21 @@ export const synthConfig = {
                     name: 'square',
                     active: true,
                     value: 0.4,
-                    osc: null,
-                    savedValue: null,
-                    overtones: [
-                        {
-                            harmonic: 1, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 2, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 3, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 4, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 5, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 6, 
-                            value: 1
-                        }
-                    ]
                 },
                 triangle: {
                     name: 'triangle',
                     active: true,
                     value: 0.4,
-                    osc: null,
-                    savedValue: null,
-                    overtones: [
-                        {
-                            harmonic: 1, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 2, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 3, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 4, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 5, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 6, 
-                            value: 1
-                        }
-                    ]
                 },
                 sawtooth: {
                     name: 'sawtooth',
                     active: true,
-                    osc: null,
                     value: 0.35,
-                    savedValue: null,
-                    overtones: [
-                        {
-                            harmonic: 1, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 2, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 3, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 4, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 5, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 6, 
-                            value: 1
-                        }
-                    ]
                 },
                 sine: {
                     name: 'sine',
                     active: true,
                     value: 0.80,
-                    osc: null,
-                    savedValue: null, 
-                    overtones: [
-                        {
-                            harmonic: 1, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 2, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 3, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 4, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 5, 
-                            value: 1
-                        },
-                        {
-                            harmonic: 6, 
-                            value: 1
-                        }
-                    ]
                 }
             },
             envelope: {
