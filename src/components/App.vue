@@ -13,6 +13,9 @@
     import { synthConfig } from './../config/synth'; 
     import { getScreenWidth }  from './../utils';
     import palette from './../services/colorPalette';
+    import store from './../services/localStorage';
+
+    store.init();
 
     const { ui, sound } = synthConfig;
 
