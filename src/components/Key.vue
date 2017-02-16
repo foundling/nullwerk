@@ -55,7 +55,7 @@
         mixins: [ screenWidthMixin ],
         data: function() {
             return {
-                // screenWidth is a screenWidthMixin data attribute
+                // screenDimensions is a mixin object with screen height and width properties
                 keyboardDirection: null,
                 active: false,
                 keyWidthPercent: {
@@ -70,7 +70,6 @@
         ],
         created: function() {
             this.keyboardDirection = this.screenDimensions.width >= 500 ? 'horizontal' : 'vertical';
-            window.addEventListener('resize', this.updateKeyboardDimensions.bind(this));
         }, 
 
         methods: {
@@ -85,11 +84,11 @@
                 this.active = false;
                 this.$emit('noteoff', { index }); 
             },
-            handleResize() {
-                this.screenDimensions.width = getScreenWidth();
-            }
         }, 
         computed: {
+            keyboardDirection: function() {
+                return this.screenDimensions.width >= 500 ? 'horizontal' : 'vertical';
+            },
             isActive: function() {
                 return this.active;
             },
@@ -104,7 +103,6 @@
                 let offset = whiteKeysToTheLeft * this.keyWidthPercent.white - (this.keyWidthPercent.black / 2) ; 
                 return offset + '%';
             },
-
             classData: function() { 
                 return {
                     'black-key': this.isBlackKey, 
