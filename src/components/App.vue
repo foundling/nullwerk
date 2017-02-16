@@ -16,16 +16,15 @@
     import palette from './../services/colorPalette';
     import Store from './../services/localStorage';
 
-    const { ui, sound } = synthConfig;
-    const store = new Store({ defaults: sound.synth });
+    const { ui, synth } = synthConfig;
+    const store = new Store({ defaults: synth });
 
     export default {
 
         data: function() {
             return {
-                leds: ui.leds,
                 palette: palette, 
-                sound: sound.synth,
+                leds: ui.leds,
                 waveforms: ui.waveforms,
                 envelope: ui.envelope,
                 keyboard: ui.keyboard,

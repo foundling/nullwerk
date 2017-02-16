@@ -1,23 +1,23 @@
-import { getScreenWidth } from './utils'; 
+import { getScreenWidth, getScreenHeight } from './utils'; 
 
 const screenWidthMixin =  {
 
     data: function()  {
         return {
-            screenWidth: null,
+            screenDimensions: null,
         }
     },
     methods: {
-        updateScreenWidth() {
-            this.screenWidth = getScreenWidth();
+        updateScreenDimensions() {
+            this.screenDimensions = { width: getScreenWidth(), height: getScreenHeight() };
         }
     },
     created: function() {
-        this.updateScreenWidth();
-        window.addEventListener('resize', this.updateScreenWidth.bind(this));
+        this.updateScreenDimensions();
+        window.addEventListener('resize', this.updateScreenDimensions.bind(this));
     }, 
     onDestroy: function() {
-        window.removeEventListener('resize', this.updateScreenWidth);
+        window.removeEventListener('resize', this.updateScreenDimensions);
     },
 
 };

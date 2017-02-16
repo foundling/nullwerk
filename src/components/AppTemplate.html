@@ -80,7 +80,7 @@
             <knob 
             v-for="waveform in waveforms" 
             v-on:toggle="toggleOscillatorVol"
-            v-bind:active="sound.oscillators[ waveform.name ].active"
+            v-bind:active="soundEngine.oscillatorSettings[ waveform.name ].active"
             v-bind:bg-image-active="waveform.knob.img.active"
             v-bind:bg-image-inactive="waveform.knob.img.inactive"
             v-bind:waveform="waveform.name"
@@ -98,7 +98,7 @@
             v-bind:direction="waveform.slider.direction"
             v-bind:name="waveform.name"
             v-bind:content="waveform.name"
-            v-bind:title="`adjust ${ waveform.name } level.`"
+            v-bind:title="`adjust ${ waveform.name }wave volume.`"
             v-bind:color="waveform.slider.color">
             </slider>
         </div>
@@ -139,19 +139,13 @@
     <!-- Settings Panel -->
     <div class="module settings-container">
 
-        <btn 
-        title="save synth parameters to local storage."
-        class="" 
-        v-on:press="saveToLocalStorage">
-
-            <i 
-            v-bind:style="{ color: palette.black }" 
-            class="fa fa-save" 
-            slot="label">
-            </i>
-
-        </btn>
-
+        <select
+        name="presets"
+        title="save synth parameters to local storage.">
+            <option 
+            value="preset.name">
+            </option 
+        </select>
     </div>
        
     <!-- Signature Sign Container -->

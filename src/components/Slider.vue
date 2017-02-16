@@ -42,6 +42,7 @@
     import Vue from 'vue';
     import VueTouch from 'vue-touch';
     import { toComputed, log } from '../utils';
+    import { screenWidthMixin } from './../mixins';
 
     Vue.use(VueTouch);
 
@@ -96,6 +97,7 @@
             this.initSliderPosition();
 
         },
+        mixins: [ screenWidthMixin ],
         methods: {
 
             initSliderPosition() {
@@ -193,6 +195,12 @@
                 };
                 
                 return styleData; 
+            }
+        },
+        watch: {
+            screenDimensions: function() {
+                console.log('dims changed', this.screenDimensions);
+                this.initSliderPosition();
             }
         },
         computed: {

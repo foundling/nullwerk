@@ -2,60 +2,62 @@ import palette from './../services/colorPalette';
 
 export const synthConfig = {
 
-    sound: {
-
-        synth: {
-            active: true,
-            masterVolume: {
-                max: 0.5,
-                min: 0.0,
-                value: 0.3,
-            },
-            octave: -1,
-            oscillators: {
-                square: {
-                    name: 'square',
-                    active: true,
-                    value: 0.4,
+    synth: {
+        active: true,
+        currentPreset: 'default',
+        presets: {
+            default: {
+                masterVolume: {
+                    max: 0.5,
+                    min: 0.0,
+                    value: 0.3,
                 },
-                triangle: {
-                    name: 'triangle',
-                    active: true,
-                    value: 0.4,
+                octave: -1,
+                oscillators: {
+                    square: {
+                        name: 'square',
+                        active: true,
+                        value: 0.4,
+                    },
+                    triangle: {
+                        name: 'triangle',
+                        active: true,
+                        value: 0.4,
+                    },
+                    sawtooth: {
+                        name: 'sawtooth',
+                        active: true,
+                        value: 0.35,
+                    },
+                    sine: {
+                        name: 'sine',
+                        active: true,
+                        value: 0.80,
+                    }
                 },
-                sawtooth: {
-                    name: 'sawtooth',
-                    active: true,
-                    value: 0.35,
+                envelope: {
+                    attack: {
+                        name: 'attack',
+                        value: 0.2,
+                        active: true,
+                    },
+                    decay: {
+                        name: 'decay',
+                        value: 0.4,
+                        active: true,
+                    },
+                    sustain: {
+                        name: 'sustain',
+                        value: 0.8, 
+                        active: true,
+                    },
+                    release: {
+                        name: 'release',
+                        value: 0.7,
+                        active: true,
+                    },
                 },
-                sine: {
-                    name: 'sine',
-                    active: true,
-                    value: 0.80,
-                }
-            },
-            envelope: {
-                attack: {
-                    name: 'attack',
-                    value: 0.2,
-                    active: true,
-                },
-                decay: {
-                    name: 'decay',
-                    value: 0.4,
-                    active: true,
-                },
-                sustain: {
-                    name: 'sustain',
-                    value: 0.8, 
-                    active: true,
-                },
-                release: {
-                    name: 'release',
-                    value: 0.7,
-                    active: true,
-                },
-            },
+            }
         }
     },
     ui: {

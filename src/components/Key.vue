@@ -69,13 +69,13 @@
             'blackKeys'
         ],
         created: function() {
-            this.keyboardDirection = this.screenWidth >= 500 ? 'horizontal' : 'vertical';
+            this.keyboardDirection = this.screenDimensions.width >= 500 ? 'horizontal' : 'vertical';
             window.addEventListener('resize', this.updateKeyboardDimensions.bind(this));
         }, 
 
         methods: {
             updateKeyboardDimensions() {
-                this.keyboardDirection = this.screenWidth >= 500 ? 'horizontal' : 'vertical';
+                this.keyboardDirection = this.screenDimensions.width >= 500 ? 'horizontal' : 'vertical';
             },
             startNote(index) {
                 this.active = true;
@@ -86,7 +86,7 @@
                 this.$emit('noteoff', { index }); 
             },
             handleResize() {
-                this.screenWidth = getScreenWidth();
+                this.screenDimensions.width = getScreenWidth();
             }
         }, 
         computed: {
