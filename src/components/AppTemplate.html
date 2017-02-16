@@ -10,7 +10,7 @@
 
             <led 
             diameter="15%"
-            v-for="led in leds" 
+            v-for="led in ui.leds" 
             v-bind:color="led.color" 
             v-bind:currentOctave="soundEngine.currentOctave" 
             v-bind:octave="led.octave">
@@ -78,7 +78,7 @@
 
         <div class="waveforms-container">
             <knob 
-            v-for="waveform in waveforms" 
+            v-for="waveform in ui.waveforms" 
             v-on:toggle="toggleOscillatorVol"
             v-bind:active="soundEngine.oscillatorSettings[ waveform.name ].active"
             v-bind:bg-image-active="waveform.knob.img.active"
@@ -92,7 +92,7 @@
 
         <div class="waveform-level-container">
             <slider 
-            v-for="waveform in waveforms" 
+            v-for="waveform in ui.waveforms" 
             v-on:slide="adjustOscillatorVolume"
             v-bind:control-source="soundEngine.oscillatorSettings[ waveform.name ]"
             v-bind:direction="waveform.slider.direction"
@@ -109,7 +109,7 @@
     <div class="module envelope-container">
 
         <div 
-            v-for="param in envelope"
+            v-for="param in ui.envelope"
             class="envelope-slider-container">
 
             <h1 
@@ -137,17 +137,12 @@
     </div>
 
     <!-- Settings Panel -->
-    <div class="module settings-container">
-
-        <select
-        name="presets"
-        title="save synth parameters to local storage.">
-            <option 
-            value="preset.name">
-            </option 
-        </select>
+    <div class="module selector-container">
+        <preset-manager 
+        v-on:addpreset="savePreset"
+        v-bind:presets="presets"></preset-manager>
     </div>
-       
+
     <!-- Signature Sign Container -->
     <div class="module title-container">
         <h1 class="make">ARS</h1>
@@ -160,18 +155,11 @@
             <key 
             v-for="index in 25" 
             v-bind:index="index - 1" 
-            v-bind:blackKeys="keyboard.blackKeys"
+            v-bind:blackKeys="ui.keyboard.blackKeys"
             v-on:noteon="noteOn"
             v-on:noteoff="noteOff">
             </key>
         </div>
     </div>
-
-    <!-- Sequencer Container -->
-    <!--
-    <sequencer 
-    v-bind:sequencer="sequencer">
-    </sequencer>
-    -->
 
 </div>

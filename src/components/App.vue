@@ -9,6 +9,7 @@
     import Wheel from './Wheel';
     import Btn from './Btn';
     import Led from './Led';
+    import PresetManager from './PresetManager';
 
     import SoundEngine from './../services/SoundEngine';
     import { synthConfig } from './../config/synth'; 
@@ -19,19 +20,16 @@
     const { ui, synth } = synthConfig;
     const store = new Store({ defaults: synth });
 
+
     export default {
 
         data: function() {
             return {
+                ui: ui,
                 palette: palette, 
-                leds: ui.leds,
-                waveforms: ui.waveforms,
-                envelope: ui.envelope,
-                keyboard: ui.keyboard,
+                presets: store.config,
                 soundEngine: new SoundEngine({ config: store.config })
             };
-        },
-        created: function() {
         },
         methods: {
             saveToLocalStorage() {
@@ -60,23 +58,23 @@
             },
             noteOff({ index }) {
                 this.soundEngine.noteOff();
+            },
+            savePreset({ name }) {
+                console.log(name);
             }
-        },
-        computed: {
         },
         filters: {
             abbreviate: s => s.charAt(0).toUpperCase(),
         },
         components: { 
-
-            Key, 
-            Sequencer, 
-            Slider, 
-            Knob,
-            Wheel, 
             Btn,
-            Led
-
+            Key, 
+            Knob,
+            Led,
+            Sequencer, 
+            PresetManager,
+            Slider, 
+            Wheel
         }
     };
 
