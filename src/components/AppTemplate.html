@@ -94,7 +94,7 @@
             <slider 
             v-for="waveform in waveforms" 
             v-on:slide="adjustOscillatorVolume"
-            v-bind:control-source="sound.oscillators[ waveform.name ]"
+            v-bind:control-source="soundEngine.oscillatorSettings[ waveform.name ]"
             v-bind:direction="waveform.slider.direction"
             v-bind:name="waveform.name"
             v-bind:content="waveform.name"
@@ -118,7 +118,7 @@
 
             <slider 
             v-on:slide="setEnvelopeValue"
-            v-bind:control-source="sound.envelope[ param.name ]"
+            v-bind:control-source="soundEngine.envelopeSettings[ param.name ]"
             v-bind:direction="param.slider.direction"
             v-bind:opacity="0.4"
             v-bind:name="param.name"

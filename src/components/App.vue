@@ -29,14 +29,14 @@
                 waveforms: ui.waveforms,
                 envelope: ui.envelope,
                 keyboard: ui.keyboard,
-                soundEngine: new SoundEngine({ config: sound.synth })
+                soundEngine: new SoundEngine({ config: store.config })
             };
         },
         created: function() {
         },
         methods: {
             saveToLocalStorage() {
-                store.config = this.sound;
+                store.config = this.soundEngine.export;
             },
             toggleMasterVol() {
                 this.soundEngine.toggleMasterVolume();

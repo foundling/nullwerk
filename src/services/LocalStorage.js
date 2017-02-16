@@ -1,43 +1,37 @@
 const STORAGE_KEY = 'ei-nullwerk';
-
-const schema = {
-
-    initialized: true,
-    oscillators: null, 
-    envelope: null
-
-};
+const localStorage = localStorage || window.localStorage;
 
 class Store {
     constructor({ defaults }) {
 
+        const initialized = !!localStorage.getItem(STORAGE_KEY);
+        console.log('initialized:', initialized);
 
-        this.defaults = defaults;
-        console.log(this.defaults);
-        this.localStorage = localStorage || window.localStorage;
-
-        if (!this.localStorage) {
+        if (!localStorage) {
             console.log("warning: localStorage is not supported in your browser. Your settings won't be saved.");
             return;
         }
 
-        this.initialized = !! JSON.parse( this.localStorage.getItem(STORAGE_KEY) || '{}' ).initialized;
-        if (!this.initialized) {
-            this.localStorage.setItem(STORAGE_KEY, JSON.stringify(schema));
+        if (!initialized) {
+            console.log('using defaults');
+            let stringifiedDefaults = JSON.stringify(defaults); 
+            localStorage.setItem(STORAGE_KEY, stringifiedDefaults);
         }
 
     }
 
     get config() {
-        return JSON.parse(this.localStorage.getItem(STORAGE_KEY));
+        //console.log('get', JSON.parse(localStorage.getItem(STORAGE_KEY)) );
+        return JSON.parse(localStorage.getItem(STORAGE_KEY));
     }
 
     set config(params) { 
-        this.localStorage.setItem(STORAGE_KEY, JSON.stringify(params)); 
+        //console.log(JSON.stringify(params, null, 2));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(params)); 
     }
 
     clear() {
-        this.localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(STORAGE_KEY);
     }
 
 };

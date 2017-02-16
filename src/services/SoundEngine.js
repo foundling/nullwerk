@@ -27,8 +27,16 @@ export default class SoundEngine {
         this.envelopeSettings = config.envelope;
         this.oscillatorSettings = config.oscillators;
         this.oscillators = null;
-    }
+        this.export = {
 
+            active: this.active,
+            octave: this.currentOctave,
+            masterVolume: config.masterVolume, 
+            oscillators: this.oscillatorSettings,
+            envelope: this.envelopeSettings
+
+        };
+    }
 
     /* MIDI Connections and event handlers */
     onMIDIStateChange(event) {
