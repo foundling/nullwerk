@@ -36,7 +36,12 @@
 <script>
     export default {
         name: 'Led',
-        props: [ 'color', 'octave', 'currentOctave', 'diameter' ],
+        props: [ 
+            'color', 
+            'octave', 
+            'currentOctave', 
+            'diameter' 
+        ],
         computed: {
             isActive: function() { 
                 return this.octave === this.currentOctave;

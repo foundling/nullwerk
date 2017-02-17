@@ -70,11 +70,13 @@
             },
             controlSource: {
                 type: Object,
+                /*
                 validator: function(o) {
                     return o.hasOwnProperty('value') &&
                            o.hasOwnProperty('name') && 
                            o.hasOwnProperty('active');
                 }
+                */
             },
             direction: {
                 type: String,
@@ -199,9 +201,13 @@
         },
         watch: {
             screenDimensions: function() {
-                console.log('dims changed', this.screenDimensions);
+                this.initSliderPosition();
+            },
+            controlSource: function() {
+                console.log('controlSource changed');
                 this.initSliderPosition();
             }
+
         },
         computed: {
             sliderPosition() {

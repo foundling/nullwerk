@@ -12,7 +12,7 @@
             diameter="15%"
             v-for="led in ui.leds" 
             v-bind:color="led.color" 
-            v-bind:currentOctave="soundEngine.currentOctave" 
+            v-bind:currentOctave="store.config.currentPreset.octave" 
             v-bind:octave="led.octave">
             </led>
 
@@ -41,7 +41,7 @@
             v-on:press="adjustOctave(-1)">
 
                 <i 
-                v-bind:style="{color: palette.white}" 
+                v-bind:style="{ color: palette.white }" 
                 class="fa fa-caret-down" 
                 slot="label">
                 </i>
@@ -80,7 +80,7 @@
             <knob 
             v-for="waveform in ui.waveforms" 
             v-on:toggle="toggleOscillatorVol"
-            v-bind:active="soundEngine.oscillatorSettings[ waveform.name ].active"
+            v-bind:active="store.config.currentPreset.oscillators[ waveform.name ].active"
             v-bind:bg-image-active="waveform.knob.img.active"
             v-bind:bg-image-inactive="waveform.knob.img.inactive"
             v-bind:waveform="waveform.name"
@@ -94,7 +94,7 @@
             <slider 
             v-for="waveform in ui.waveforms" 
             v-on:slide="adjustOscillatorVolume"
-            v-bind:control-source="soundEngine.oscillatorSettings[ waveform.name ]"
+            v-bind:control-source="soundEngine.settings.oscillators[ waveform.name ]"
             v-bind:direction="waveform.slider.direction"
             v-bind:name="waveform.name"
             v-bind:content="waveform.name"
@@ -118,7 +118,7 @@
 
             <slider 
             v-on:slide="setEnvelopeValue"
-            v-bind:control-source="soundEngine.envelopeSettings[ param.name ]"
+            v-bind:control-source="soundEngine.settings.envelope[ param.name ]"
             v-bind:direction="param.slider.direction"
             v-bind:opacity="0.4"
             v-bind:name="param.name"
@@ -132,15 +132,16 @@
 
     <!-- Modulation Wheels Container -->
     <div class="module wheels-container">
-        <wheel></wheel>
-        <wheel></wheel>
     </div>
 
-    <!-- Settings Panel -->
+    <!-- Preset Settings -->
     <div class="module selector-container">
         <preset-manager 
-        v-on:addpreset="savePreset"
-        v-bind:presets="presets"></preset-manager>
+        v-on:NEW_PRESET="newPreset"
+        v-on:CHANGE_PRESET="changePreset"
+        v-on:UPDATE_PRESET="updatePreset"
+        v-bind:preset-data="store.config">
+        </preset-manager>
     </div>
 
     <!-- Signature Sign Container -->

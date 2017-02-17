@@ -2,31 +2,39 @@
 
     <div>
 
-        <!-- SELECT  -->
-        <i class="save-icon fa fa-save"></i>
-        <select 
-        v-show="state === 'select'">
+        <h1 class="preset-name">preset: [ <span> {{ presetData.currentPresetName }}</span> ]</h1>
+        <!-- SELECT PRESET -->
+        <i 
+        v-on:click="updatePreset"
+        class="save-icon fa fa-save">
+        </i>
 
-            <option v-for="preset in presets"> {{ preset.name }} </option>
-            <option>new preset</option>
+        <select 
+        v-show="state === 'select'"
+        v-model="selected"
+        v-on:change="changePreset">
+
+            <option 
+            v-for="(preset, key) in presetData.presets" 
+            v-bind:value="key">{{ key }}</option>
+
+            <option value="new">Save New Preset</option>
 
         </select>
 
-        <!-- INPUT  -->
+        <!-- ADD NEW PRESET  -->
         <div 
-        v-show="state === 'save'"
+        v-show="state === 'new'"
         class="input-container">
 
-            <input 
-            v-model:value="inputValue">
-            </input>
-
-            <i 
-            v-on:click="savePreset" 
-            class="close-input fa fa-close"></i>
+            <input v-model:value="inputValue"></input>
 
             <i 
             v-on:click="cancelSave" 
+            class="close-input fa fa-close"></i>
+
+            <i 
+            v-on:click="newPreset" 
             class="close-input fa fa-check"></i>
 
         </div>
@@ -37,8 +45,10 @@
 
 <style>
     i.save-icon,
-    select {
+    select,
+    h1.preset-name {
 
+        color: black;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -47,52 +57,59 @@
         margin-bottom: 5%;
 
     }
+    h1.preset-name {
+        display: flex;
+        flex-direction: row;
+    }
 </style>
 
 <script>
+
+    import Vue from 'vue';
 
     export default {
 
         components: {},
         props: {
-            presets: Object,
+            presetData: {
+                type: Object,
+            }
         },
         data: function() {
 
             return {
 
-                state: 'select',
-                inputValue: 'abc'
+                state: 'select', // 'select' or 'new'  
+                inputValue: '', 
+                selected: this.presetData.currentPresetName,
 
             };
 
         },
         methods: {
-            savePreset: function() {
-
-                this.$emit('addpreset', {
-                    name: this.inputValue.trim() 
-                }); 
-
+            newPreset: function() {
+                this.$emit('NEW_PRESET', { name: this.inputValue.trim() }); 
                 this.inputValue = '';
-                this.state = 'select'
-
+                this.state = 'select';
             }, 
-            loadNewPreset: function() {
-                this.$emit('loadpreset', { name: this.currentPreset });
-            },
-            computed: {
-                currentPreset: function() {
-                    return this.preset.name;
+            changePreset: function(e) {
+
+                if (this.selected === 'new') {
+                    this.state = 'new';
+                    return;
                 }
+
+                this.$emit('CHANGE_PRESET', { name: this.selected });
             },
             cancelSave: function() {
+                this.selected = 'default';
                 this.state = 'select';
-            } 
+            },
+            updatePreset: function() {
+                this.$emit('UPDATE_PRESET', { name: this.presetData.currentPresetName });
+            }
         }
-
 
     };
 
 </script>
-

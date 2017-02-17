@@ -9,33 +9,102 @@ const MIN_OCTAVE = -2;
 
 export default class SoundEngine {
 
-    constructor({ config }) {
+    constructor() {
 
         /* init Web Audio and WebMidi  */
 
         this.context = new (window.AudioContext || window.webkitAudioContext)(); 
         MIDI.init().then(this.onMIDIConnect, this.onMIDIFail);
 
-        /* Instantiate Properties */
+        /* Instantiate Properties That don't rely on synth config. */
 
         this.masterGain = this.context.createGain();
         this.masterGain.connect(this.context.destination);
-        this.active = config.active;
-        this.currentOctave = config.octave;
-        this.masterGain.gain.value = config.masterVolume.value;
-        this.savedVolumeSetting = config.masterVolume.savedValue;
-        this.envelopeSettings = config.envelope;
-        this.oscillatorSettings = config.oscillators;
-        this.oscillators = null;
-        this.export = {
 
-            active: this.active,
-            octave: this.currentOctave,
-            masterVolume: config.masterVolume, 
-            oscillators: this.oscillatorSettings,
-            envelope: this.envelopeSettings
+    }
 
-        };
+    export() {
+        return this.settings;
+    }
+
+    /* Waveform Getters and Setters */
+
+    get sineValue() {
+        return this.settings.oscillators.sine.value;
+    }
+    get squareValue() {
+        return this.settings.oscillators.square.value;
+    }
+    get sawtoothValue() {
+        return this.settings.oscillators.sawtooth.value;
+    }
+    get triangleValue() {
+        return this.settings.oscillators.triangle.value;
+    }
+
+    set sineValue(value) {
+        this.settings.oscillators.sine.value = value;
+    }
+    set squareValue(value) {
+        this.settings.oscillators.square.value = value;
+    }
+    set sawtoothValue(value) {
+        this.settings.oscillators.square.value = value;
+    }
+    set triangleValue(value) {
+        this.settings.oscillators.triangle.value = value;
+    }
+
+    /* Envelope Getters and Setters */
+
+    get attackValue() {
+        return this.settings.envelope.attack.value;
+    }
+    get decayValue() {
+        return this.settings.envelope.decay.value;
+    }
+    get sustainValue() {
+        return this.settings.envelope.sustain.value;
+    }
+    get releaseValue() {
+        return this.settings.envelope.release.value;
+    }
+
+    set attackValue(value) {
+        this.settings.envelope.attack.value = value;
+    }
+    set decayValue(value) {
+        this.settings.envelope.decay.value = value;
+    }
+    set sustainValue(value) {
+        this.settings.envelope.sustain.value = value;
+    }
+    set releaseValue(value) {
+        this.settings.envelope.release.value = value;
+    }
+
+    get octave() {
+        return this.settings.octave;
+    }
+    get active() {
+        return this.settings.active;
+    }
+
+    set octave(newOctave) {
+        if (Math.abs(newOctave) > 2) return;
+        this.settings.octave = newOctave;
+    }
+
+    set active(toOff) {
+
+        if (toOff) {
+            this.settings.masterVolume.savedValue = this.settings.masterVolume.value;
+            this.settings.masterVolume.value = 0; 
+        } else {
+            this.settings.masterVolume.value = this.settings.masterVolume.savedValue;
+        }
+
+        this.settings.active = !this.settings.active;
     }
 
     /* MIDI Connections and event handlers */
@@ -100,68 +169,8 @@ export default class SoundEngine {
 
     /* Web Audio Sound Engine Functions */
 
-    get octave() {
-        return this.currentOctave;
-    }
-
-    set octave(octave) {
-
-        if (octave > MAX_OCTAVE || octave < MIN_OCTAVE) return;
-        this.currentOctave = octave;
-
-    }
-
-    get volume() {
-        return this.masterGain.gain.value;
-    }
-
-    set volume(value) {
-
-        if (value > MAX_VOLUME) {
-            this.masterGain.gain.value = MAX_VOLUME;
-        } else if (value < MIN_VOLUME) {
-            this.masterGain.gain.value = MIN_VOLUME; 
-        } else {
-            this.masterGain.gain.value = value;
-        }
-
-    }
-
-    /* Waveform Getters and Setters */
-    get sineValue() {
-        return this.oscillatorSettings.sine.value;
-    }
-
-    set sineValue(value) {
-        this.oscillatorSettings.sine.value = value;
-    }
-
-    get squareValue() {
-        return this.oscillatorSettings.square.value;
-    }
-
-    set squareValue(value) {
-        this.oscillatorSettings.square.value = value;
-    }
-
-    get sawtoothValue() {
-        return this.oscillatorSettings.sawtooth.value;
-    }
-
-    set sawtoothValue(value) {
-        this.oscillatorSettings.sawtooth.value = value;
-    }
-
-    get triangleValue() {
-        return this.oscillatorSettings.triangle.value;
-    }
-
-    set triangleValue(value) {
-        this.oscillatorSettings.triangle.value = value;
-    }
-
     toggleOscillatorVolume(name) {
-        const osc = this.oscillatorSettings[name];
+        const osc = this.settings.oscillators[ name ];
         if (osc.active) {
             osc.savedValue = osc.value;
             osc.value = 0.0;
@@ -173,29 +182,17 @@ export default class SoundEngine {
 
     toggleMasterVolume() {
 
-        if (this.active) {
-            this.savedVolumeSetting = this.masterGain.gain.value;
-            this.masterGain.gain.value = 0;
+        const masterVol = this.settings.masterVolume;
+        const active = this.settings.active;
+
+        if (active) {
+            masterVol.savedValue = masterVol.value;  
+            masterVol.value = 0;
         } 
         else {
-            this.masterGain.gain.value = this.savedVolumeSetting;
+            masterVol.value = masterVol.savedValue;
         }
-
-        this.active = !this.active;
-    }
-
-    setEnvelopeValue({ name, value }) {
-
-        //value is between 0 and 1;
-        this.envelopeSettings[ name ].value = value; 
-
-    }
-
-    setOscillatorValue = function({ name, value }) {
-
-        /* when oscillators get recreated, they use the values that this updates */ 
-        this.oscillatorSettings[name].value = value;
-
+        this.settings.active = !this.settings.active;
     }
 
     playNote(keyIndex, freq) {
