@@ -30,6 +30,7 @@
                 palette,
                 store,
                 soundEngine,
+                preset: null
             };
         },
         created: function() {
@@ -65,12 +66,21 @@
                 console.log('change preset');
                 this.store.config.currentPresetName = name;
                 this.store.config.currentPreset = this.store.config.presets[ name ];
-                this.soundEngine.settings = this.store.config.presets[name];
-                console.log(JSON.stringify(this.store.config.currentPreset,null,2));
             },
             newPreset({ name }) {
                 const settings = this.store.config.currentPreset;
                 this.store.addPreset(name, settings); 
+            }
+        },
+        watch: {
+            // when preset changes, rebind it to the sound engine settings
+            preset: function() {
+                this.soundEngine.settings = this.preset;
+            }
+        },
+        computed: {
+            preset: function() {
+                return this.store.config.currentPreset;
             }
         },
         filters: {
