@@ -234,7 +234,7 @@ export default class SoundEngine {
             With web audio, notes are discardable by design. 
             so start & stop = create & destroy for a node. 
         */
-        const normalizedReleaseDur = this.envelopeValueToDuration('release', this.envelopeSettings.release.value);
+        const normalizedReleaseDur = this.envelopeValueToDuration('release', this.settings.envelope.release.value);
         const releaseTime = this.context.currentTime + normalizedReleaseDur; 
 
         this.oscillators.forEach(osc => {
@@ -256,8 +256,8 @@ export default class SoundEngine {
 
         const masterGain = this.masterGain;
         const context = this.context;
-        const oscillators = this.oscillatorSettings;
-        const envelope = this.envelopeSettings;
+        const oscillators = this.settings.oscillators;
+        const envelope = this.settings.envelope;
         const that = this;
 
         return Object.keys(oscillators)
