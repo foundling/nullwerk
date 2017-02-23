@@ -27,6 +27,68 @@ export default class SoundEngine {
         return this.settings;
     }
 
+    /* MIDI Connections and event handlers */
+    onMIDIStateChange = (event) => {
+        const newState = event.target.state;
+        console.log(`MIDI state changed to ${ state }!`); 
+    }
+
+    onMIDIMessage = (msg) => {
+
+        /* [ command and channel byte, note, velocity data ] */
+ 
+        const data = msg.data;
+        const command = data[0] >> 4;
+        const channel = data[0] & 0xf;
+        const type = data[0] & 0xf0;
+        const noteNumber = data[1];
+        const velocity = data[2];
+
+        switch(type) {
+            case 144: // noteOn message
+                this.noteOn(noteNumber, velocity);
+                break;
+            case 128: // noteOn message
+                this.noteOff();
+                break;
+        }
+
+    }
+
+    onMIDIConnect = (midiAccess) => {
+
+        const inputs = midiAccess.inputs.values();
+
+        for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
+
+            input.value.onmidimessage = this.onMIDIMessage;
+            input.value.onmidistatechange = this.onMIDIStateChange;
+
+        }
+
+    }
+
+    onMIDIFail = (error) => {
+
+        console.log(`Midi Fail! Error Name:  ${error.name}`);
+        console.log(error);
+
+    }
+
+    fromMIDI = (noteNumber) => {
+        const freq = Math.pow(2, (noteNumber - 69)/12) * C4_HERTZ;
+        return freq;
+    }
+
+    noteOn(noteNumber, velocity) {
+        const frequencyAtKey = this.fromMIDI(noteNumber);
+        this.playNote(null, frequencyAtKey);
+    }
+
+    noteOff() {
+        this.muteNote();  
+    }
+
     /* Waveform Getters and Setters */
 
     get sineValue() {
@@ -107,67 +169,7 @@ export default class SoundEngine {
         this.settings.active = !this.settings.active;
     }
 
-    /* MIDI Connections and event handlers */
-    onMIDIStateChange = (event) => {
-        const newState = event.target.state;
-        console.log(`MIDI state changed to ${ state }!`); 
-    }
 
-    onMIDIMessage = (msg) => {
-
-        /* [ command and channel byte, note, velocity data ] */
- 
-        const data = msg.data;
-        const command = data[0] >> 4;
-        const channel = data[0] & 0xf;
-        const type = data[0] & 0xf0;
-        const noteNumber = data[1];
-        const velocity = data[2];
-
-        switch(type) {
-            case 144: // noteOn message
-                this.noteOn(noteNumber, velocity);
-                break;
-            case 128: // noteOn message
-                this.noteOff();
-                break;
-        }
-
-    }
-
-    onMIDIConnect = (midiAccess) => {
-
-        const inputs = midiAccess.inputs.values();
-
-        for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
-
-            input.value.onmidimessage = this.onMIDIMessage;
-            input.value.onmidistatechange = this.onMIDIStateChange;
-
-        }
-
-    }
-
-    onMIDIFail = (error) => {
-
-        console.log(`Midi Fail! Error Name:  ${error.name}`);
-        console.log(error);
-
-    }
-
-    fromMIDI = (noteNumber) => {
-        const freq = Math.pow(2, (noteNumber - 69)/12) * C4_HERTZ;
-        return freq;
-    }
-
-    noteOn(noteNumber, velocity) {
-        const frequencyAtKey = this.fromMIDI(noteNumber);
-        this.playNote(null, frequencyAtKey);
-    }
-
-    noteOff() {
-        this.muteNote();  
-    }
 
     /* Web Audio Sound Engine Functions */
 
@@ -214,6 +216,14 @@ export default class SoundEngine {
         */
 
         let frequencyAtKey = freq ? freq : this._indexToFrequency(keyIndex);
+
+        if (this.oscillators) {
+            this.oscillators.forEach(osc => {
+                osc.gain.gain.linearRampToValueAtTime(0, this.context.currentTime + 0.1);
+                osc.osc.stop(this.context.currentTime + 0.1);
+            });
+        }
+
         this.oscillators = this._createNote(frequencyAtKey); 
 
     }
@@ -243,10 +253,9 @@ export default class SoundEngine {
             // release time: ramp from sustain level down to 0 in <release time> seconds 
             // and stop the note
             osc.gain.gain.linearRampToValueAtTime(0, releaseTime);  
-            //this.oscillators.forEach(node => node.osc.stop(releaseTime + 0.01));
+            osc.osc.stop(releaseTime + 0.01);
 
         });
-
 
         // release happens here. ramp value down to 0.
         // then stop note.

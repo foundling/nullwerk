@@ -1,5 +1,6 @@
+- this is unplayable. it shorts out if you play for about half a minute.
 - drag on a note results in an infinite note.
+- envelope: endless sustain. 
 - octave changes via midi change note value, not reflected in UI.
 - overlapping notes
-- envelope: if release level is less than sustain time, endless note. 
 
