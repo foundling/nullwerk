@@ -1,2 +1,5 @@
 - drag on a note results in an infinite note.
+- octave changes via midi change note value, not reflected in UI.
+- overlapping notes
+- envelope: if release level is less than sustain time, endless note. 
 
