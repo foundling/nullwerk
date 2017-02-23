@@ -108,12 +108,12 @@ export default class SoundEngine {
     }
 
     /* MIDI Connections and event handlers */
-    onMIDIStateChange(event) {
+    onMIDIStateChange = (event) => {
         const newState = event.target.state;
         console.log(`MIDI state changed to ${ state }!`); 
     }
 
-    onMIDIMessage(msg){
+    onMIDIMessage = (msg) => {
 
         /* [ command and channel byte, note, velocity data ] */
  
@@ -135,31 +135,33 @@ export default class SoundEngine {
 
     }
 
-    onMIDIConnect(midiAccess) {
+    onMIDIConnect = (midiAccess) => {
 
         const inputs = midiAccess.inputs.values();
 
         for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
-            input.value.onmidimessage = onMIDIMessage;
-            input.value.onmidistatechange = onMIDIStateChange;
+
+            input.value.onmidimessage = this.onMIDIMessage;
+            input.value.onmidistatechange = this.onMIDIStateChange;
+
         }
 
     }
 
-    onMIDIFail(error) {
+    onMIDIFail = (error) => {
 
         console.log(`Midi Fail! Error Name:  ${error.name}`);
         console.log(error);
 
     }
 
-    fromMIDI(noteNumber) {
+    fromMIDI = (noteNumber) => {
         const freq = Math.pow(2, (noteNumber - 69)/12) * C4_HERTZ;
         return freq;
     }
 
     noteOn(noteNumber, velocity) {
-        const frequencyAtKey = fromMIDI(noteNumber);
+        const frequencyAtKey = this.fromMIDI(noteNumber);
         this.playNote(null, frequencyAtKey);
     }
 
