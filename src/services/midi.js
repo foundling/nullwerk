@@ -3,7 +3,8 @@ export default {
     init() {
 
         if (typeof navigator.requestMIDIAccess !== 'function') {
-            return console.log(`Sorry, your browser doesn't seem to support the Web Midi Api :[ `);
+            console.log(`Sorry, your browser doesn't seem to support the Web Midi Api :[ `);
+            return null;
         }
 
         return navigator.requestMIDIAccess({ sysex: false });

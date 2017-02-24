@@ -1,6 +1,5 @@
-- this is unplayable. it shorts out if you play for about half a minute.
 - drag on a note results in an infinite note.
-- envelope: endless sustain. 
 - octave changes via midi change note value, not reflected in UI.
-- overlapping notes
-
+- ipad: both touch events and mouse events are fired
+- ios: invalid state exception. (probably coming from trying to reset oscillators while attenuating old oscillators and stopping them at a certain time).
+- long delay on touch devices before note sounds

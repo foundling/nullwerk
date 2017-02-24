@@ -1,7 +1,6 @@
 import MIDI from './midi';
 
 const C4_HERTZ = 261.626; 
-
 const MAX_VOLUME = 0.4;
 const MIN_VOLUME = 0.0;
 const MAX_OCTAVE = 2;
@@ -11,10 +10,13 @@ export default class SoundEngine {
 
     constructor() {
 
-        /* init Web Audio and WebMidi  */
+        // init Web Audio and WebMidi  */
 
         this.context = new (window.AudioContext || window.webkitAudioContext)(); 
-        MIDI.init().then(this.onMIDIConnect, this.onMIDIFail);
+        this.MIDIAccess = MIDI.init();
+        if (this.MIDIAccess) {
+            this.MIDIAccess.then(this.onMIDIConnect, this.onMIDIFail);
+        }
 
         /* Instantiate Properties That don't rely on synth config. */
 
@@ -219,8 +221,8 @@ export default class SoundEngine {
 
         if (this.oscillators) {
             this.oscillators.forEach(osc => {
-                osc.gain.gain.linearRampToValueAtTime(0, this.context.currentTime + 0.1);
-                osc.osc.stop(this.context.currentTime + 0.1);
+                osc.gain.gain.linearRampToValueAtTime(0, this.context.currentTime);
+                osc.osc.stop(this.context.currentTime + 0.01);
             });
         }
 

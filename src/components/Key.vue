@@ -1,8 +1,10 @@
 <template>
 
     <div 
-    v-on:mousedown="startNote(index)"
-    v-on:mouseup="stopNote(index)"
+    v-on:touchstart.prevent="startNote(index)"
+    v-on:touchend.prevent="stopNote(index)"
+    v-on:mousedown.prevent="startNote(index)"
+    v-on:mouseup.prevent="stopNote(index)"
     v-bind:class="classData"
     v-bind:style="styleData"
     class="key">
@@ -11,7 +13,6 @@
 </template>
 
 <style lang="scss">
-
     .key {
         height: 100%;
         border: 1px solid rgb(40,40,40); 
@@ -52,6 +53,8 @@
 
     export default {
         name: 'Key',
+        components: {
+        },
         mixins: [ screenWidthMixin ],
         data: function() {
             return {

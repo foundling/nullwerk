@@ -2,6 +2,7 @@
 <style src="./AppStyle.scss" lang="scss"></style>
 <script>
 
+    import FastClick from 'fastclick';
     import Key from './Key';
     import Sequencer from './Sequencer';
     import Slider from './Slider';
@@ -20,7 +21,6 @@
     const { ui, params } = synthConfig;
     const store = new Store({ defaults: params });
     const soundEngine = new SoundEngine();
-    //console.log(JSON.stringify(store.config,null, 2));
 
     export default {
 
@@ -35,6 +35,9 @@
         },
         created: function() {
             this.soundEngine.settings = this.store.config.currentPreset;
+        },
+        mounted: function() {
+            document.addEventListener('load', () => { FastClick.attach(document.body); }); 
         },
         methods: {
             toggleMasterVol() {
