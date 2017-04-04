@@ -16,11 +16,12 @@
     import { synthConfig } from './../config/synth'; 
     import { getScreenWidth }  from './../utils';
     import palette from './../services/colorPalette';
-    import Store from './../services/localStorage';
+    import LocalStorage from './../services/LocalStorage';
 
     const { ui, params } = synthConfig;
-    const store = new Store({ defaults: params });
+    const localStorage = new LocalStorage({ defaults: params });
     const soundEngine = new SoundEngine();
+
 
     export default {
 
@@ -28,16 +29,18 @@
             return {
                 ui,
                 palette,
-                store,
+                localStorage,
                 soundEngine,
                 preset: null
             };
         },
         created: function() {
-            this.soundEngine.settings = this.store.config.currentPreset;
+            this.soundEngine.settings = this.localStorage.config.currentPreset;
         },
         mounted: function() {
-            document.addEventListener('load', () => { FastClick.attach(document.body); }); 
+            document.addEventListener('load', () => { 
+                FastClick.attach(document.body); 
+            }); 
         },
         methods: {
             toggleMasterVol() {
@@ -62,17 +65,16 @@
                 this.soundEngine.noteOff();
             },
             updatePreset({ name }) {
-                const settings = this.store.config.currentPreset;
-                this.store.updatePreset(name, settings);
+                const settings = this.localStorage.config.currentPreset;
+                this.localStorage.updatePreset(name, settings);
             },
             changePreset({ name }) {
-                console.log('change preset');
-                this.store.config.currentPresetName = name;
-                this.store.config.currentPreset = this.store.config.presets[ name ];
+                this.localStorage.config.currentPresetName = name;
+                this.localStorage.config.currentPreset = this.localStorage.config.presets[ name ];
             },
             newPreset({ name }) {
-                const settings = this.store.config.currentPreset;
-                this.store.addPreset(name, settings); 
+                const settings = this.localStorage.config.currentPreset;
+                this.localStorage.addPreset(name, settings); 
             }
         },
         watch: {
@@ -83,7 +85,7 @@
         },
         computed: {
             preset: function() {
-                return this.store.config.currentPreset;
+                return this.localStorage.config.currentPreset;
             }
         },
         filters: {
