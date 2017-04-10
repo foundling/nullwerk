@@ -1,3 +1,12 @@
+function merge(target, src) {
+    for (let k in src) {
+        if (src.hasOwnProperty(k) && src[k]) {
+            target[k] = src[k];
+        }
+    }
+    return target;
+};
+
 function toComputed(el, prop) {
 
     const stringifiedWidth = getComputedStyle(el)[prop].replace('px','');
@@ -36,9 +45,10 @@ const errorMessages = {
 };
 
 export { 
-    log,
-    toComputed,
+    errorMessages,
     getScreenWidth,
     getScreenHeight,
-    errorMessages
+    log,
+    merge,
+    toComputed
 };

@@ -3,21 +3,11 @@ import { errorMessages } from '../utils';
 const STORAGE_KEY = 'nullwerk';
 const localStorage = localStorage || window.localStorage;
 const Vue = require('vue');
+import { merge } from '../utils'; 
 const SCHEMA = {
     currentPresetName: 'default',
     currentPreset: null,
     presets: null
-};
-
-const merge = function(target, src) {
-    for (let k in src) {
-        if (src.hasOwnProperty(k)) {
-            if (src[k]) {
-                target[k] = src[k];
-            }
-        }
-    }
-    return target;
 };
 
 class Store {
