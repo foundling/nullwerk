@@ -8,10 +8,13 @@ const SCHEMA = {
     currentPreset: null,
     presets: null
 };
-const simpleMerge = function(target, src) {
+
+const merge = function(target, src) {
     for (let k in src) {
-        if (src[k]) {
-            target[k] = src[k];
+        if (src.hasOwnProperty(k)) {
+            if (src[k]) {
+                target[k] = src[k];
+            }
         }
     }
     return target;
@@ -21,15 +24,16 @@ class Store {
 
     constructor({ defaults }) {
 
-        if (!localStorage) {
-            return console.log(errorMessages.localStorageNotSupported);
-        }
+        console.warn('DEBUG: Clearing Local Storage');
+        localStorage.removeItem(STORAGE_KEY);
+
+        if (!localStorage) return console.warn(errorMessages.localStorageNotSupported);
 
         const initialized = Boolean( localStorage.getItem(STORAGE_KEY) );
 
         if (!initialized) {
             // doesn't take care of binding current preset
-            let defaultStore = JSON.stringify( simpleMerge(defaults, SCHEMA) ); 
+            let defaultStore = JSON.stringify( merge(defaults, SCHEMA) ); 
             localStorage.setItem(STORAGE_KEY, defaultStore);
         }
 
@@ -43,15 +47,12 @@ class Store {
         this.data.presets[ name ] = settings;
         this._saveAndUpdateStore();
     }
-    switchPreset(name) {
-        if (this.data.currentPreset[name]) {
-            this.data.currentPreset = this.data.presets[name]);
-            this.data.currentPresetName = name;
-            this._saveAndUpdateStore();
-        } else {
-            console.error(`${name} not a preset!`);
-        }
-    }, 
+    changePreset(name) {
+        if (!this.data.presets[name]) return console.error(`${name} not a preset!`);
+        this.data.currentPreset = this.data.presets[name];
+        this.data.currentPresetName = name;
+        this._saveAndUpdateStore();
+    } 
     _saveAndUpdateStore() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data));
         const updatedConfig = JSON.parse(localStorage.getItem(STORAGE_KEY));

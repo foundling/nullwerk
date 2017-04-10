@@ -50,7 +50,8 @@
                 this.soundEngine.active = !this.soundEngine.active;
             },
             toggleOscillatorVol({ waveform }) {
-                this.soundEngine.settings.oscillators[waveform].active = !this.soundEngine.settings.oscillators[waveform].active; 
+                let waveForm = this.soundEngine.settings.oscillators[waveform]; 
+                waveForm.active = !waveForm.active; 
             },
             adjustOctave(direction) { 
                 this.soundEngine.octave += direction;
@@ -72,24 +73,17 @@
                 this.localStorage.savePreset(name, settings);
             },
             changePreset({ name }) {
-                this.localStorage.data.currentPresetName = name;
-                this.localStorage.data.currentPreset = this.localStorage.data.presets[ name ];
+                this.localStorage.changePreset(name);
             },
             newPreset({ name }) {
                 const settings = this.localStorage.data.currentPreset;
-                this.localStorage.addPreset(name, settings); 
+                this.localStorage.savePreset(name, settings); 
             }
         },
         watch: {
-            // when preset changes, rebind it to the sound engine settings
-            //preset: function() {
-            //    this.soundEngine.settings = this.preset;
-            //}
-        },
-        computed: {
-            //preset: function() {
-            //    return this.localStorage.config.currentPreset;
-            //}
+            'localStorage.data': function() {
+                this.soundEngine.settings = this.localStorage.currentPreset;
+            }
         },
         filters: {
             abbreviate: s => s.charAt(0).toUpperCase(),

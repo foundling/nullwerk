@@ -72,23 +72,23 @@ export const synthConfig = {
                 oscillators: {
                     square: {
                         name: 'square',
-                        active: false,
-                        value: 0.4,
+                        active: true,
+                        value: 0.1,
                     },
                     triangle: {
                         name: 'triangle',
-                        active: false,
-                        value: 0.4,
+                        active: true,
+                        value: 0.2,
                     },
                     sawtooth: {
                         name: 'sawtooth',
-                        active: false,
-                        value: 0.35,
+                        active: true,
+                        value: 0.3,
                     },
                     sine: {
                         name: 'sine',
-                        active: false,
-                        value: 0.80,
+                        active: true,
+                        value: 0.4,
                     }
                 },
                 envelope: {
