@@ -31,9 +31,14 @@ function getScreenHeight() {
 
 const log = console.log;
 
+const errorMessages = {
+    localStorageNotSupported: 'Local Storage is Not Supported in Your Browser.' 
+};
+
 export { 
     log,
     toComputed,
     getScreenWidth,
-    getScreenHeight
+    getScreenHeight,
+    errorMessages
 };

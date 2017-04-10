@@ -1,17 +1,20 @@
+import { errorMessages } from '../utils';
+
 const STORAGE_KEY = 'nullwerk';
 const localStorage = localStorage || window.localStorage;
-
-/*
- *
- * local storage schema:
- * config 
- *      currentPresetName
- *      presets
- *
- */
-
-const errorMsgs = {
-    notSupported: "[ Error ] LocalStorage is not supported in your browser. Your settings won't be saved."
+const Vue = require('vue');
+const SCHEMA = {
+    currentPresetName: 'default',
+    currentPreset: null,
+    presets: null
+};
+const simpleMerge = function(target, src) {
+    for (let k in src) {
+        if (src[k]) {
+            target[k] = src[k];
+        }
+    }
+    return target;
 };
 
 class Store {
@@ -19,45 +22,49 @@ class Store {
     constructor({ defaults }) {
 
         if (!localStorage) {
-            return console.log(errorMsgs.notSupported);
+            return console.log(errorMessages.localStorageNotSupported);
         }
 
-        const initialized = !!localStorage.getItem(STORAGE_KEY);
+        const initialized = Boolean( localStorage.getItem(STORAGE_KEY) );
 
         if (!initialized) {
-            let defaultStore = JSON.stringify(defaults); 
+            // doesn't take care of binding current preset
+            let defaultStore = JSON.stringify( simpleMerge(defaults, SCHEMA) ); 
             localStorage.setItem(STORAGE_KEY, defaultStore);
         }
 
-        this.config = JSON.parse( localStorage.getItem(STORAGE_KEY) );
-        this.config.currentPreset = initialized ? 
-                                    this.config.presets[ this.config.currentPresetName ] : 
-                                    this.config.presets.default; 
+        this.data = JSON.parse( localStorage.getItem(STORAGE_KEY) );
+        if (!initialized) {
+            this.data.currentPreset = this.data.presets.default;
+        }
+        this._saveAndUpdateStore();
     }
-    _saveToLocalStorage() {
+    savePreset(name, settings) {
+        this.data.presets[ name ] = settings;
+        this._saveAndUpdateStore();
     }
-    updatePreset(name, settings) {
-
-        this.addPreset(name, settings);
-
-    }
-    addPreset(name, settings) {
-
-        this.config.presets[ name ] = settings;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.config));
+    switchPreset(name) {
+        if (this.data.currentPreset[name]) {
+            this.data.currentPreset = this.data.presets[name]);
+            this.data.currentPresetName = name;
+            this._saveAndUpdateStore();
+        } else {
+            console.error(`${name} not a preset!`);
+        }
+    }, 
+    _saveAndUpdateStore() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data));
         const updatedConfig = JSON.parse(localStorage.getItem(STORAGE_KEY));
-        this.config = updatedConfig;
-
+        this.data = updatedConfig;
     }
-    getConfig() {
-
-        return this.config;
-
+    get currentPreset() {
+        return this.data.currentPreset;
+    }
+    get config() {
+        return this.data;
     }
     get allPresets() {
-
-        return this.config.presets;
-
+        return this.data.presets;
     }
 
 };

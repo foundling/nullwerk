@@ -12,7 +12,7 @@
             diameter="15%"
             v-for="led in ui.leds" 
             v-bind:color="led.color" 
-            v-bind:currentOctave="store.config.currentPreset.octave" 
+            v-bind:currentOctave="localStorage.config.currentPreset.octave" 
             v-bind:octave="led.octave">
             </led>
 
@@ -80,7 +80,7 @@
             <knob 
             v-for="waveform in ui.waveforms" 
             v-on:toggle="toggleOscillatorVol"
-            v-bind:active="store.config.currentPreset.oscillators[ waveform.name ].active"
+            v-bind:active="localStorage.config.currentPreset.oscillators[ waveform.name ].active"
             v-bind:bg-image-active="waveform.knob.img.active"
             v-bind:bg-image-inactive="waveform.knob.img.inactive"
             v-bind:waveform="waveform.name"
@@ -140,7 +140,7 @@
         v-on:NEW_PRESET="newPreset"
         v-on:CHANGE_PRESET="changePreset"
         v-on:UPDATE_PRESET="updatePreset"
-        v-bind:preset-data="store.config">
+        v-bind:preset-data="localStorage.config">
         </preset-manager>
     </div>
 

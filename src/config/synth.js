@@ -2,9 +2,7 @@ import palette from './../services/colorPalette';
 
 export const synthConfig = {
 
-    params: {
-        currentPresetName: 'default',
-        currentPreset: null,
+    config: {
         presets: {
             default: {
                 name: 'default',

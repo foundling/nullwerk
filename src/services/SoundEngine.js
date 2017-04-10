@@ -8,15 +8,19 @@ const MIN_OCTAVE = -2;
 
 export default class SoundEngine {
 
-    constructor() {
+    constructor({ config }) {
+
+        this.settings = config;
 
         // init Web Audio and WebMidi  */
 
         this.context = new (window.AudioContext || window.webkitAudioContext)(); 
         this.MIDIAccess = MIDI.init();
+
         if (this.MIDIAccess) {
             this.MIDIAccess.then(this.onMIDIConnect, this.onMIDIFail);
         }
+
 
         /* Instantiate Properties That don't rely on synth config. */
 

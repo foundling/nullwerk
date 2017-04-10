@@ -2,6 +2,7 @@
 <style src="./AppStyle.scss" lang="scss"></style>
 <script>
 
+    // vue components
     import FastClick from 'fastclick';
     import Key from './Key';
     import Sequencer from './Sequencer';
@@ -12,30 +13,32 @@
     import Led from './Led';
     import PresetManager from './PresetManager';
 
-    import SoundEngine from './../services/SoundEngine';
-    import { synthConfig } from './../config/synth'; 
-    import { getScreenWidth }  from './../utils';
+    // synth configuration
     import palette from './../services/colorPalette';
+    import { synthConfig } from './../config/synth'; 
+    const { ui, config } = synthConfig;
+
+    // service classes
+    import SoundEngine from './../services/SoundEngine';
     import LocalStorage from './../services/LocalStorage';
 
-    const { ui, params } = synthConfig;
-    const localStorage = new LocalStorage({ defaults: params });
-    const soundEngine = new SoundEngine();
-
+    // service objects
+    const localStorage = new LocalStorage({ defaults: config });
+    const soundEngine = new SoundEngine({ config: localStorage.currentPreset });
 
     export default {
 
+        name: 'App',
         data: function() {
             return {
                 ui,
                 palette,
                 localStorage,
                 soundEngine,
-                preset: null
             };
         },
         created: function() {
-            this.soundEngine.settings = this.localStorage.config.currentPreset;
+            // this.soundEngine.settings = this.localStorage.config.currentPreset;
         },
         mounted: function() {
             document.addEventListener('load', () => { 
@@ -65,28 +68,28 @@
                 this.soundEngine.noteOff();
             },
             updatePreset({ name }) {
-                const settings = this.localStorage.config.currentPreset;
-                this.localStorage.updatePreset(name, settings);
+                const settings = this.localStorage.data.currentPreset;
+                this.localStorage.savePreset(name, settings);
             },
             changePreset({ name }) {
-                this.localStorage.config.currentPresetName = name;
-                this.localStorage.config.currentPreset = this.localStorage.config.presets[ name ];
+                this.localStorage.data.currentPresetName = name;
+                this.localStorage.data.currentPreset = this.localStorage.data.presets[ name ];
             },
             newPreset({ name }) {
-                const settings = this.localStorage.config.currentPreset;
+                const settings = this.localStorage.data.currentPreset;
                 this.localStorage.addPreset(name, settings); 
             }
         },
         watch: {
             // when preset changes, rebind it to the sound engine settings
-            preset: function() {
-                this.soundEngine.settings = this.preset;
-            }
+            //preset: function() {
+            //    this.soundEngine.settings = this.preset;
+            //}
         },
         computed: {
-            preset: function() {
-                return this.localStorage.config.currentPreset;
-            }
+            //preset: function() {
+            //    return this.localStorage.config.currentPreset;
+            //}
         },
         filters: {
             abbreviate: s => s.charAt(0).toUpperCase(),
