@@ -14,9 +14,6 @@ class Store {
 
     constructor({ defaults }) {
 
-        console.warn('DEBUG: Clearing Local Storage');
-        localStorage.removeItem(STORAGE_KEY);
-
         if (!localStorage) return console.warn(errorMessages.localStorageNotSupported);
 
         const initialized = Boolean( localStorage.getItem(STORAGE_KEY) );
