@@ -1,18 +1,7 @@
 <template>
     <div class="sequencer">
-        <div class="sequencer-controls">
-        </div>
-        <div class="sequencer-buttons">
-            <btn 
-            v-on:press="dispatcher"
-            v-for="button in config.buttons"
-            v-bind:backgroundColor="button.backgroundColor"
-            v-bind:label="button.label"
-            v-bind:width="100/config.buttons.length"
-            class="sequencer-button">
-                <led slot="label" diameter="5%" color="red"></led>
-            </btn>
-        </div>
+        <div class="sequencer-controls"></div>
+        <div class="sequencer-buttons"></div>
     </div>
 </template>
 
@@ -47,9 +36,6 @@
         LED
 
     } from './../components';
-
-    import config from './config/sequencer';
-    console.log(config);
 
     export default {
         name: 'Sequencer',
