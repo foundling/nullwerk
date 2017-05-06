@@ -35,7 +35,7 @@
 
 <script>
     export default {
-        name: 'Led',
+        name: 'LED',
         props: [ 
             'color', 
             'octave', 

@@ -46,7 +46,7 @@
 
 <script>
     import Btn from './Btn';
-    import Led from './Led';
+    import LED from './LED';
 
     export default {
         name: 'Sequencer',
@@ -61,7 +61,7 @@
         },
         components: { 
             Btn,
-            Led,
+            LED,
         },
         methods: {
             togglePlay() {
