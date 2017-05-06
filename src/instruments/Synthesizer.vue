@@ -11,8 +11,8 @@
                 class="LED-container">
 
                 <LED 
+                v-for="LED in ui.leds" 
                 diameter="15%"
-                v-for="LED in ui.LEDs" 
                 v-bind:color="LED.color" 
                 v-bind:currentOctave="localStorage.config.currentPreset.octave" 
                 v-bind:octave="LED.octave">
