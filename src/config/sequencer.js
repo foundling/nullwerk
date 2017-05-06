@@ -1,6 +1,6 @@
 import palette from './../services/colorPalette';
 
-export default {
+const config = {
 
     currentMode: 'stop',
     modes: [
@@ -26,3 +26,5 @@ export default {
     })
 
 };
+
+export { config };

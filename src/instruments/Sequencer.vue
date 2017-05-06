@@ -5,17 +5,12 @@
         <div class="sequencer-buttons">
             <btn 
             v-on:press="dispatcher"
-            v-for="button in sequencer.buttons"
+            v-for="button in config.buttons"
             v-bind:backgroundColor="button.backgroundColor"
             v-bind:label="button.label"
-            v-bind:width="100/sequencer.buttons.length"
+            v-bind:width="100/config.buttons.length"
             class="sequencer-button">
                 <led slot="label" diameter="5%" color="red"></led>
-                <!--<h1 
-                slot="label" 
-                v-bind:style="button.label"
-                name="button.label">{{ button.label.content }}</h1>
-                -->
             </btn>
         </div>
     </div>
@@ -45,8 +40,16 @@
 </style>
 
 <script>
-    import Btn from './Btn';
-    import LED from './LED';
+
+    import {
+
+        Btn,
+        LED
+
+    } from './../components';
+
+    import config from './config/sequencer';
+    console.log(config);
 
     export default {
         name: 'Sequencer',
