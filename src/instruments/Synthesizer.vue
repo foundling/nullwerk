@@ -152,6 +152,28 @@
             <h1 class="model">1</h1>
         </div>
 
+        <!-- Signature Sign Container -->
+        <div class="module transport-controls">
+
+            <button 
+            v-on:click="toggleRecord"
+            class="record-button">
+                RECORD
+            </button>
+
+            <button 
+            v-on:click="stop"
+            class="stop-button">
+                STOP
+            </button>
+
+            <button 
+            v-on:click="play"
+            class="play-button">
+                PLAY
+            </button>
+        </div>
+
         <!-- Keyboard Container -->
         <div class="module keyboard-container">
             <div class="keyboard">
@@ -316,10 +338,16 @@ h1.make {
 .lfo-container {
     background: lightblue;
 }
-.sequencer-container {
-    background: yellow;
-    width: 100%;
+
+.transport-controls {
+    .record-button {
+    }
+    .play-button {
+    }
+    .stop-button {
+    }
 }
+
 .keyboard-container {
     height: 40%;
     width: 100%;
@@ -439,7 +467,16 @@ h1.make {
             newPreset({ name }) {
                 const settings = this.localStorage.data.currentPreset;
                 this.localStorage.savePreset(name, settings); 
+            },
+            toggleRecord() {
+                this.soundEngine.recordEnabled = !this.soundEngine.recordEnabled;
+            },
+            stop() {
+                if (this.soundEngine.recordEnabled) {
+                    this.soundEngine.recordEnabled = false;
+                }
             }
+
         },
         watch: {
             'localStorage.data': function() {

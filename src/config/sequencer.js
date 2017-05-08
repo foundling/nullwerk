@@ -1,6 +1,11 @@
 import palette from './../services/colorPalette';
 
 const config = {
+    presets: {
+        
+    },
+    ui: {
+    }
 
     currentMode: 'stop',
     modes: [

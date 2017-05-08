@@ -1,6 +1,7 @@
 <template>
     <div class="synth-workstation">
         <synthesizer></synthesizer>
+        <!-- <sequencer></sequencer> -->
     </div>
 </template>
 
@@ -16,13 +17,15 @@
     // vue components
 
     import {
-        Synthesizer
+        Synthesizer,
+        Sequencer
     } from './instruments';
 
     export default {
         name: 'App',
         components: {
-            Synthesizer
+            Synthesizer,
+            Sequencer
         }
     };
 

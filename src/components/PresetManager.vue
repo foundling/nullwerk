@@ -2,7 +2,10 @@
 
     <div>
 
-        <h1 class="preset-name">preset: [ <span> {{ presetData.currentPresetName }}</span> ]</h1>
+        <h1 class="preset-name">
+            preset:  <span>{{ presetData.currentPresetName }}</span> 
+        </h1>
+
         <!-- SELECT PRESET -->
         <i 
         v-on:click="updatePreset"
@@ -16,7 +19,9 @@
 
             <option 
             v-for="(preset, key) in presetData.presets" 
-            v-bind:value="key">{{ key }}</option>
+            v-bind:value="key">
+                {{ key }}
+            </option>
 
             <option value="new">Save New Preset</option>
 

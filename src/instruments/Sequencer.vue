@@ -1,7 +1,13 @@
 <template>
     <div class="sequencer">
         <div class="sequencer-controls"></div>
-        <div class="sequencer-buttons"></div>
+        <div class="sequencer-buttons">
+            <LED 
+                v-for="step in steps"
+                diameter="15%"
+                v-bind:color="preset.color">
+            </LED>
+        </div>
     </div>
 </template>
 
@@ -12,12 +18,13 @@
         background: whitesmoke;
     }
     .sequencer-controls {
+        width: 100%;
         height: 50%;
         background: rgb(40,40,40);
     }
     .sequencer-buttons {
-        height: 50%;
         width: 100%;
+        height: 50%;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -35,18 +42,24 @@
         Btn,
         LED
 
-    } from './../components';
+    } from '../components';
+
+    import TimeEngine from '../services/TimeEngine';
+    const timeEngine = new TimeEngine();
 
     export default {
         name: 'Sequencer',
         data: function() {
+
             return {
+                steps: [ ...Array(8).keys() ],
+                preset: {
+                    color: 'white'
+                }
             };
+
         },
         props: {
-            sequencer: {
-                type: Object
-            },
         },
         components: { 
             Btn,

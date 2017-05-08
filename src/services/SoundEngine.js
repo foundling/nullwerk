@@ -21,11 +21,24 @@ export default class SoundEngine {
             this.MIDIAccess.then(this.onMIDIConnect, this.onMIDIFail);
         }
 
-
         /* Instantiate Properties That don't rely on synth config. */
 
         this.masterGain = this.context.createGain();
         this.masterGain.connect(this.context.destination);
+
+        /* recording data */
+        this.recording = [];
+        this.recordEnabled = false;
+
+    }
+
+    recordEventTime() {
+
+        this.recording.push({
+            time: this.context.currentTime,
+            //note: 
+            //settings: 
+        }); 
 
     }
 
