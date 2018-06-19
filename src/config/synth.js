@@ -36,6 +36,19 @@ export const synthConfig = {
                         value: 0.80,
                     }
                 },
+                expression: {
+                    modulation: {
+                        name: 'modulation',
+                        active: true,
+                        value: 0.5
+                    },
+                    pitch: {
+                        name: 'pitch',
+                        active: true,
+                        value: 0.5
+                    }
+
+                },
                 envelope: {
                     attack: {
                         name: 'attack',
@@ -57,7 +70,7 @@ export const synthConfig = {
                         value: 0.7,
                         active: true,
                     },
-                },
+                }
             },
             fun: {
                 name: 'fun',
@@ -209,6 +222,24 @@ export const synthConfig = {
                 }
             }
         ],
+        expression: {
+            pitch: {
+                name: 'pitch',
+                slider: {
+                    description: 'adjust pitch',
+                    color: palette.black,
+                    direction: 'vertical'
+                }
+            },
+            modulation: {
+                name: 'modulation',
+                slider: {
+                    description: 'adjust modulation amount',
+                    color: palette.black,
+                    direction: 'vertical'
+                }
+            }
+        },
         keyboard: {
             blackKeys: [
                 1, 3, 

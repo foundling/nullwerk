@@ -21,10 +21,9 @@
         background: black;
     } 
     .handle {
-        position: absolute;
+        background: #2f2f2f;
         height: 10%;
         width: 100%;
-        color: red;
     }
 </style>
 

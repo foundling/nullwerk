@@ -58,6 +58,10 @@
             };
         },
         props: {
+            sticky: {
+                type: Boolean,
+                default: false,
+            },
             name: {
                 type: String,
             },
@@ -70,13 +74,6 @@
             },
             controlSource: {
                 type: Object,
-                /*
-                validator: function(o) {
-                    return o.hasOwnProperty('value') &&
-                           o.hasOwnProperty('name') && 
-                           o.hasOwnProperty('active');
-                }
-                */
             },
             direction: {
                 type: String,
@@ -114,7 +111,6 @@
                 let percentOffset = this.controlSource.value;
                 let slideBarOffset = percentOffset * slideableDistancePx;
 
-                //this.slideData.position = slideBarOffset;
                 this.slideData.position = slideBarOffset;
                 this.styleData.bar.transform = `translate${ this.axis }(${ sign * slideBarOffset }px)`;
 
@@ -178,8 +174,12 @@
 
             },
             moveSliderEnd(e) {
-                // reset lastDelta to 0 at end of gesture.
+
+                if (this.sticky)
+                    this.initSliderPosition();
+
                 this.slideData.lastDelta = 0;
+
             },
             buildStyleData() {
 

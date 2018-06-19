@@ -132,9 +132,37 @@
 
         </div>
 
-        <!-- Modulation Wheels Container -->
+        <!-- Expression Wheels Container -->
         <div class="module wheels-container">
-            <wheel />
+
+            <div class="expression-wheel-container">
+                <slider
+                v-on:slide="adjustModWheel"
+                v-bind:sticky="true"
+                v-bind:control-source="soundEngine.settings.expression.modulation"
+                v-bind:direction="ui.expression.modulation.slider.direction"
+                v-bind:opacity="1"
+                v-bind:name="ui.expression.modulation.name"
+                v-bind:content="ui.expression.modulation.name"
+                v-bind:color="ui.expression.modulation.slider.color"
+                v-bind:title="ui.expression.modulation.name">
+                </slider>
+            </div>
+
+            <div class="modulation-wheel-container">
+                <slider
+                v-on:slide="adjustModWheel"
+                v-bind:sticky="true"
+                v-bind:control-source="soundEngine.settings.expression.modulation"
+                v-bind:direction="ui.expression.modulation.slider.direction"
+                v-bind:opacity="1"
+                v-bind:name="ui.expression.modulation.name"
+                v-bind:content="ui.expression.modulation.name"
+                v-bind:color="ui.expression.modulation.slider.color"
+                v-bind:title="ui.expression.modulation.name">
+                </slider>
+            </div>
+
         </div>
 
         <!-- Preset Settings -->
@@ -277,7 +305,16 @@ h1.make {
     font-weight: 100;
 }
 .wheels-container {
-    background: aquamarine;
+    background: lightgray;
+    position: relative;
+}
+.expression-wheel-container,
+.modulation-wheel-container {
+    width: 50%;
+    height: 100%;
+    background: black;
+    position: relative;
+    margin: 0 20%;
 }
 .master-volume-container {
     background: pink;
@@ -442,6 +479,8 @@ h1.make {
             toggleOscillatorVol({ waveform }) {
                 let waveForm = this.soundEngine.settings.oscillators[waveform]; 
                 waveForm.active = !waveForm.active; 
+            },
+            adjustModWheel(direction) {
             },
             adjustOctave(direction) { 
                 this.soundEngine.octave += direction;
