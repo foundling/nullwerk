@@ -31,7 +31,6 @@
         name: 'Btn',
         props: [
             'label', 
-            'color',
             'backgroundColor',
             'diameter',
             'width',
@@ -49,7 +48,6 @@
             },
             buttonLabelStyle() {
                 return {
-                    color: this.color,
                     width: this.diameter,
                     height: this.diameter,
                     borderRadius: '50%'

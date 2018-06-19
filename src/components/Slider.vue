@@ -26,6 +26,7 @@
         display: flex;
         align-content: center;
         justify-content: center;
+        border-radius: 2px;
     }
     .slider-label {
         display: flex;
@@ -78,6 +79,9 @@
             direction: {
                 type: String,
                 validator: (s) => ['horizontal', 'vertical'].includes(s) 
+            },
+            fontColor: {
+                type: String,
             },
             color: { 
                 type: String,
@@ -189,6 +193,7 @@
                         height: this.direction === 'horizontal' ? '100%' : '10%',
                         width: this.direction === 'horizontal' ? '10%' : '100%',
                         background: this.color,
+                        color: this.fontColor,
                         opacity: this.opacity,
                         left: '0px',
                         bottom: '0px',

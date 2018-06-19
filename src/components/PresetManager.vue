@@ -53,7 +53,6 @@
     select,
     h1.preset-name {
 
-        color: black;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -61,6 +60,16 @@
         margin-top: 5%;
         margin-bottom: 5%;
 
+    }
+
+    i.save-icon,
+    h1.preset-name {
+        font-weight: 100;
+        color: whitesmoke;
+    }
+
+    select {
+        color: black;
     }
     h1.preset-name {
         display: flex;

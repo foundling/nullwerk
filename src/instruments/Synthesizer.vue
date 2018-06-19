@@ -122,7 +122,7 @@
                 v-on:slide="setEnvelopeValue"
                 v-bind:control-source="soundEngine.settings.envelope[ param.name ]"
                 v-bind:direction="param.slider.direction"
-                v-bind:opacity="0.4"
+                v-bind:opacity="0.7"
                 v-bind:name="param.name"
                 v-bind:content="param.name"
                 v-bind:color="param.slider.color"
@@ -175,13 +175,7 @@
             </preset-manager>
         </div>
 
-        <!-- Signature Sign Container -->
-        <div class="module title-container">
-            <h1 class="make">ARS</h1>
-            <h1 class="model">1</h1>
-        </div>
-
-        <!-- Signature Sign Container -->
+        <!--
         <div class="module transport-controls">
 
             <button 
@@ -202,6 +196,7 @@
                 PLAY
             </button>
         </div>
+        -->
 
         <!-- Keyboard Container -->
         <div class="module keyboard-container">
@@ -262,7 +257,9 @@ h1 {
 .sequencer-container,
 .title-container,
 .lfo-container,
+.selector-container,
 .sequencer-container {
+    background: rgb(40,40,40);
     min-width: calc(100% / 2);
     width: 25%;
     height: 30%;
@@ -276,7 +273,9 @@ h1 {
     font-family: Helvetica Neue;
 }
 .envelope-slider-container { 
-    border-right: 1px solid rgb(239,239,239);
+
+    color: white;
+    border: 4px solid #404040;
     position: relative;
     width: 25%;
     height: 100%;
@@ -288,7 +287,6 @@ h1.envelope-slider-label {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: black;
 }
 h1.make,
 h1.model {
@@ -305,11 +303,13 @@ h1.make {
     font-weight: 100;
 }
 .wheels-container {
-    background: lightgray;
+    background: rgb(40,40,40);
     position: relative;
+    padding: 3%;
 }
 .expression-wheel-container,
 .modulation-wheel-container {
+    border-radius: 5px;
     width: 50%;
     height: 100%;
     background: black;
@@ -317,12 +317,18 @@ h1.make {
     margin: 0 20%;
 }
 .master-volume-container {
-    background: pink;
+    background: rgb(40,40,40); 
 }
 .octave-button-up,
 .octave-button-down {
     display: block;
     font-size: 4em;
+}
+
+.octave-button-up > .fa,
+.octave-button-down > .fa {
+    color: rgb(4,4,4);
+    text-shadow: 0px 2px 0px #afafaf;
 }
 
 .master-pitch-container {
@@ -353,11 +359,13 @@ h1.make {
     height: 100%;
 }
 .waveforms-and-options-container {
-    background: lightgreen;
+    background: rgb(40,40,40);
     flex-direction: column;
 }
 .waveforms-container,
 .waveform-level-container {
+    border: 4px solid #404040;
+    background: rgb(40,40,40);
     display: inline-flex;
     height: 50%;
     width: 100%;
@@ -365,13 +373,12 @@ h1.make {
 
 .waveform-level-container {
     position: relative;
-    background: whitesmoke;
 }
 .filter-container {
     background: #e8e8e8;
 }
 .envelope-container {
-    background: whitesmoke;
+    background: rgb(40,40,40);
 }
 .lfo-container {
     background: lightblue;
@@ -512,6 +519,9 @@ h1.make {
                 this.soundEngine.recordEnabled = !this.soundEngine.recordEnabled;
             },
             play() {
+                if (!this.soundEngine.recordEnabled) {
+                    this.soundEngine.recordEnabled = true;
+                }
             },
             stop() {
                 if (this.soundEngine.recordEnabled) {

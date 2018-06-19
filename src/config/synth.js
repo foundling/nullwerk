@@ -23,17 +23,17 @@ export const synthConfig = {
                     triangle: {
                         name: 'triangle',
                         active: true,
-                        value: 0.4,
+                        value: 0.05,
                     },
                     sawtooth: {
                         name: 'sawtooth',
                         active: true,
-                        value: 0.35,
+                        value: 0.08,
                     },
                     sine: {
                         name: 'sine',
                         active: true,
-                        value: 0.80,
+                        value: 0.10,
                     }
                 },
                 expression: {
@@ -104,6 +104,19 @@ export const synthConfig = {
                         value: 0.4,
                     }
                 },
+                expression: {
+                    modulation: {
+                        name: 'modulation',
+                        active: true,
+                        value: 0.5
+                    },
+                    pitch: {
+                        name: 'pitch',
+                        active: true,
+                        value: 0.5
+                    }
+
+                },
                 envelope: {
                     attack: {
                         name: 'attack',
@@ -162,14 +175,14 @@ export const synthConfig = {
             {
                 name: 'sawtooth',
                 knob: {
-                    color: 'goldenrod',
+                    color: '#20dab8',
                     img: {
                         inactive: '/static/img/sawtooth_wave.png',
                         active: '/static/img/sawtooth_wave_inverse.png'
                     },
                 }, 
                 slider: {
-                    color: 'goldenrod',
+                    color: '#20dab8',
                     direction: 'horizontal',
                 }
             },
@@ -193,7 +206,7 @@ export const synthConfig = {
                 name: 'attack',
                 slider: {
                     description: 'adjust time to attack.',
-                    color: palette.black, 
+                    color: '#20dab8',
                     direction: 'vertical'
                 }
             },
@@ -201,7 +214,7 @@ export const synthConfig = {
                 name: 'decay',
                 slider: {
                     description: 'Adjust time taken to decay to sustain level.',
-                    color: palette.black, 
+                    color: '#20dab8',
                     direction: 'vertical',
                 }
             },
@@ -209,7 +222,7 @@ export const synthConfig = {
                 name: 'sustain',
                 slider: {
                     description: 'adjust sustain level.',
-                    color: palette.black, 
+                    color: '#20dab8',
                     direction: 'vertical'
                 }
             },
@@ -217,7 +230,7 @@ export const synthConfig = {
                 name: 'release',
                 slider: {
                     description: 'adjust time for sound to dissipate after releasing a key.',
-                    color: palette.black, 
+                    color: '#20dab8',
                     direction: 'vertical'
                 }
             }
@@ -227,7 +240,7 @@ export const synthConfig = {
                 name: 'pitch',
                 slider: {
                     description: 'adjust pitch',
-                    color: palette.black,
+                    color: 'linear-gradient(black, deepskyblue, black)',
                     direction: 'vertical'
                 }
             },
@@ -235,7 +248,7 @@ export const synthConfig = {
                 name: 'modulation',
                 slider: {
                     description: 'adjust modulation amount',
-                    color: palette.black,
+                    color: 'linear-gradient(black, deepskyblue, black)',
                     direction: 'vertical'
                 }
             }

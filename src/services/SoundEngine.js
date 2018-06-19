@@ -43,6 +43,7 @@ export default class SoundEngine {
     }
 
     export() {
+        /* for saving configurations */
         return this.settings;
     }
 
