@@ -89,9 +89,11 @@
             },
         }, 
         computed: {
+            /*
             keyboardDirection: function() {
                 return this.screenDimensions.width >= 500 ? 'horizontal' : 'vertical';
             },
+            */
             isActive: function() {
                 return this.active;
             },

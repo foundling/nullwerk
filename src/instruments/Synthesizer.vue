@@ -33,7 +33,7 @@
                     <i 
                     v-bind:style="{ color: palette.white }" 
                     class="fa fa-caret-up" 
-                    slot="label">
+                    slot="label" />
                     </i>
 
                 </btn>
@@ -134,6 +134,7 @@
 
         <!-- Modulation Wheels Container -->
         <div class="module wheels-container">
+            <wheel />
         </div>
 
         <!-- Preset Settings -->
@@ -470,6 +471,8 @@ h1.make {
             },
             toggleRecord() {
                 this.soundEngine.recordEnabled = !this.soundEngine.recordEnabled;
+            },
+            play() {
             },
             stop() {
                 if (this.soundEngine.recordEnabled) {
