@@ -270,7 +270,7 @@ export default class SoundEngine {
         const releaseTime = this.context.currentTime + normalizedReleaseDur; 
 
         this.oscillators.forEach(osc => {
-            console.log(osc.gain.gain.value);
+            //console.log(osc.gain.gain.value);
             // release time: ramp from sustain level down to 0 in <release time> seconds 
             // and stop the note
             //osc.gain.gain.linearRampToValueAtTime(0, releaseTime);  
@@ -305,6 +305,7 @@ export default class SoundEngine {
                 node.osc = context.createOscillator(); 
                 node.osc.type = oscillator.name;
                 node.osc.frequency.value = fundamentalFrequency;
+                node.osc.frequency.originalFrequency = fundamentalFrequency;
 
                 // init gain
                 node.gain = context.createGain();

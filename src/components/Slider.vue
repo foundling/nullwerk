@@ -183,6 +183,10 @@
                     this.initSliderPosition();
 
                 this.slideData.lastDelta = 0;
+                this.$emit('slideend', {
+                    name: this.controlSource.name,
+                    value: 0.5
+                });
 
             },
             buildStyleData() {
@@ -209,7 +213,6 @@
                 this.initSliderPosition();
             },
             controlSource: function() {
-                console.log('controlSource changed');
                 this.initSliderPosition();
             }
 

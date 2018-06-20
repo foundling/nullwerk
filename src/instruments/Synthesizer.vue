@@ -137,7 +137,8 @@
 
             <div class="expression-wheel-container">
                 <slider
-                v-on:slide="pitchWheel"
+                v-on:slide="adjustOscillatorPitch"
+                v-on:slideend="adjustOscillatorPitch"
                 v-bind:sticky="true"
                 v-bind:control-source="soundEngine.settings.expression.modulation"
                 v-bind:direction="ui.expression.modulation.slider.direction"
@@ -463,15 +464,18 @@ h1.make {
                 let waveForm = this.soundEngine.settings.oscillators[waveform]; 
                 waveForm.active = !waveForm.active; 
             },
-            pitchWheel({ value }) {
+            adjustOscillatorPitch({ value }) {
 
                 if (!this.soundEngine.oscillators)
                     return;
 
-                this.soundEngine.oscillators.forEach(osc => {
+                let normalizedValue = value - 0.5; 
+                let oscillators = this.soundEngine.oscillators;
+                let freq = this.soundEngine.oscillators[0].osc.frequency.value;  
+                let range = freq*2 - freq/2;
 
-                    osc.osc.frequency.value *= value;
-
+                oscillators.forEach(osc => {
+                    osc.osc.frequency.value = osc.osc.frequency.originalFrequency + (normalizedValue * range);
                 });
 
             },
@@ -486,6 +490,7 @@ h1.make {
             },
             noteOn({ index }) {
                 this.soundEngine.playNote(index);
+                console.log(this.soundEngine.oscillators[0].osc.frequency.abc = true);
             },
             noteOff({ index }) {
                 this.soundEngine.noteOff();
