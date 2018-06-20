@@ -15,6 +15,7 @@ export default class SoundEngine {
         // init Web Audio and WebMidi  */
 
         this.context = new (window.AudioContext || window.webkitAudioContext)(); 
+        this.oscillators = null;
         this.MIDIAccess = MIDI.init();
 
         if (this.MIDIAccess) {
@@ -110,7 +111,6 @@ export default class SoundEngine {
     }
 
     /* Waveform Getters and Setters */
-
     get sineValue() {
         return this.settings.oscillators.sine.value;
     }
@@ -270,10 +270,11 @@ export default class SoundEngine {
         const releaseTime = this.context.currentTime + normalizedReleaseDur; 
 
         this.oscillators.forEach(osc => {
+            console.log(osc.gain.gain.value);
             // release time: ramp from sustain level down to 0 in <release time> seconds 
             // and stop the note
-            osc.gain.gain.linearRampToValueAtTime(0, releaseTime);  
-            osc.osc.stop(releaseTime + 0.01);
+            //osc.gain.gain.linearRampToValueAtTime(0, releaseTime);  
+            //osc.osc.stop(releaseTime + 0.01);
 
         });
 

@@ -137,7 +137,7 @@
 
             <div class="expression-wheel-container">
                 <slider
-                v-on:slide="adjustModWheel"
+                v-on:slide="pitchWheel"
                 v-bind:sticky="true"
                 v-bind:control-source="soundEngine.settings.expression.modulation"
                 v-bind:direction="ui.expression.modulation.slider.direction"
@@ -151,7 +151,6 @@
 
             <div class="modulation-wheel-container">
                 <slider
-                v-on:slide="adjustModWheel"
                 v-bind:sticky="true"
                 v-bind:control-source="soundEngine.settings.expression.modulation"
                 v-bind:direction="ui.expression.modulation.slider.direction"
@@ -174,29 +173,6 @@
             v-bind:preset-data="localStorage.config">
             </preset-manager>
         </div>
-
-        <!--
-        <div class="module transport-controls">
-
-            <button 
-            v-on:click="toggleRecord"
-            class="record-button">
-                RECORD
-            </button>
-
-            <button 
-            v-on:click="stop"
-            class="stop-button">
-                STOP
-            </button>
-
-            <button 
-            v-on:click="play"
-            class="play-button">
-                PLAY
-            </button>
-        </div>
-        -->
 
         <!-- Keyboard Container -->
         <div class="module keyboard-container">
@@ -487,7 +463,17 @@ h1.make {
                 let waveForm = this.soundEngine.settings.oscillators[waveform]; 
                 waveForm.active = !waveForm.active; 
             },
-            adjustModWheel(direction) {
+            pitchWheel({ value }) {
+
+                if (!this.soundEngine.oscillators)
+                    return;
+
+                this.soundEngine.oscillators.forEach(osc => {
+
+                    osc.osc.frequency.value *= value;
+
+                });
+
             },
             adjustOctave(direction) { 
                 this.soundEngine.octave += direction;
@@ -514,21 +500,7 @@ h1.make {
             newPreset({ name }) {
                 const settings = this.localStorage.data.currentPreset;
                 this.localStorage.savePreset(name, settings); 
-            },
-            toggleRecord() {
-                this.soundEngine.recordEnabled = !this.soundEngine.recordEnabled;
-            },
-            play() {
-                if (!this.soundEngine.recordEnabled) {
-                    this.soundEngine.recordEnabled = true;
-                }
-            },
-            stop() {
-                if (this.soundEngine.recordEnabled) {
-                    this.soundEngine.recordEnabled = false;
-                }
             }
-
         },
         watch: {
             'localStorage.data': function() {

@@ -52,22 +52,22 @@ export const synthConfig = {
                 envelope: {
                     attack: {
                         name: 'attack',
-                        value: 0.2,
+                        value: 0.1,
                         active: true,
                     },
                     decay: {
                         name: 'decay',
-                        value: 0.4,
+                        value: 0.2,
                         active: true,
                     },
                     sustain: {
                         name: 'sustain',
-                        value: 0.8, 
+                        value: 0.2, 
                         active: true,
                     },
                     release: {
                         name: 'release',
-                        value: 0.7,
+                        value: 0.2,
                         active: true,
                     },
                 }
