@@ -149,8 +149,8 @@ export const synthConfig = {
                 knob: {
                     color: 'crimson',
                     img: {
-                        inactive: '/static/img/square_wave.png',
-                        active: '/static/img/square_wave_inverse.png'
+                        inactive: 'static/img/square_wave.png',
+                        active: 'static/img/square_wave_inverse.png'
                     },
                 },
                 slider: {
@@ -163,8 +163,8 @@ export const synthConfig = {
                 knob: {
                     color: 'darkcyan',
                     img: {
-                        inactive: '/static/img/triangle_wave.png',
-                        active: '/static/img/triangle_wave_inverse.png'
+                        inactive: 'static/img/triangle_wave.png',
+                        active: 'static/img/triangle_wave_inverse.png'
                     },
                 },
                 slider: {
@@ -177,8 +177,8 @@ export const synthConfig = {
                 knob: {
                     color: '#20dab8',
                     img: {
-                        inactive: '/static/img/sawtooth_wave.png',
-                        active: '/static/img/sawtooth_wave_inverse.png'
+                        inactive: 'static/img/sawtooth_wave.png',
+                        active: 'static/img/sawtooth_wave_inverse.png'
                     },
                 }, 
                 slider: {
@@ -191,8 +191,8 @@ export const synthConfig = {
                 knob: {
                     color: 'deepskyblue',
                     img: {
-                        inactive: '/static/img/sine_wave.png',
-                        active: '/static/img/sine_wave_inverse.png'
+                        inactive: 'static/img/sine_wave.png',
+                        active: 'static/img/sine_wave_inverse.png'
                     }
                 },
                 slider: {
