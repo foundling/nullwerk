@@ -1,3 +1,0 @@
-- note behavior settings
-- sync octave changes with ui
-

@@ -1,5 +1,0 @@
-- drag on a note results in an infinite note.
-- octave changes via midi change note value, not reflected in UI.
-- ipad: both touch events and mouse events are fired
-- ios: invalid state exception. (probably coming from trying to reset oscillators while attenuating old oscillators and stopping them at a certain time).
-- long delay on touch devices before note sounds
