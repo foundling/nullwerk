@@ -273,8 +273,8 @@ export default class SoundEngine {
             //console.log(osc.gain.gain.value);
             // release time: ramp from sustain level down to 0 in <release time> seconds 
             // and stop the note
-            //osc.gain.gain.linearRampToValueAtTime(0, releaseTime);  
-            //osc.osc.stop(releaseTime + 0.01);
+            osc.gain.gain.linearRampToValueAtTime(0, releaseTime);  
+            osc.osc.stop(releaseTime + 0.01);
 
         });
 
