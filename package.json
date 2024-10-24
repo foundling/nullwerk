@@ -13,7 +13,7 @@
     "fastclick": "1.0.6",
     "node-sass": "^4.5.0",
     "sass-loader": "^5.0.1",
-    "vue": "^2.0.0-rc.8",
+    "vue": "^3.0.0",
     "vue-touch": "^2.0.0-beta.4",
     "vuex": "^2.0.0"
   },
